@@ -45,14 +45,15 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public void login(String userName, String userPassword) {
+        String user = "";
         if(userName.contains("@")) {
-            String user = userMapper.selectUserByUserEmail(userName);
+            user = userMapper.selectUserByUserEmail(userName);
         } else {
-            String user = userMapper.selectUserByUserName(userName);
+            user = userMapper.selectUserByUserName(userName);
         }
-//        if (user == null) {
-//            return null;
-//        }
+        if (user != null) {
+            return;
+        }
 
 
 

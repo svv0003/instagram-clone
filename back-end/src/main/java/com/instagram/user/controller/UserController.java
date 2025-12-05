@@ -29,10 +29,18 @@ public class UserController {
 
     @PostMapping("/login")
     public void login(@RequestBody User user){
+        /*
+        TODO
+        로그인 성공 시 토큰
+         */
+        if(user == null) {
+
+        }
         log.info("===로그인 요청===");
         log.info("요청 데이터 - 이름 : {}, 이메일 : {}", user.getUserName(), user.getUserPassword());
         try {
             userService.login(user.getUserName(), user.getUserPassword());
+
             log.info("회원가입 성공 - 이메일 : {}", user.getUserName());
         } catch (Exception e){
             log.error("회원가입 실패 - 이메일 : {}, 에러 : {}", user.getUserEmail(), e.getMessage());
