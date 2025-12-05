@@ -15,12 +15,14 @@ import apiService from '../service/apiService';
 
 const LoginPage = () => {
     // TODO: username state를 선언하세요
-
+    const [username, setUsername] = useState(null);
     // TODO: password state를 선언하세요
-
+    const [password, setPassword] = useState(null);
     // TODO: loading state를 선언하세요
+    const [loading, setLoading] = useState(false)
 
     // TODO: useNavigate를 사용하여 navigate 함수를 가져오세요
+    const navigate = useNavigate();
 
     // TODO: handleLogin 함수를 작성하세요
     // 1. 입력값 검증 (username과 password가 비어있는지 확인)
@@ -31,11 +33,29 @@ const LoginPage = () => {
     // 6. finally: loading을 false로 설정
     const handleLogin = async () => {
         // TODO: 함수를 완성하세요
+        try {
+            const response = await apiService.login(username, password);
+            alert("로그인되었습니다.");
+            navigate("/");
+        } catch (error) {
+            let errorMessage = "로그인 실패했습니다.";
+            if(error.response && error?.message) {
+                errorMessage = error.response.data.message;
+            } else if(error.response?.status === 400) {
+                errorMessage = "입력 정보를 확인해주세요.";
+            }
+            alert(errorMessage);
+        } finally {
+            setLoading(false);
+        }
     };
 
     // TODO: Enter 키 입력 시 handleLogin 호출하는 함수 작성
     const handleKeyPress = (e) => {
         // TODO: 함수를 완성하세요
+        if (e.key === 'Enter') {
+            handleLogin();
+        }
     };
 
     return (
@@ -50,6 +70,14 @@ const LoginPage = () => {
                         {/* value: username */}
                         {/* onChange: setUsername */}
                         {/* onKeyPress: handleKeyPress */}
+                        <input className="login-input"
+                               type="text"
+                               placeholder="전화번호, 사용자 이름 또는 이메일"
+                               value={username}
+                               onChange={(e) => setUsername(e.target.value)}
+                               onKeyPress={handleKeyPress}
+                               autoComplete="email"
+                        />
 
                         {/* TODO: 비밀번호 입력 input 작성 */}
                         {/* type: "password" */}
@@ -57,11 +85,24 @@ const LoginPage = () => {
                         {/* value: password */}
                         {/* onChange: setPassword */}
                         {/* onKeyPress: handleKeyPress */}
+                        <input className="login-input"
+                               type="password"
+                               placeholder="비밀번호"
+                               value={password}
+                               onChange={(e) => setPassword(e.target.value)}
+                               onKeyPress={handleKeyPress}
+                               autoComplete="email"
+                        />
 
                         {/* TODO: 로그인 버튼 작성 */}
                         {/* onClick: handleLogin */}
                         {/* disabled: loading */}
                         {/* 버튼 텍스트: loading이면 "로그인 중...", 아니면 "로그인" */}
+                        <button className="login-button"
+                                onClick={handleLogin}
+                                disabled={loading}>
+                            {loading ? "로그인 중..." : "로그인"}
+                        </button>
                     </div>
 
                     <div className="divider">
@@ -71,7 +112,7 @@ const LoginPage = () => {
                     </div>
 
                     <button className="facebook-login">
-                        Facebook으로 로그인
+                        SNS 로그인
                     </button>
 
                     <button className="forgot-password">
@@ -79,9 +120,24 @@ const LoginPage = () => {
                     </button>
                 </div>
 
+                {
+                    /*
+                    익명 함수란 명칭을 작성하지 않고, 1회성으로 사용하는 기능이다.
+                    명칭 함수란 기능에 명칭을 부여하여 다양한 태그에서 재사용하는 기능이다.
+                    onClick={}은 클릭 시 특정 기능을 동작하며, 동작할 기능 명칭을 작성해야 하지만
+                    단순히 사용할 경우에는 익명함수로 작성한다.
+                    onClick={function movePage()}
+                    onClick={() => navigate("/signup")
+                     */
+                }
                 <div className="signup-box">
                     <p>
-                        계정이 없으신가요? <button className="signup-link">가입하기</button>
+                        계정이 없으신가요?
+                        <button className="signup-link"
+                                onClick={() => navigate("/signup")}
+                        >
+                            가입하기
+                        </button>
                     </p>
                 </div>
             </div>

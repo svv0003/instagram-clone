@@ -1,5 +1,6 @@
 package com.instagram.common.aop;
 
+import com.instagram.user.model.dto.User;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
 import org.aspectj.lang.JoinPoint;
@@ -28,11 +29,11 @@ public class LoggingAspect {
         StringBuilder sb = new StringBuilder();
         sb.append(String.format("[%s.%s] 요청 / ip : %s", className, methodName, ip));
 
-//        if(req.getSession().getAttribute("loginMember") != null) {
-//            String memberEmail =
-//                    ( (Member)req.getSession().getAttribute("loginMember") ).getMemberEmail();
-//            sb.append(String.format(", 요청 회원 : %s", memberEmail));
-//        }
+        if(req.getSession().getAttribute("loginMember") != null) {
+            String memberEmail =
+                    ( (User)req.getSession().getAttribute("loginMember") ).getUserEmail();
+            sb.append(String.format(", 요청 회원 : %s", memberEmail));
+        }
         log.info(sb.toString());
     }
 
