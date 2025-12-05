@@ -44,16 +44,22 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public void login(String userName, String userPassword) {
-        String user = "";
-        if(userName.contains("@")) {
-            user = userMapper.selectUserByUserEmail(userName);
-        } else {
-            user = userMapper.selectUserByUserName(userName);
+    public User login(String userName, String userPassword) {
+        User DBUserCheck = userMapper.selectUserByUserEmail(userName);
+        if(DBUserCheck == null) {
+            log.warn("로그인 실패 - 존재하지 않는 이메일 : {}", userName);
+            return null;
         }
-        if (user != null) {
-            return;
+        // 비밀번호 검증
+        if(!passwordEncoder.matches(userPassword, DBUserCheck.getUserPassword())) {
+            log.warn("로그인 실패 - 잘못된 비밀번호 : {}",userName);
+            return null;
         }
+        // 비밀번호는 응답에서 제거
+        DBUserCheck.setUserPassword(null);
+        log.info("로그인성공 - 이메일 {}",userName);
+        return null;
+
 
 
 

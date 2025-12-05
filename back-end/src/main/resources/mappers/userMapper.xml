@@ -19,13 +19,13 @@
     </select>
 
     <select id="selectUserByUserName" parameterType="User">
-        SELECT user_name, user_password
+        SELECT user_name
         FROM users
         WHERE user_name = #{userName}
     </select>
 
     <select id="selectUserByUserEmail" parameterType="User">
-        SELECT user_email, user_password
+        SELECT user_email
         FROM users
         WHERE user_email = #{userEmail}
     </select>
