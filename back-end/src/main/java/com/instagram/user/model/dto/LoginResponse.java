@@ -10,5 +10,5 @@ import lombok.NoArgsConstructor;
 public class LoginResponse {
 
     private String token;   // JWT 토큰
-    private String user;    // 사용자 정보
+    private User user;    // 사용자 정보
 }

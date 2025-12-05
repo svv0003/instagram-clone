@@ -14,10 +14,10 @@ import { useNavigate } from 'react-router-dom';
 import apiService from '../service/apiService';
 
 const LoginPage = () => {
-    // TODO: username state를 선언하세요
-    const [username, setUsername] = useState(null);
+    // TODO: userEmail state를 선언하세요
+    const [userEmail, setUserEmail] = useState('');
     // TODO: password state를 선언하세요
-    const [password, setPassword] = useState(null);
+    const [password, setPassword] = useState('');
     // TODO: loading state를 선언하세요
     const [loading, setLoading] = useState(false)
 
@@ -34,17 +34,15 @@ const LoginPage = () => {
     const handleLogin = async () => {
         // TODO: 함수를 완성하세요
         try {
-            const response = await apiService.login(username, password);
+            const res = await apiService.login(userEmail, password);
             alert("로그인되었습니다.");
-            navigate("/");
+            navigate("/feed");
         } catch (error) {
-            let errorMessage = "로그인 실패했습니다.";
-            if(error.response && error?.message) {
-                errorMessage = error.response.data.message;
-            } else if(error.response?.status === 400) {
-                errorMessage = "입력 정보를 확인해주세요.";
+            if(error.response?.status === 401) {
+                alert("이메일 또는 비밀번호가 올바르지 않습니다.");
+            } else {
+                alert("로그인에 실패했습니다. 다시 로그인해주세요.");
             }
-            alert(errorMessage);
         } finally {
             setLoading(false);
         }
@@ -73,8 +71,8 @@ const LoginPage = () => {
                         <input className="login-input"
                                type="text"
                                placeholder="전화번호, 사용자 이름 또는 이메일"
-                               value={username}
-                               onChange={(e) => setUsername(e.target.value)}
+                               value={userEmail}
+                               onChange={(e) => setUserEmail(e.target.value)}
                                onKeyPress={handleKeyPress}
                                autoComplete="email"
                         />

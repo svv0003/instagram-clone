@@ -95,25 +95,25 @@ const apiService = {
     // TODO: 로그인 API
     // POST /auth/login
     // body: { username, password }
-    login: async (username, password) => {
+    login: async (userEmail, password) => {
         // TODO: API 호출을 완성하세요
         // const response = await axios.post(
-        const response = await api.post(
+        const res = await api.post(
             // `${API_BASE_URL}/auth/login`,
             `auth/login`,
             {
-                userName: username,
+                userEmail: userEmail,
                 userPassword: password
             });
         /*
         TODO
         토큰과 사용자 정보를 localStorage 저장하기
          */
-        if(response.data.token) {
-            localStorage.setItem('token', response.data.token);
-            localStorage.setItem('user', JSON.stringify(response.data.user));
+        if(res.data.token) {
+            localStorage.setItem('token', res.data.token);
+            localStorage.setItem('user', JSON.stringify(res.data.user));
         }
-        return response;
+        return res.data;
     },
 
     // TODO: 로그아웃 함수

@@ -5,7 +5,6 @@ import com.instagram.user.model.mapper.UserMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 @Slf4j
@@ -25,7 +24,7 @@ public class UserServiceImpl implements UserService {
         이미 존재한다면 throw new RunTimeException "이미 존재하는 이메일입니다." 처리하기
         존재하지 않는 이메일이라면 비밀번호 암호화 처리하기
          */
-        String existingEmail = userMapper.selectUserByUserEmail(user.getUserEmail());
+        User existingEmail = userMapper.selectUserByUserEmail(user.getUserEmail());
         if(existingEmail != null) {
             throw new RuntimeException("이미 존재하는 이메일입니다.");
         }
@@ -44,25 +43,19 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public User login(String userName, String userPassword) {
-        User DBUserCheck = userMapper.selectUserByUserEmail(userName);
-        if(DBUserCheck == null) {
-            log.warn("로그인 실패 - 존재하지 않는 이메일 : {}", userName);
+    public User login(String userEmail, String userPassword) {
+        User checkUserFromDB = userMapper.selectUserByUserEmail(userEmail);
+        if(checkUserFromDB == null) {
+            log.warn("로그인 실패 - 존재하지 않는 이메일 : {}", userEmail);
             return null;
         }
-        // 비밀번호 검증
-        if(!passwordEncoder.matches(userPassword, DBUserCheck.getUserPassword())) {
-            log.warn("로그인 실패 - 잘못된 비밀번호 : {}",userName);
+        if(!passwordEncoder.matches(userPassword, checkUserFromDB.getUserPassword())) {
+            log.warn("로그인 실패 - 잘못된 비밀번호 : {}",userEmail);
             return null;
         }
-        // 비밀번호는 응답에서 제거
-        DBUserCheck.setUserPassword(null);
-        log.info("로그인성공 - 이메일 {}",userName);
-        return null;
-
-
-
-
+        checkUserFromDB.setUserPassword(null);
+        log.info("로그인성공 - 이메일 {}",userEmail);
+        return checkUserFromDB;
     }
 
     @Override
