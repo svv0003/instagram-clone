@@ -32,7 +32,6 @@ const LoginPage = () => {
     // 5. 실패 시: alert로 에러 메시지 표시
     // 6. finally: loading을 false로 설정
     const handleLogin = async () => {
-        // TODO: 함수를 완성하세요
         try {
             const res = await apiService.login(userEmail, password);
             alert("로그인되었습니다.");
@@ -50,7 +49,6 @@ const LoginPage = () => {
 
     // TODO: Enter 키 입력 시 handleLogin 호출하는 함수 작성
     const handleKeyPress = (e) => {
-        // TODO: 함수를 완성하세요
         if (e.key === 'Enter') {
             handleLogin();
         }

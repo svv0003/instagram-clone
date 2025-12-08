@@ -1,0 +1,194 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.instagram.post.model.mapper.PostMapper">
+
+    <!--
+    뷰 테이블
+    CREATE VIEW Post_Details_View AS
+    SELECT
+        p.post_id,
+        p.user_id,
+        p.post_image,
+        p.post_caption,
+        p.post_location,
+        p.created_at,
+        p.updated_at,
+        u.user_name,
+        u.user_fullname,
+        u.user_avatar,
+        (SELECT COUNT(*) FROM likes WHERE post_id = p.post_id) AS like_count,
+        (SELECT COUNT(*) FROM comments WHERE post_id = p.post_id) AS comment_count
+    FROM posts p
+             INNER JOIN users u ON p.user_id = u.user_id
+    -->
+    <!-- 모든 게시물 조회 (최신순)
+    <select id="selectAllPosts">
+        SELECT
+            p.post_id,
+            p.user_id,
+            p.post_image,
+            p.post_caption,
+            p.post_location,
+            p.created_at,
+            p.updated_at,
+            u.user_name,
+            u.user_fullname,
+            u.user_avatar,
+            좋아요 수 (서브쿼리)
+            (SELECT COUNT(*) FROM likes WHERE post_id = p.post_id) AS like_count,
+            댓글 수 (서브쿼리)
+            (SELECT COUNT(*) FROM comments WHERE post_id = p.post_id) AS comment_count,
+            CASE
+                WHEN EXISTS (
+                    SELECT 1 FROM likes
+                    WHERE post_id = p.post_id AND user_id = #{currentUserId}
+                )
+                    THEN TRUE
+                ELSE FALSE
+                END AS is_liked
+        FROM posts p
+                 INNER JOIN users u ON p.user_id = u.user_id
+        ORDER BY p.created_at DESC
+    </select>
+    -->
+    <select id="selectAllPosts" resultType="Post">
+        SELECT
+            p.*,
+            CASE
+                WHEN EXISTS (
+                    SELECT 1 FROM likes
+                    WHERE post_id = p.post_id AND user_id = #{currentUserId}
+            )
+            THEN TRUE
+            ELSE FALSE
+        END AS is_liked
+        FROM post_detail_view p
+        ORDER BY p.created_at DESC
+    </select>
+
+    <!-- 특정 게시물 조회
+    <select id="selectPostById" >
+        SELECT
+            p.post_id,
+            p.user_id,
+            p.post_image,
+            p.post_caption,
+            p.post_location,
+            p.created_at,
+            p.updated_at,
+            u.user_name,
+            u.user_fullname,
+            u.user_avatar,
+            (SELECT COUNT(*) FROM likes WHERE post_id = p.post_id) AS like_count,
+            (SELECT COUNT(*) FROM comments WHERE post_id = p.post_id) AS comment_count,
+            CASE
+                WHEN EXISTS (
+                    SELECT 1 FROM likes
+                    WHERE post_id = p.post_id AND user_id = #{currentUserId}
+                )
+                    THEN TRUE
+                ELSE FALSE
+                END AS is_liked
+        FROM posts p
+                 INNER JOIN users u ON p.user_id = u.user_id
+        WHERE p.post_id = #{postId}
+    </select>
+    -->
+    <select id="selectPostById" resultType="Post">
+        SELECT
+            p.*,
+            CASE
+                WHEN EXISTS (
+                    SELECT 1 FROM likes
+                    WHERE post_id = p.post_id AND user_id = #{currentUserId}
+                )
+                    THEN TRUE
+                ELSE FALSE
+                END AS is_liked
+        FROM post_detail_view p
+        ORDER BY  p.post_id = #{postId}
+    </select>
+
+    <!-- 특정 사용자 게시물 조회
+    <select id="selectPostsByUserId">
+        SELECT
+            p.post_id,
+            p.user_id,
+            p.post_image,
+            p.post_caption,
+            p.post_location,
+            p.created_at,
+            p.updated_at,
+            u.user_name,
+            u.user_fullname,
+            u.user_avatar,
+            (SELECT COUNT(*) FROM likes WHERE post_id = p.post_id) AS like_count,
+            (SELECT COUNT(*) FROM comments WHERE post_id = p.post_id) AS comment_count,
+            CASE
+                WHEN EXISTS (
+                    SELECT 1 FROM likes
+                    WHERE post_id = p.post_id AND user_id = #{currentUserId}
+                )
+                    THEN TRUE
+                ELSE FALSE
+                END AS is_liked
+        FROM posts p
+                 INNER JOIN users u ON p.user_id = u.user_id
+        WHERE p.user_id = #{userId}
+        ORDER BY p.created_at DESC
+    </select>
+    -->
+    <select id="selectPostsByUserId" resultType="Post">
+        SELECT
+            p.*,
+            CASE
+                WHEN EXISTS (
+                    SELECT 1 FROM likes
+                    WHERE post_id = p.post_id AND user_id = #{currentUserId}
+                )
+                    THEN TRUE
+                ELSE FALSE
+                END AS is_liked
+        FROM post_detail_view p
+        WHERE p.user_id = #{userId}
+        ORDER BY p.created_at DESC
+    </select>
+
+    <!-- 게시물 작성 -->
+    <insert id="insertPost" parameterType="Post" useGeneratedKeys="true" keyProperty="postId" keyColumn="post_id">
+        INSERT INTO posts (user_id, post_image, post_caption, post_location)
+        VALUES (#{userId}, #{postImage}, #{postCaption}, #{postLocation})
+    </insert>
+
+    <update id="updatePost">
+        UPDATE posts
+        SET post_image = #{postImage}
+        WHERE post_id = #{postId}
+    </update>
+
+    <!-- 게시물 삭제 -->
+    <delete id="deletePost">
+        DELETE FROM posts
+        WHERE post_id = #{postId}
+    </delete>
+
+    <!-- 좋아요 추가 -->
+    <insert id="insertLike">
+        INSERT INTO likes (post_id, user_id)
+        VALUES (#{postId}, #{userId})
+        ON CONFLICT (post_id, user_id) DO NOTHING
+    </insert>
+
+    <!-- 좋아요 취소 -->
+    <delete id="deleteLike">
+        DELETE FROM likes
+        WHERE post_id = #{postId}
+        AND user_id = #{userId}
+    </delete>
+
+
+</mapper>
