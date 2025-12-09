@@ -17,16 +17,15 @@ import java.util.List;
 @Slf4j
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api")
+@RequestMapping("/api/posts")
 public class PostController {
-
     private final PostService postService;
     private final JwtUtil jwtUtil;
 
-    @PostMapping("/posts")
+    @PostMapping
     public ResponseEntity<String> createPost(@RequestPart MultipartFile postImage,
                                              @RequestPart String postCaption,
-                                             @RequestPart String postLocation,
+                                             @RequestPart(required = false) String postLocation,
                                              @RequestHeader("Authorization") String authHeader) {
         /*
         JWT 토큰(백엔드 인증 기반)으로 현재 로그인 사용자 id 가져오기
@@ -51,13 +50,12 @@ public class PostController {
         }
     }
 
-    @GetMapping("/all")
-    public ResponseEntity<List<Post>> getAllProducts(@RequestHeader("Authorization") String authHeader) {
+    @GetMapping
+    public ResponseEntity<List<Post>> getAllPosts(@RequestHeader("Authorization") String authHeader) {
         String token = authHeader.substring(7);
         log.info("token: {}", token);
         int currentUserId = jwtUtil.getUserIdFromToken(token);
         List<Post> posts = postService.getAllPosts(currentUserId);
         return ResponseEntity.ok(posts);
     }
-
 }

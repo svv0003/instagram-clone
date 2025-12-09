@@ -90,24 +90,28 @@ const apiService = {
 
     // ===== 게시물 API =====
 
-    // TODO: 모든 게시물 조회
-    // GET /posts
-    getPosts: async (setPosts, setLoading) => {
-        // TODO: API 호출을 완성하세요
+    /**
+     * 모든 게시물 조회
+     */
+    getPosts: async () => {
         try {
-            const res = await api.get(`/all`);
-            setPosts(res.data);
+            const res = await api.get(`/posts`);
+            return res.data;
         } catch (error) {
             alert("데이터를 가져올 수  없습니다.");
-        } finally {
-            setLoading(false);
         }
     },
 
-    // TODO: 특정 게시물 조회
-    // GET /posts/:postId
+    /**
+     * 특정 게시물 조회
+     * */
     getPost: async (postId) => {
-        // TODO: API 호출을 완성하세요
+        try {
+            const res = await api.get('/posts/' + postId);
+            return res.data;
+        } catch (error) {
+            alert("데이터를 가져올 수  없습니다.");
+        }
     },
 
     // TODO: 게시물 작성
@@ -173,17 +177,46 @@ const apiService = {
 
     // ===== 스토리 API =====
 
-    // TODO: 스토리 목록 조회
-    // GET /stories
+    /**
+     * 스토리 목록 조회
+     */
     getStories: async () => {
-        // TODO: API 호출을 완성하세요
+        try {
+            const res = await api.get('/stories');
+            return res.data;
+        } catch (e) {
+            alert("스토리 조회 실패 : {}", e);
+        }
     },
 
-    // TODO: 스토리 작성
-    // POST /stories
-    // body: { storyImage }
+    /**
+     * 특정 스토리 조회
+     */
+    getStoryByStoryId: async (storyId) => {
+        try {
+            const res = await api.get(`/stories/${storyId}`);
+            return res.data;
+        } catch (e) {
+            alert("스토리 조회 실패 : {}", e);
+        }
+    },
+
+    /**
+     * 스토리 작성
+     */
     createStory: async (storyImage) => {
-        // TODO: API 호출을 완성하세요
+        const uploadStory = new FormData();
+        uploadStory.append("storyImage", storyImage);
+        console.log("storyImage", storyImage);
+        const res = await api.post(
+            "/stories",
+            uploadStory,
+            {
+            headers: {
+                'Content-Type': 'multipart/form-data'
+            }
+        });
+        return res.data;
     },
 
     // ===== 사용자 API =====

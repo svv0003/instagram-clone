@@ -31,7 +31,10 @@ public class PostServiceImpl implements PostService {
     }
 
     @Override
-    public boolean createPost(MultipartFile postImage, String postCaption, String postLocation, int currentUserId) {
+    public boolean createPost(MultipartFile postImage,
+                              String postCaption,
+                              String postLocation,
+                              int currentUserId) {
         /*
         게시물이 1개라도 등록되면 true, 0 이하는 false
          */
@@ -48,7 +51,8 @@ public class PostServiceImpl implements PostService {
             int result = postMapper.insertPost(post);
             log.info("result :{}", result);
             if(result > 0){
-                String imageUrl = fileUploadService.uploadPostImage(postImage, result, "post");
+                String imageUrl =
+                        fileUploadService.uploadPostImage(postImage, result, "post");
                 post.setPostImage(imageUrl);
                 postMapper.updatePost(post);
                 return true;

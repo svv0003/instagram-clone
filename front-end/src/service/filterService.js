@@ -2,6 +2,10 @@ import * as file from "@testing-library/user-event/dist/type";
 
 export const FILTER_OPTIONS = [
     { name: 'Original', filter: 'none' },
+    { name: 'Vivid', filter: 'saturate(150%) contrast(120%)'},
+    { name: 'Dramatic', filter: 'contrast(140%) brightness(95%) sepia(10%)'},
+    { name: 'Warm Tone', filter: 'sepia(25%) saturate(130%) brightness(108%)'},
+    { name: 'Cool Tone', filter: 'hue-rotate(200deg) saturate(110%) brightness(100%)'},
     { name: 'Grayscale', filter: 'grayscale(100%)' },
     { name: 'Sepia', filter: 'sepia(60%)' },
     { name: 'Warm', filter: 'sepia(30%) saturate(140%)' },
@@ -16,12 +20,18 @@ export const FILTER_OPTIONS = [
  * @param filter            적용할 CSS 필터 문자열
  * @returns {Promise<File>} 필터 적용된 새로운 File 객체
  */
-export const getFilteredFile = async (originalFile, filter) => {
-    // 필터가 없으면 원본 그대로 반환한다.
+export const getFilteredFile = async (originalFile, filter, filterName) => {
     if(!filter || filter === 'none') return Promise.resolve(originalFile);
     const img = new Image();
-    const url = URL.createObject(originalFile);
+    const url = URL.createObjectURL(originalFile);
     img.src = url;
+
+    const originalName = originalFile.name;
+    const lastDotIndex = originalName.lastIndexOf('.');
+    const originalNameWithoutExtension = lastDotIndex === -1 ? originalName : originalName.substring(0, lastDotIndex);
+    const extension = lastDotIndex === -1 ? '' : originalName.substring(lastDotIndex);
+    const fileNameWithFilterNameAndExtension = `${originalNameWithoutExtension}_${filterName || 'filtered'}${extension}`;
+
     try {
         await img.decode();         // 이미지 로드 대기
         URL.revokeObjectURL(url);   // 메모리 해제
@@ -31,18 +41,18 @@ export const getFilteredFile = async (originalFile, filter) => {
         const ctx = canvas.getContext('2d');
         ctx.filter = filter;
         ctx.drawImage(img, 0, 0);
-        return new Promise(resolve => { // canvas -> orifinalFile 변환
+        return new Promise(resolve => {
             canvas.toBlob(blob => {
                 resolve(new File(
                     [blob],
-                    originalFile.name,
+                    fileNameWithFilterNameAndExtension,
                     {
                     type: originalFile.type,
                     lasModified: new Date()
                     }
                 ));
             }, originalFile.type,
-                0.9);
+                1);
         })
     } catch (e) {
         console.log(e);

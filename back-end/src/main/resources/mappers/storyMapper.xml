@@ -6,5 +6,39 @@
 
 <mapper namespace="com.instagram.story.model.mapper.StoryMapper">
 
+    <!-- 스토리 생성 -->
+    <insert id="insertStory" parameterType="Story" useGeneratedKeys="true" keyProperty="storyId" keyColumn="story_id">
+        INSERT INTO stories (user_id, story_image, created_at, expires_at)
+        VALUES ( #{userId}, #{storyImage}, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP + INTERVAL '24 hours')
+    </insert>
 
+    <update id="updateStory" parameterType="Story">
+        UPDATE stories
+        SET story_image = #{storyImage}
+        WHERE story_id = #{storyId}
+    </update>
+
+    <!-- 스토리 조회 -->
+    <select id="selectAllStories" resultType="Story">
+        SELECT story_id, user_id, story_image, created_at, user_name, user_avatar
+        FROM active_stories_view
+    </select>
+
+    <!-- 특정 사용자 스토리 조회 -->
+    <select id="selectStoriesByUserId" resultType="Story" parameterType="int">
+        SELECT story_id, user_id, story_image, created_at, user_name, user_avatar
+        FROM active_stories_view
+        WHERE user_id = #{userId}
+    </select>
+
+    <!-- 특정 스토리 조회 -->
+    <select id="selectStoriesByStoryId" resultType="Story" parameterType="int">
+        SELECT story_id, user_id, story_image, created_at, user_name, user_avatar
+        FROM active_stories_view
+        WHERE story_id = #{storyId}
+    </select>
+
+    <!--
+
+    -->
 </mapper>

@@ -38,7 +38,7 @@ public class FileUploadService {
             }
             log.info("업로드 디렉토리 생성 : {}", profileFolder);
         }
-        String fileNameWithExtension = imageType + file.getOriginalFilename() + getExtension(file);
+        String fileNameWithExtension = imageType + '_' + file.getOriginalFilename();
         Path savePath = Paths.get(profileFolder, fileNameWithExtension);
         try {
             Files.copy(file.getInputStream(), savePath, StandardCopyOption.REPLACE_EXISTING);
@@ -62,11 +62,11 @@ public class FileUploadService {
             }
             log.info("업로드 디렉토리 생성 : {}", storyFolder);
         }
-        String fileNameWithExtension = imageType + getExtension(file);
+        String fileNameWithExtension = imageType + '_' + file.getOriginalFilename();
         Path savePath = Paths.get(storyFolder, fileNameWithExtension);
         try {
             Files.copy(file.getInputStream(), savePath, StandardCopyOption.REPLACE_EXISTING);
-            log.info("상품 이미지 업로드 성공 : {} -> {}", file.getOriginalFilename(), fileNameWithExtension);
+            log.info("스토리 이미지 업로드 성공 : {} -> {}", file.getOriginalFilename(), fileNameWithExtension);
         } catch (IOException e) {
             log.error("파일 저장 중 오류 발생: {}", e.getMessage());
         }
@@ -86,7 +86,7 @@ public class FileUploadService {
             }
             log.info("업로드 디렉토리 생성 : {}", postFolder);
         }
-        String fileNameWithExtension = imageType + file.getOriginalFilename() + getExtension(file);
+        String fileNameWithExtension = imageType + '_' + file.getOriginalFilename();
         Path savePath = Paths.get(postFolder, fileNameWithExtension);
         try {
             Files.copy(file.getInputStream(), savePath, StandardCopyOption.REPLACE_EXISTING);
