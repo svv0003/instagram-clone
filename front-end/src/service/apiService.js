@@ -1,6 +1,6 @@
 import axios from 'axios';
+import {API_BASE_URL} from "./commonService";
 
-const API_BASE_URL = 'http://localhost:9000/api';
 
 const api = axios.create({
     baseURL: API_BASE_URL,
@@ -63,7 +63,6 @@ const apiService = {
             userFullname: fullName,
         });
         return response.data;
-
     },
 
     // POST /auth/login
@@ -95,7 +94,7 @@ const apiService = {
      */
     getPosts: async () => {
         try {
-            const res = await api.get(`/posts`);
+            const res = await api.get('/posts');
             return res.data;
         } catch (error) {
             alert("데이터를 가져올 수  없습니다.");
@@ -146,12 +145,24 @@ const apiService = {
     // POST /posts/:postId/like
     addLike: async (postId) => {
         // TODO: API 호출을 완성하세요
+        try {
+            const res = await api.post(`/posts/${postId}/like`, postId);
+            return res.data;
+        } catch (e) {
+            alert("좋아요 실패 : {}", e);
+        }
     },
 
     // TODO: 좋아요 취소
     // DELETE /posts/:postId/like
     removeLike: async (postId) => {
         // TODO: API 호출을 완성하세요
+        try {
+            const res = await api.delete(`/posts/${postId}/like`, postId);
+            return res.data;
+        } catch (e) {
+            alert("좋아요 취소 실패 : {}", e);
+        }
     },
 
     // ===== 댓글 API =====
@@ -224,14 +235,74 @@ const apiService = {
     // TODO: 사용자 프로필 조회
     // GET /users/:userId
     getUser: async (userId) => {
-        // TODO: API 호출을 완성하세요
+        try {
+            const res = await api.get(`/auth/user/${userId}`);
+            console.log("res : ", res);
+            return res.data;
+        } catch (error) {
+            alert("데이터를 가져올 수 없습니다.");
+        }
     },
 
     // TODO: 사용자 게시물 조회
     // GET /users/:userId/posts
     getUserPosts: async (userId) => {
-        // TODO: API 호출을 완성하세요
-    }
+        try {
+            const res = await api.get(`/posts/user/${userId}`);
+            console.log("postRes : ", res);
+            return res.data;
+        } catch (error) {
+            alert("데이터를 가져올 수 없습니다.");
+        }
+    },
+
+    /**
+     * 사용자 스토리 조회
+     */
+    getUserStories: async (userId) => {
+        try {
+            console.log("api.get 시작");
+            const res = await api.get(`/stories/user/${userId}`);
+            console.log("res : ", res);
+            return res.data;
+        } catch (e) {
+            alert("스토리 조회 실패 : {}", e);
+        }
+    },
+    // TODO 2-1: getUser 함수 작성
+    // GET /users/:userId
+    // 파라미터: userId
+    // 리턴: res.data
+    // getUser: async (userId) => {
+    // },
+
+    // TODO 2-2: updateProfile 함수 작성
+    // PUT /users/:userId
+    // 파라미터: userId, formData
+    // 헤더: 'Content-Type': 'multipart/form-data'
+    // 성공 시 localStorage의 'user' 업데이트
+    updateProfile: async (userId, formData) => {
+        console.log("userId : ", userId);
+        console.log("formData : ", formData);
+        try {
+            const res = await api.put(`/auth/profile/edit/${userId}`, formData, {
+                headers : {
+                    'Content-Type': 'multipart/form-data'
+                }
+            });
+            console.log("res : ", res);
+            if(res.data) {
+                localStorage.setItem('user', JSON.stringify(res.data));
+                const token = localStorage.getItem("token");
+                if(token) {
+                    localStorage.setItem("token", token);
+                }
+            }
+            return res.data;
+        } catch (e) {
+            alert("회원정보 수정 실패 : {}", e);
+        }
+    },
 };
 
 export default apiService;

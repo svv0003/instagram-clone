@@ -63,13 +63,13 @@ public class StoryController {
         }
     }
 
-    @GetMapping("/{storyId}")
-    public ResponseEntity<?> getStoryByStoryId(@PathVariable("storyId") int storyId){
-        try{
-            Story a = storyService.getStoriesByStoryId(storyId);
-            return  ResponseEntity.ok(a);
-        } catch (Exception e){
-            return ResponseEntity.badRequest().body("스토리 조회 실패 : "+e.getMessage());
-        }
-    }
+//    @GetMapping("/{storyId}")
+//    public ResponseEntity<?> getStoryByStoryId(@PathVariable("storyId") int storyId){
+//        try{
+//            Story a = storyService.getStoriesByStoryId(storyId);
+//            return  ResponseEntity.ok(a);
+//        } catch (Exception e){
+//            return ResponseEntity.badRequest().body("스토리 조회 실패 : "+e.getMessage());
+//        }
+//    }
 }

@@ -3,6 +3,7 @@ package com.instagram.post.controller;
 import com.instagram.common.util.JwtUtil;
 import com.instagram.post.model.dto.Post;
 import com.instagram.post.model.service.PostService;
+import com.instagram.story.model.dto.Story;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.tomcat.Jar;
@@ -57,5 +58,39 @@ public class PostController {
         int currentUserId = jwtUtil.getUserIdFromToken(token);
         List<Post> posts = postService.getAllPosts(currentUserId);
         return ResponseEntity.ok(posts);
+    }
+
+    @GetMapping("/user/{userId}")
+    public ResponseEntity<List<Post>> getPostsByUserId(@PathVariable("userId") int userId) {
+        List<Post> posts = postService.getPostsByUserId(userId);
+        return ResponseEntity.ok(posts);
+    }
+
+    @PostMapping("/{postId}/like")
+    public ResponseEntity<Boolean> addLike(@PathVariable("postId") int postId,
+                                           @RequestHeader("Authorization") String authHeader) {
+        try {
+            String token = authHeader.substring(7);
+            int currentUserId = jwtUtil.getUserIdFromToken(token);
+            boolean result = postService.addLike(postId, currentUserId);
+            return ResponseEntity.ok(result);
+        }  catch (Exception e) {
+            log.error("좋아요 실패 : {}", e.getMessage());
+            return ResponseEntity.badRequest().body(false);
+        }
+    }
+
+    @DeleteMapping("/{postId}/like")
+    public ResponseEntity<Boolean> deleteLike(@PathVariable("postId") int postId,
+                                              @RequestHeader("Authorization") String authHeader) {
+        try {
+            String token = authHeader.substring(7);
+            int currentUserId = jwtUtil.getUserIdFromToken(token);
+            boolean result = postService.deleteLike(postId, currentUserId);
+            return ResponseEntity.ok(result);
+        }  catch (Exception e) {
+            log.error("좋아요 취소 실패 : {}", e.getMessage());
+            return ResponseEntity.badRequest().body(false);
+        }
     }
 }

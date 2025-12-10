@@ -11,7 +11,7 @@ public interface UserMapper {
     // 사용자 생성
     void insertUser(User user);
     // 사용자 수정
-    void updateUser(User user);
+    int updateUser(User user);
     // 사용자 삭제
     void deleteUser(int userId);
     // id로 사용자 조회

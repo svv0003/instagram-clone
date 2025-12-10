@@ -10,7 +10,7 @@
 // - 기본 경로(/)는 /login으로 리다이렉트
 // ============================================
 
-import React from 'react';
+import React, {useState} from 'react';
 import './App.css';
 import {BrowserRouter, Navigate, Route, Routes} from "react-router-dom"
 import LoginPage from "./pages/LoginPage";
@@ -21,13 +21,21 @@ import UploadPage from "./pages/UploadPage";
 import StoryUploadPage from "./pages/StoryUploadPage";
 import MyFeedPage from "./pages/MyFeedPage";
 import StoryDetailPage from "./pages/StoryDetailPage";
+import EditProfilePage from "./pages/EditProfilePage";
 
 // TODO: 필요한 컴포넌트들을 import 하세요
 
 function App() {
+    const [user, setUser] = useState(() => {
+        const savedUser = localStorage.getItem("user");
+        const token = localStorage.getItem("token");
+        if(savedUser && token) {
+            return JSON.parse(savedUser);
+        }
+    })
+
     return (
         <div>
-            {/* TODO: Router 설정을 완성하세요 */}
             <BrowserRouter>
                 <Routes>
                     <Route path="/" element={<Navigate to="/login" replace/>}/>
@@ -38,6 +46,12 @@ function App() {
                                 <PrivateRoute>
                                     <FeedPage />
                                 </PrivateRoute>}
+                    />
+                    <Route path="/story/detail/:userId"
+                           element={
+                               <PrivateRoute>
+                                   <StoryDetailPage />
+                               </PrivateRoute>}
                     />
                     <Route path="/upload"
                            element={
@@ -57,12 +71,19 @@ function App() {
                                     <MyFeedPage />
                                </PrivateRoute>}
                     />
-                    <Route path="/story/detail/:storyId"
+                    {/*<Route path="/user/:userId"*/}
+                    {/*       element={*/}
+                    {/*            <PrivateRoute>*/}
+                    {/*                <MyFeedPage />*/}
+                    {/*           </PrivateRoute>}*/}
+                    {/*/>*/}
+                    <Route path="profile/edit"
                            element={
                                 <PrivateRoute>
-                                    <StoryDetailPage />
+                                    <EditProfilePage />
                                </PrivateRoute>}
                     />
+
                 </Routes>
             </BrowserRouter>
         </div>

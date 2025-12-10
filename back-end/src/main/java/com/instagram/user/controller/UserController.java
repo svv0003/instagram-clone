@@ -1,6 +1,7 @@
 package com.instagram.user.controller;
 
 import com.instagram.common.util.JwtUtil;
+import com.instagram.post.model.dto.Post;
 import com.instagram.user.model.dto.LoginRequest;
 import com.instagram.user.model.dto.LoginResponse;
 import com.instagram.user.model.dto.User;
@@ -10,6 +11,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+
+import java.util.List;
 
 @Slf4j
 @RestController
@@ -50,5 +53,43 @@ public class UserController {
         loginResponse.setUser(user);
         log.info("로그인 성공 - 이메일: {}", user.getUserEmail());
         return ResponseEntity.ok(loginResponse);
+    }
+
+    @GetMapping("/user/{userId}")
+    public ResponseEntity<User> getPostsByUserId(@PathVariable("userId") int userId) {
+        User user = userService.getUserByUserId(userId);
+        return ResponseEntity.ok(user);
+    }
+
+//    @GetMapping("/profile/edit")
+//    public ResponseEntity<User> getUserProfile(@RequestHeader("Authorization") String authHeader) {
+//        try {
+//            String token = authHeader.substring(7);
+//            int userId = jwtUtil.getUserIdFromToken(token);
+//            User u = userService.getUserByUserId(userId);
+//            if(u != null) {
+//                u.setUserPassword(null);
+//            }
+//            return ResponseEntity.ok(u);
+//        } catch (Exception e) {
+//            log.error("프로필 조회 실패 : {}", e.getMessage());
+//            return ResponseEntity.status(401).body(null);
+//        }
+//    }
+
+    @PutMapping("/profile/edit/{userId}")
+    public ResponseEntity<User> editProfile(@PathVariable("userId") int userId,
+                                            @RequestPart("formData") User user,
+                                            @RequestPart(value = "profileImage", required = false) MultipartFile userAvatar){
+        try {
+            log.info("user : {}", user);
+            user.setUserId(userId);
+            log.info("user : {}", user);
+            log.info("profileImage : {}", userAvatar);
+            User u = userService.updateUser(user, userAvatar);
+            return ResponseEntity.ok(u);
+        } catch (Exception e) {
+            return ResponseEntity.status(500).body(null);
+        }
     }
 }

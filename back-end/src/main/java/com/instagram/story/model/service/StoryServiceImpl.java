@@ -45,16 +45,16 @@ public class StoryServiceImpl implements StoryService {
     @Override
     public Story getStoriesByUserId(int userId) {
         log.info("특정 사용자 스토리 조회 - 사용자ID: {}", userId);
-        Story story = new Story();
+        Story story = storyMapper.selectStoryByUserId(userId);
         return story;
     }
 
-    @Override
-    public Story getStoriesByStoryId(int storyId) {
-        log.info("특정 스토리 조회 - 스토리ID: {}", storyId);
-        Story story = storyMapper.selectStoriesByStoryId(storyId);
-        return story;
-    }
+//    @Override
+//    public Story getStoriesByStoryId(int storyId) {
+//        log.info("특정 스토리 조회 - 스토리ID: {}", storyId);
+//        Story story = storyMapper.selectStoriesByStoryId(storyId);
+//        return story;
+//    }
 
     @Override
     public void deleteExpiredStories() {

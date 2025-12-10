@@ -10,6 +10,6 @@ public interface StoryMapper {
     void insertStory(Story story);
     void updateStory(int storyId, String storyImage);
     List<Story> selectAllStories();
+    Story selectStoryByUserId(int userId);
     Story selectStoriesByStoryId(int StoryId);
-    Story selectStoryById(int userId);
 }

@@ -1,11 +1,18 @@
 package com.instagram.user.model.service;
 
+import com.instagram.common.util.FileUploadService;
+import com.instagram.post.model.dto.Post;
 import com.instagram.user.model.dto.User;
 import com.instagram.user.model.mapper.UserMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.io.IOException;
+import java.util.List;
 
 @Slf4j
 @Service
@@ -14,6 +21,7 @@ public class UserServiceImpl implements UserService {
 
     private final UserMapper userMapper;
     private final BCryptPasswordEncoder passwordEncoder;
+    private final FileUploadService fileUploadService;
 
     @Override
     public void signUp(User user) {
@@ -33,7 +41,7 @@ public class UserServiceImpl implements UserService {
             throw new RuntimeException("이미 존재하는 사용자명입니다.");
         }
         if(user.getUserAvatar() == null || user.getUserAvatar().isEmpty()) {
-            user.setUserAvatar("default-avatar.png");
+            user.setUserAvatar("/static/img/default-avatar.jpg");
         }
         String originPW = user.getUserPassword();
         String encodedPW = passwordEncoder.encode(originPW);
@@ -66,5 +74,48 @@ public class UserServiceImpl implements UserService {
     @Override
     public User getUserByUserName(String userName) {
         return null;
+    }
+
+    @Override
+    public User getUserByUserId(int userId) {
+        return userMapper.selectUserById(userId);
+    }
+
+    @Override
+    @Transactional
+    public User updateUser(User user, MultipartFile file) {
+        log.info("updateUser 시작, user.getUserId: {}",  user.getUserId());
+        User getUserDataFromDB = userMapper.selectUserById(user.getUserId());
+        log.info("getUserDataFromDB : {}", getUserDataFromDB);
+        if(getUserDataFromDB == null) {
+            throw new RuntimeException("사용자 정보를 찾을 수 없습니다.");
+        }
+        log.info("getUserDataFromDB : {}", getUserDataFromDB);
+        if(user == null) return null;
+        log.info("user : {}", user);
+        if(file != null && !file.isEmpty()) {
+            try {
+                log.info("file : {}", file);
+                String imageUrl =
+                        fileUploadService.uploadProfileImage(
+                                file, user.getUserId(), "profile");
+                log.info("imageUrl : {}", imageUrl);
+                getUserDataFromDB.setUserAvatar(imageUrl);
+            } catch (Exception e) {
+                log.error("프로필 수정 문제 발생 : {}", e);
+                return null;
+            }
+        }
+        if(user.getUserName() != null) getUserDataFromDB.setUserName(user.getUserName());
+        if(user.getUserEmail() != null) getUserDataFromDB.setUserEmail(user.getUserEmail());
+        if(user.getUserPassword() != null) getUserDataFromDB.setUserPassword(passwordEncoder.encode(user.getUserPassword()));
+        if(user.getUserFullname() != null) getUserDataFromDB.setUserFullname(user.getUserFullname());
+        log.info("getUserDataFromDB(2) : {}", getUserDataFromDB);
+        int result = userMapper.updateUser(getUserDataFromDB);
+        log.info("result : {}", result);
+        User abc = userMapper.selectUserById(user.getUserId());
+        log.info("user(2) : {}", abc);
+        getUserDataFromDB.setUserPassword(null);
+        return getUserDataFromDB;
     }
 }

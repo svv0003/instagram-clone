@@ -13,6 +13,7 @@ import { useNavigate } from 'react-router-dom';
 import apiService from '../service/apiService';
 import { Heart, MessageCircle, Send, Bookmark, MoreHorizontal, Home, PlusSquare, Film, User } from 'lucide-react';
 import Header from "../components/Header";
+import {getImageUrl} from "../service/commonService";
 
 const FeedPage = () => {
     const [posts, setPosts] = useState([]);
@@ -25,6 +26,7 @@ const FeedPage = () => {
     }, []);
 
     const loadFeedData = async () => {
+        setLoading(true);
         try {
             const postRes = await apiService.getPosts();
             setPosts(postRes);
@@ -44,20 +46,44 @@ const FeedPage = () => {
     };
 
     const toggleLike = async (postId, isLiked) => {
+        /*
+        좋아요 누르면 화면에 반영되지만
+        취소는 백그라운드에서 작업될 뿐 화면에 바로 보이지 않는 상황이다.
+        소비자에게 백엔드 속도는 중요하지 않고, 눈 앞에 보여지는 화면의 속도가 우선이므로
+        프론트엔드에서 바뀌는 작업을 보인 후 백엔드로 로직 진행한다.
+        실패할 경우 카운트 원상 복구 후 소비자에게 전달한다.
+         */
+        /*
+        현재 게시물 목록 복사한다.
+        클릭한 게시물이 몇 번째인지 찾는다.
+        게시물 찾았다면 좋아요 상태를 반대로 뒤집는다 (true -> false)
+        숫자 취소는 -1, 추가는 +1
+        변경된 상태로 화면에 반영한다.
+         */
+        const newPosts = [...posts];
+        const targetIndex = newPosts.findIndex(post => post.postId === postId);
+        if(targetIndex !== -1) {
+            newPosts[targetIndex].isLiked = !isLiked;
+            if(isLiked) --newPosts[targetIndex].likeCount;
+            else ++newPosts[targetIndex].likeCount;
+            setPosts(newPosts);
+        }
         try {
             if (isLiked) {
                 await apiService.removeLike(postId);
             } else {
                 await apiService.addLike(postId);
             }
+            /*
+            기존에는 백엔드에서 프론트엔드로 변경했다면
+            수정내용은 프론트엔드에서 백엔드 로직
             const postsData = await apiService.getPosts();
             setPosts(postsData);
+             */
         } catch (error) {
             alert("좋아요 처리에 실패했습니다.");
         }
     };
-
-
 
     if (loading) {
         return (
@@ -72,21 +98,25 @@ const FeedPage = () => {
     return (
         <div className="feed-container">
             <Header />
-
             <div className="feed-content">
                 {stories.length > 0 && (
                     <div className="stories-container">
                         <div className="stories-wrapper">
-                            {stories.map((story => (
+                            {stories.map((story) => (
                                 <div key={story.storyId}
                                      className="story-item"
-                                     onClick={() => navigate(`/story/detail/${story.storyId}`)}>
-                                    <div className="story-avatar-wrapper" key={story.id}>
-                                        <img src={story.userAvatar} className="story-avatar"/>
+                                     onClick={() =>
+                                         navigate(`/story/detail/${story.userId}`)}>
+                                    <div className="story-avatar-wrapper"
+                                         key={story.id}>
+                                        <img src={story.userAvatar}
+                                             className="story-avatar"/>
                                     </div>
-                                    <span className="story-username">{story.userName}</span>
+                                    <span className="story-username">
+                                        {story.userName}
+                                    </span>
                                 </div>
-                            )))}
+                            ))}
                         </div>
                     </div>
                 )}
@@ -103,7 +133,7 @@ const FeedPage = () => {
                                 <MoreHorizontal className="post-more-icon" />
                             </div>
 
-                            <img src={post.postImage} className="post-image" />
+                            <img src={getImageUrl(post.postImage)} className="post-image" />
                             <div className="post-content">
                                 <div className="post-actions">
                                     <div className="post-actions-left">

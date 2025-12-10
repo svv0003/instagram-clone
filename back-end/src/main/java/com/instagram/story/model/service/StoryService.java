@@ -10,6 +10,6 @@ public interface StoryService {
     Story createStory(int userId, MultipartFile storyImage) throws IOException;
     List<Story> getAllStories();
     Story getStoriesByUserId(int userId);
-    Story getStoriesByStoryId(int storyId);
+//    Story getStoriesByStoryId(int storyId);
     void deleteExpiredStories();
 }
