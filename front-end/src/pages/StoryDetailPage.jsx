@@ -65,14 +65,16 @@ const StoryDetail = () => {
             setStoryData(res);
         } catch (error) {
             alert("스토리를 불러오는데 실패했습니다.");
-            navigate('/feed');
+            //navigate('/feed');
         } finally {
             setLoading(false);
         }
     }
 
     useEffect(() => {
-        if(!storyData) return navigate('/feed');
+        if (!storyData || loading) {
+            return;
+        }
         const duration = 5000;
         const intervalTime = 50;
         const timer = setInterval(() => {
@@ -87,7 +89,7 @@ const StoryDetail = () => {
             });
         }, intervalTime);
         return () => clearInterval(timer);
-    }, [navigate]);
+    }, [navigate, storyData, loading]);
 
 
     if(loading) return <div>로딩중</div>;

@@ -17,6 +17,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+@Slf4j
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/stories")
@@ -56,7 +57,9 @@ public class StoryController {
     @GetMapping("/user/{userId}")
     public ResponseEntity<?> getStory(@PathVariable("userId") int userId){
         try{
+            log.info("user : {}", userId);
             Story a = storyService.getStoriesByUserId(userId);
+            log.info("Story a : {}", a);
             return  ResponseEntity.ok(a);
         } catch (Exception e){
             return ResponseEntity.badRequest().body("스토리 조회 실패 : "+e.getMessage());
