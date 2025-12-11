@@ -39,7 +39,7 @@ public class JwtUtil {
      * JWT 토큰 생성
      * 토큰 형태는 32lk2ew4ara3sl43asd34iwl4ejf 이와 같은 형식으로 생성된다.
      */
-    public String generageToken(int userId, String userEmail) {
+    public String generateToken(int userId, String userEmail) {
         Date now = new Date();                                      // 현재시간
         Date validity = new Date(now.getTime() + expirationTime);   // 현재시간 기준 +24시간 유효기간 설정
         return Jwts.builder()

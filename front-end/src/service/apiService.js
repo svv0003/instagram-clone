@@ -230,6 +230,15 @@ const apiService = {
         return res.data;
     },
 
+    // deleteStory: async (userId, storyId) => {
+    deleteStory: async (storyId) => {
+        // console.log("userId : ", userId);
+        console.log("storyId : ", storyId);
+        // const res = await api.delete(`/stories/${userId}/${storyId}`);
+        const res = await api.delete(`/stories/${storyId}`);
+      // return res.data
+    },
+
     // ===== 사용자 API =====
 
     // TODO: 사용자 프로필 조회

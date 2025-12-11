@@ -45,6 +45,33 @@ const FeedPage = () => {
         }
     };
 
+    // /**
+    //  * 사용자별로 스토리를 그룹화하고 가장 최근 스토리만 반환한다.
+    //  * select * from story 에서 가져온 모든 데이터를  storiesData 변수에 전달
+    //  * @param storiesData
+    //  * @returns {unknown[]}
+    //  */
+    // const groupStoriesByUser = (storiesData) => {
+    //     const userStoriesMap = {}; // 추후 유저들을 그룹화해서 담을 변수 공간
+    //     // db에서 가져온 모든 스토리를 for 문으로 순회
+    //     storiesData.forEach(story => {
+    //         const userId = story.userId; // 각 스토리에 해당하는 유저 아이디를 변수이름에 담아
+    //         // 해당 사용자의 첫 스토리이거나, 더 최근 스토리인 경우 스토리 유저 나열 순서를 맨 앞으로 이동
+    //         // 정렬 = 알고리즘
+    //         if (!userStoriesMap[userId]
+    //             ||
+    //             new Date(story.createdAt) > new Date(userStoriesMap[userId].createdAt)
+    //         ) {
+    //             userStoriesMap[userId] = story;
+    //         }
+    //     });
+    //     // 위에서 그룹화한 userStoriesMap 유저들을 배열로 변환하고 최신순으로 정렬
+    //     // 정렬 = 알고리즘
+    //     return Object.values(userStoriesMap).sort((a, b) =>
+    //         new Date(b.createdAt) - new Date(a.createdAt)
+    //     );
+    // }
+
     const toggleLike = async (postId, isLiked) => {
         /*
         좋아요 누르면 화면에 반영되지만
@@ -103,7 +130,7 @@ const FeedPage = () => {
                     <div className="stories-container">
                         <div className="stories-wrapper">
                             {stories.map((story) => (
-                                <div key={story.storyId}
+                                <div key={story.userId}
                                      className="story-item"
                                      onClick={() =>
                                          navigate(`/story/detail/${story.userId}`)}>

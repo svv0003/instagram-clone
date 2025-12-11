@@ -9,39 +9,34 @@
 // - 입력값 검증 (이메일 형식, 사용자명 규칙, 비밀번호 길이)
 // ============================================
 
-import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import React, {useEffect, useState} from 'react';
+import {useLocation, useNavigate} from 'react-router-dom';
 import apiService from '../service/apiService';
 
 const SignupPage = () => {
-    // TODO: username state를 선언하세요 (user_name)
-    const [username, setUsername] = useState('');
-
-    // TODO: email state를 선언하세요 (user_email)
-    const [email, setEmail] = useState('');
-
-    // TODO: password state를 선언하세요 (user_password)
-    const [password, setPassword] = useState('');
-
-    // TODO: fullName state를 선언하세요 (user_fullname)
-    const [fullName, setFullName] = useState('');
-
-    // TODO: loading state를 선언하세요
-    const [loading, setLoading] = useState(false);
-
-    // TODO: useNavigate를 사용하여 navigate 함수를 가져오세요
+    const location = useLocation();
     const navigate = useNavigate();
 
-    // TODO: handleSignup 함수를 작성하세요
-    // 1. 입력값 검증 (모든 필드가 비어있는지 확인)
-    // 2. 이메일 형식 검증 (정규식 사용)
-    // 3. 사용자명 규칙 검증 (영문, 숫자, 밑줄, 마침표만 허용, 3-50자)
-    // 4. 비밀번호 길이 검증 (최소 6자)
-    // 5. loading을 true로 설정
-    // 6. apiService.signup(username, email, password, fullName) 호출
-    // 7. 성공 시: alert로 성공 메시지, /login으로 이동
-    // 8. 실패 시: alert로 에러 메시지 표시 (409: 중복, 400: 잘못된 입력)
-    // 9. finally: loading을 false로 설정
+    const [email, setEmail] = useState('');
+    const [username, setUsername] = useState('');
+    const [password, setPassword] = useState('');
+    const [fullName, setFullName] = useState('');
+    const [loading, setLoading] = useState(false);
+    const [isKakaoSignup, setIsKakaoSignup] = useState(false);
+
+    useEffect(() => {
+        if(location.state?.email) {
+            // 카카오에서 넘어온 정보로 email, username, fullName 작성하기
+            setEmail(location.state.email);
+            setUsername(location.state.name);
+            setFullName(location.state.nickname);
+            setIsKakaoSignup(true);
+        }
+    }, [location.state])
+
+    console.log("kakao email : ", location.state?.email);
+    console.log("kakao state : ", location.state);
+
     const handleSignup = async () => {
         // TODO: 함수를 완성하세요
         try {
@@ -63,7 +58,6 @@ const SignupPage = () => {
         }
     };
 
-    // TODO: Enter 키 입력 시 handleSignup 호출하는 함수 작성
     const handleKeyPress = (e) => {
         if (e.key === 'Enter') {
             handleSignup();
@@ -111,13 +105,6 @@ const SignupPage = () => {
                     </div>
 
                     <div>
-                        {/* TODO: 이메일 입력 input 작성 (user_email - UNIQUE) */}
-                        {/* placeholder: "휴대폰 번호 또는 이메일 주소" */}
-                        {/* type: "email" */}
-                        {/* value: email */}
-                        {/* onChange: setEmail */}
-                        {/* onKeyPress: handleKeyPress */}
-                        {/* autoComplete: "email" */}
                         {
                             /*
                             매개변수가 1개인 경우에는 소괄호 제거 가능
@@ -133,52 +120,31 @@ const SignupPage = () => {
                         }
                         <input className="login-input"
                                type="email"
-                               placeholder="연락처 또는 이메일 주소"
+                               placeholder={location.state?.email || "연락처 또는 이메일 주소"}
                                value={email}
                                onChange={(e) => setEmail(e.target.value)}
                                onKeyPress={handleKeyPress}
                                autoComplete="email"
+                               disabled={isKakaoSignup}
                         />
-
-                        {/* TODO: 성명 입력 input 작성 (user_fullname) */}
-                        {/* placeholder: "성명" */}
-                        {/* type: "text" */}
-                        {/* value: fullName */}
-                        {/* onChange: setFullName */}
-                        {/* onKeyPress: handleKeyPress */}
-                        {/* autoComplete: "name" */}
                         <input className="login-input"
                                type="text"
-                               placeholder="성명"
+                               placeholder={location.state?.name || "성명"}
                                value={fullName}
                                onChange={(e) => setFullName(e.target.value)}
                                onKeyPress={handleKeyPress}
                                autoComplete="name"
+                               disabled={isKakaoSignup}
                         />
-
-                        {/* TODO: 사용자 이름 입력 input 작성 (user_name - UNIQUE) */}
-                        {/* placeholder: "사용자 이름" */}
-                        {/* type: "text" */}
-                        {/* value: username */}
-                        {/* onChange: setUsername */}
-                        {/* onKeyPress: handleKeyPress */}
-                        {/* autoComplete: "username" */}
                         <input className="login-input"
                                type="text"
-                               placeholder="사용자 이름"
+                               placeholder={location.state?.nickname || "사용자 이름"}
                                value={username}
                                onChange={(e) => setUsername(e.target.value)}
                                onKeyPress={handleKeyPress}
                                autoComplete="username"
+                               disabled={isKakaoSignup}
                         />
-
-                        {/* TODO: 비밀번호 입력 input 작성 (user_password) */}
-                        {/* placeholder: "비밀번호" */}
-                        {/* type: "password" */}
-                        {/* value: password */}
-                        {/* onChange: setPassword */}
-                        {/* onKeyPress: handleKeyPress */}
-                        {/* autoComplete: "new-password" */}
                         <input className="login-input"
                                type="password"
                                placeholder="비밀번호"
@@ -187,13 +153,6 @@ const SignupPage = () => {
                                onKeyPress={handleKeyPress}
                                autoComplete="new-password"
                         />
-
-                        {/* TODO: 가입 버튼 작성 */}
-                        {/* className: login-button */}
-                        {/* onClick: handleSignup */}
-                        {/* disabled: loading */}
-                        {/* 버튼 텍스트: loading이면 "가입 중...", 아니면 "가입" */}
-                        {/* 스타일: loading일 때 opacity 0.7, cursor not-allowed */}
                         <button className="login-button"
                                 onClick={() => handleSignup()}
                                 disabled={loading}
@@ -211,7 +170,8 @@ const SignupPage = () => {
                         lineHeight: '1.5',
                         padding: '0 1rem'
                     }}>
-                        가입하면 Instagram의 <strong style={{ fontWeight: 600 }}>약관</strong>, <strong style={{ fontWeight: 600 }}>데이터 정책</strong> 및<br />
+                        가입하면 Instagram의 <strong style={{ fontWeight: 600 }}>약관</strong>,
+                        <strong style={{ fontWeight: 600 }}>데이터 정책</strong> 및<br />
                         <strong style={{ fontWeight: 600 }}>쿠키 정책</strong>에 동의하게 됩니다.
                     </p>
                 </div>

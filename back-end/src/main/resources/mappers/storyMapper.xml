@@ -18,27 +18,43 @@
         WHERE story_id = #{storyId}
     </update>
 
+    <delete id="deleteStory" parameterType="int">
+        DELETE FROM stories
+        WHERE story_id = #{storyId}
+    </delete>
+
     <!-- 스토리 조회 -->
     <select id="selectAllStories" resultType="Story">
         SELECT story_id, user_id, story_image, created_at, user_name, user_avatar
         FROM active_stories_view
     </select>
 
-    <!-- 특정 사용자 스토리 조회 -->
+    <!-- 24시간 이내 스토리 계정 조회 -->
+    <select id="selectAllStoriesForOneDay" resultType="Story">
+        SELECT DISTINCT ON (user_id)
+        user_id,
+        user_name,
+        user_avatar,
+        created_at
+        FROM active_stories_view
+        WHERE created_at >= NOW() - INTERVAL '1 day'
+        ORDER BY user_id, created_at DESC
+    </select>
+
+    <!-- 24시간 이내 특정 사용자 스토리 조   회 -->
     <select id="selectStoriesByUserId" resultType="Story" parameterType="int">
         SELECT story_id, user_id, story_image, created_at, user_name, user_avatar
         FROM active_stories_view
-        WHERE user_id = #{userId}
+        WHERE created_at >= NOW() - INTERVAL '1 day'
+          AND user_id = #{userId}
+        ORDER BY created_at ASC
     </select>
 
     <!-- 특정 스토리 조회 -->
-    <select id="selectStoriesByStoryId" resultType="Story" parameterType="int">
-        SELECT story_id, user_id, story_image, created_at, user_name, user_avatar
-        FROM active_stories_view
+    <select id="selectStoryByStoryId" resultType="Story" parameterType="int">
+        SELECT story_id, story_image
+        FROM stories
         WHERE story_id = #{storyId}
     </select>
 
-    <!--
-
-    -->
 </mapper>

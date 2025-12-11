@@ -57,9 +57,7 @@ public class StoryController {
     @GetMapping("/user/{userId}")
     public ResponseEntity<?> getStory(@PathVariable("userId") int userId){
         try{
-            log.info("user : {}", userId);
-            Story a = storyService.getStoriesByUserId(userId);
-            log.info("Story a : {}", a);
+            List<Story> a = storyService.getStoriesByUserId(userId);
             return  ResponseEntity.ok(a);
         } catch (Exception e){
             return ResponseEntity.badRequest().body("스토리 조회 실패 : "+e.getMessage());
@@ -75,4 +73,27 @@ public class StoryController {
 //            return ResponseEntity.badRequest().body("스토리 조회 실패 : "+e.getMessage());
 //        }
 //    }
+
+//    @DeleteMapping("/{userId}/{storyId}")
+    @DeleteMapping("/{storyId}")
+    public ResponseEntity<?> deleteStory(
+//            @RequestHeader("Authorization") String token,
+//            @PathVariable int userId,
+            @PathVariable int storyId){
+        try {
+            log.info("삭제 시도");
+//            String jwtToken = token.substring(7);
+//            int loginUserId = jwtUtil.getUserIdFromToken(jwtToken);
+//            log.info("loginUserId : {}, story.getUserId : {} ", loginUserId, userId);
+//            if(loginUserId != userId) {
+//                log.info("본인 스토리 아닙니다.");
+//                return ResponseEntity.badRequest().body("본인 스토리만 삭제 가능하니다.");
+//            }
+            log.info("스토리 삭제 서비스 시도.");
+            storyService.deleteStory(storyId);
+            return  ResponseEntity.ok(true);
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body("스토리 조회 실패 : " + e.getMessage());
+        }
+    }
 }

@@ -9,7 +9,8 @@ import java.util.List;
 public interface StoryService {
     Story createStory(int userId, MultipartFile storyImage) throws IOException;
     List<Story> getAllStories();
-    Story getStoriesByUserId(int userId);
+    List<Story> getStoriesByUserId(int userId);
 //    Story getStoriesByStoryId(int storyId);
     void deleteExpiredStories();
+    void deleteStory(int storyId);
 }

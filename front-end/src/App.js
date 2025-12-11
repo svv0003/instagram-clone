@@ -22,15 +22,22 @@ import StoryUploadPage from "./pages/StoryUploadPage";
 import MyFeedPage from "./pages/MyFeedPage";
 import StoryDetailPage from "./pages/StoryDetailPage";
 import EditProfilePage from "./pages/EditProfilePage";
+import KakaoCallback from "./pages/KakaoCallback";
 
 // TODO: 필요한 컴포넌트들을 import 하세요
 
 function App() {
     const [user, setUser] = useState(() => {
-        const savedUser = localStorage.getItem("user");
-        const token = localStorage.getItem("token");
-        if(savedUser && token) {
-            return JSON.parse(savedUser);
+        try {
+            const savedUser = localStorage.getItem("user");
+            const token = localStorage.getItem("token");
+            if(savedUser && token) {
+                return JSON.parse(savedUser);
+            }
+            return null;
+        } catch (err) {
+            localStorage.removeItem("user");
+            localStorage.removeItem("token");
         }
     })
 
@@ -41,6 +48,7 @@ function App() {
                     <Route path="/" element={<Navigate to="/login" replace/>}/>
                     <Route path="/login" element={<LoginPage />}/>
                     <Route path="/signup" element={<SignupPage />}/>
+                    <Route path="/auth/kakao/callback" element={<KakaoCallback />}/>
                     <Route path="/feed"
                            element={
                                 <PrivateRoute>
