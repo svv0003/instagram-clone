@@ -2,6 +2,7 @@ package com.instagram.user.model.mapper;
 
 import com.instagram.user.model.dto.User;
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 
@@ -24,4 +25,14 @@ public interface UserMapper {
     User selectUserByUserPassword(String userPassword);
     // 모든 사용자 조회
     List<User> selectAllUsers();
+
+    /**
+     * 유저 이름으로 검색
+     */
+    List<User> searchUsersByUserName(@Param("query") String query);
+
+    /**
+     * 유저네임으로 정확히 일치하는 유저 조회
+     */
+    User selectUserByUserNameExact(String userName);
 }

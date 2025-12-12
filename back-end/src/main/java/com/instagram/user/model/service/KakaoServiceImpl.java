@@ -59,6 +59,9 @@ public class KakaoServiceImpl {
 
     public User getKakaoUserInfo(String accessToken) {
         HttpHeaders headers = new HttpHeaders();
+        /*
+        스킴과 토큰을 구분하기 위한 구분자로 반드시 Bearer 뒤에 띄어쓰기 포함해야 한다.
+         */
         headers.add("Authorization", "Bearer " + accessToken);
         headers.add("Content-type", "application/x-www-form-urlencoded;charset=utf-8");
 

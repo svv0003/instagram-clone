@@ -8,12 +8,14 @@
 // - handleLogout 함수: 확인 후 로그아웃
 // ============================================
 
-import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import React, {useState, useEffect} from 'react';
+import {useNavigate} from 'react-router-dom';
 import apiService from '../service/apiService';
-import { Heart, MessageCircle, Send, Bookmark, MoreHorizontal, Home, PlusSquare, Film, User } from 'lucide-react';
+import {Heart, MessageCircle, Send, Bookmark, MoreHorizontal} from 'lucide-react';
 import Header from "../components/Header";
 import {getImageUrl} from "../service/commonService";
+import MentionInput from "./MentionInput";
+import MentionText from "./MentionText";
 
 const FeedPage = () => {
     const [posts, setPosts] = useState([]);
@@ -124,7 +126,8 @@ const FeedPage = () => {
 
     return (
         <div className="feed-container">
-            <Header />
+            <Header/>
+
             <div className="feed-content">
                 {stories.length > 0 && (
                     <div className="stories-container">
@@ -132,11 +135,11 @@ const FeedPage = () => {
                             {stories.map((story) => (
                                 <div key={story.userId}
                                      className="story-item"
-                                     onClick={() =>
-                                         navigate(`/story/detail/${story.userId}`)}>
+                                     onClick={() => navigate(`/story/detail/${story.userId}`)}
+                                >
                                     <div className="story-avatar-wrapper"
                                          key={story.id}>
-                                        <img src={story.userAvatar}
+                                        <img src={getImageUrl(story.userAvatar)}
                                              className="story-avatar"/>
                                     </div>
                                     <span className="story-username">
@@ -148,19 +151,18 @@ const FeedPage = () => {
                     </div>
                 )}
 
-
                 {posts.length > 0 && (
                     posts.map((post) => (
                         <article key={post.postId} className="post-card">
                             <div className="post-header">
                                 <div className="post-user-info">
-                                    <img src={post.userAvatar} className="post-user-avatar"/>
+                                    <img src={getImageUrl(post.userAvatar)} className="post-user-avatar"/>
                                     <span className="post-username">{post.userName}</span>
                                 </div>
-                                <MoreHorizontal className="post-more-icon" />
+                                <MoreHorizontal className="post-more-icon"/>
                             </div>
 
-                            <img src={getImageUrl(post.postImage)} className="post-image" />
+                            <img src={post.postImage} className="post-image"/>
                             <div className="post-content">
                                 <div className="post-actions">
                                     <div className="post-actions-left">
@@ -169,10 +171,10 @@ const FeedPage = () => {
                                             onClick={() => toggleLike(post.postId, post.isLiked)}
                                             fill={post.isLiked ? "#ed4956" : "none"}
                                         />
-                                        <MessageCircle className="action-icon" />
-                                        <Send className="action-icon" />
+                                        <MessageCircle className="action-icon"/>
+                                        <Send className="action-icon"/>
                                     </div>
-                                    <Bookmark className="action-icon" />
+                                    <Bookmark className="action-icon"/>
                                 </div>
 
                                 <div className="post-likes">
@@ -181,30 +183,21 @@ const FeedPage = () => {
 
                                 <div className="post-caption">
                                     <span className="post-caption-username">{post.userName}</span>
-                                    {post.postCaption}
+                                    <MentionText text={post.postCaption} />
+                                    {/*{post.postCaption}*/}
                                 </div>
+
                                 {post.commentCount > 0 && (
                                     <button className="post-comments-btn">
                                         댓글{post.commentCount}개 모두 보기
                                     </button>
                                 )}
                                 <div className="post-time">
-                                    {post.createdAt ||'방금 전'}
+                                    {post.createdAt || '방금 전'}
                                 </div>
                             </div>
                         </article>
                     ))
-                )}
-                {posts.length === 0 && !loading && (
-                    <div className="no-posts-message">
-                        <p>게시물이 없습니다. 새로운 콘텐츠를 등록하거나 팔로우해보세요!</p>
-                        <button onClick={() => navigate('/upload')}
-                                style={{ marginTop: '10px' }}
-                        >
-                            <PlusSquare size={16} style={{ marginRight: '5px' }} />
-                            새 게시물 등록
-                        </button>
-                    </div>
                 )}
             </div>
         </div>

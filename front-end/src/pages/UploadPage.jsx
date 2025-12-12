@@ -1,25 +1,22 @@
 import React, {useState} from 'react';
 import {useNavigate} from 'react-router-dom';
 import apiService from '../service/apiService';
-import {ArrowLeft, Image} from 'lucide-react';
+import {Image} from 'lucide-react';
 import {getFilteredFile, FILTER_OPTIONS} from "../service/filterService";
-import * as filterService from "../service/filterService";
 import Header from "../components/Header";
+import MentionInput from "./MentionInput";
 
-/*
-필요에 따라 소비자가 업로드한 이미지를 리사이즈 처리화 할 수 있다.
-10MB 이미지를 8MB 이하 이미지로 사이즈 축소, 크기 축소!
- */
+
 const UploadPage = () => {
     const [selectedImage, setSelectedImage] = useState(null);
     const [imagePreview, setImagePreview] = useState(null);
     const [caption, setCaption] = useState('');
     const [location, setLocation] = useState('');
     const [loading, setLoading] = useState(false);
-    const [selectedFilterName, setSelectedFilterName] = useState('Original');
     const [selectedFilter, setSelectedFilter] = useState('none');
+
     const navigate = useNavigate();
-    const user = JSON.parse(localStorage.getItem('user') || {});
+    const user = JSON.parse(localStorage.getItem('user') || '{}');
 
     const handleImageChange = (e) => {
         const f = e.target.files[0];
@@ -28,7 +25,7 @@ const UploadPage = () => {
             const reader = new FileReader();
             reader.onloadend = () => {
                 setImagePreview(reader.result);
-                setSelectedFilter('none');  // 이미지 변경 시 필터 초기화
+                setSelectedFilter('none');
             };
             reader.readAsDataURL(f);
         }
@@ -40,11 +37,12 @@ const UploadPage = () => {
             return;
         }
         try {
+            console.log("caption : ", caption);
             setLoading(true);
-            const uploadFile = await getFilteredFile(selectedImage, selectedFilter, selectedFilterName);
-            await apiService.createPost(uploadFile, caption, location);
+            const filteredImage = await getFilteredFile(selectedImage, selectedFilter);
+            await apiService.createPost(filteredImage, caption, location);
             alert("게시물이 성공적으로 등록되었습니다.");
-            navigate("/feed");
+            navigate("/feed")
         } catch (err) {
             alert("게시물 등록에 실패했습니다.");
         } finally {
@@ -52,28 +50,28 @@ const UploadPage = () => {
         }
     };
 
-    const handleLocationChange = () =>{
+    const handleLocationChange = () => {
         const loc = prompt('위치를 입력하세요.');
         if(loc) setLocation(loc);
     }
 
-// <img class="upload-user-avatar" src="default-avatar.png">
-    // user.userAvatar 로 가져온 이미지가 엑스 박스일 때
-
-    const avatarImage =
-        user.userAvatar && user.userAvatar.trim() !== ''?
+    const avatarImage = user.userAvatar && user.userAvatar.trim() !== ''?
         user.userAvatar : '/static/img/default-avatar.jpg';
+
     const handleAvatarError = (e) => {
         e.target.src ='/static/img/default-avatar.jpg';
     }
+
     return (
         <div className="upload-container">
-            <Header type="upload"
-                    title="새 게시물"
-                    onSubmit={handlePost}
-                    submitDisabled={!selectedImage || !caption.trim()}
-                    loading={loading}
-                    submitText={"공유"}/>
+            <Header
+                type="upload"
+                title="새 게시물"
+                onSubmit={handlePost}
+                submitDisabled={!selectedImage || !caption.trim()}
+                loading={loading}
+                submitText={"공유"} />
+
             <div className="upload-content">
                 <div className="upload-card">
                     <div className="upload-image-area">
@@ -87,12 +85,9 @@ const UploadPage = () => {
                                 <div className="filter-scroll-container">
                                     {FILTER_OPTIONS.map((option) => (
                                         <div key={option.name}
-                                             className={`filter-item 
-                                             ${selectedFilter === option.filter ? 'active' : ''}`}
-                                             onClick={() => {
-                                                 setSelectedFilterName(option.name);
-                                                 setSelectedFilter(option.filter);
-                                             }}
+                                             className={`filter-item
+                                                ${selectedFilter === option.filter ?'active':''}  `}
+                                             onClick={() => setSelectedFilter(option.filter)}
                                         >
                                             <span className="filter-name">{option.name}</span>
                                             <div className="filter-thumbnail"
@@ -100,8 +95,7 @@ const UploadPage = () => {
                                                      backgroundImage:`url(${imagePreview})`,
                                                      filter: option.filter,
                                                  }}
-                                            >
-                                            </div>
+                                            />
                                         </div>
                                     ))}
                                 </div>
@@ -121,16 +115,14 @@ const UploadPage = () => {
                                 <span className="upload-text">
                                     사진을 선택하세요.
                                 </span>
-                                <span className="upload-select-btn">
-                                    컴퓨터에서 선택
-                                </span>
+
                                 <input type="file"
                                        accept="image/*"
                                        onChange={handleImageChange}
                                        className="upload-file-input"
                                 />
-                            </label>
-                        )}
+                            </label>)
+                        }
                     </div>
 
                     <div className="upload-caption-area">
@@ -138,12 +130,20 @@ const UploadPage = () => {
                             <img className="upload-user-avatar"
                                  src={avatarImage}
                                  onError={handleAvatarError}
-                                 alt="avatar image"/>
+                            />
                             <div className="upload-caption-right">
                                 <div className="upload-username">
                                     {user.userName}
-
                                 </div>
+
+                                <MentionInput
+
+                                    value={caption}
+                                    onChange={setCaption}
+                                    placeholder="문구를 입력하세요... (@로 사용자 태그)"
+                                    rows={4}
+                                />
+                                {/*
                                 <textarea
                                     placeholder="문구를 입력하세요..."
                                     value={caption}
@@ -151,7 +151,8 @@ const UploadPage = () => {
                                     rows={4}
                                     className="upload-caption-input"
                                 />
-                                <div className="upload-caption-content">
+                                    */}
+                                <div className="upload-caption-count">
                                     {caption.length}/2,200
                                 </div>
                             </div>

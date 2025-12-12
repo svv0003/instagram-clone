@@ -57,4 +57,35 @@
         WHERE user_id = #{userId}
     </delete>
 
+    <!-- 유저 이름으로 검색 -->
+    <select id="searchUsersByUserName" parameterType="String" resultType="User">
+        SELECT
+            user_id,
+            user_name,
+            user_fullname,
+            user_email,
+            user_avatar,
+            created_at,
+            updated_at
+        FROM users
+        WHERE user_name LIKE CONCAT('%', #{query}, '%')
+        ORDER BY user_name ASC
+        LIMIT 10
+    </select>
+
+    <!-- 유저네임으로 정확히 일치하는 유저 조회 -->
+    <select id="selectUserByUserNameExact" parameterType="String" resultType="User">
+        SELECT
+            user_id,
+            user_name,
+            user_fullname,
+            user_email,
+            user_avatar,
+            created_at,
+            updated_at
+        FROM users
+        WHERE user_name = #{userName}
+    </select>
+
+
 </mapper>

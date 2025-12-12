@@ -84,7 +84,9 @@ const apiService = {
     // TODO: 로그아웃 함수
     // localStorage에서 token과 user 제거하고 /login으로 이동
     logout: () => {
-        // TODO: 로그아웃 로직을 완성하세요
+        localStorage.removeItem("token");
+        localStorage.removeItem("user");
+        window.location.href = '/login';
     },
 
     // ===== 게시물 API =====
@@ -310,6 +312,30 @@ const apiService = {
             return res.data;
         } catch (e) {
             alert("회원정보 수정 실패 : {}", e);
+        }
+    },
+    // TODO 1: 유저 검색 API 호출 함수 구현
+    // GET /api/users/search?q={query}
+    searchUsers: async (query) => {
+        // const res = await api.get(`/api/users/search?q=${encodeURIComponent(query) }`);
+        try {
+            const res = await api.get(`/users/search?q=${query}`);
+            return res.data;
+        } catch (err) {
+            console.error("유저 검색 실패",err);
+            return [];
+        }
+    },
+
+    // TODO 2: 유저네임으로 유저 조회 API 호출 함수 구현
+    // GET /api/users/username/{username}
+    getUserByUsername: async (username) => {
+        try {
+            const res = await api.get(`/users/username/${username}`);
+            return res.data;
+        }catch(err) {
+            console.error("유저 조회 실패",err);
+            return null;
         }
     },
 };

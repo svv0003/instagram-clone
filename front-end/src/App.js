@@ -48,6 +48,11 @@ function App() {
                     <Route path="/" element={<Navigate to="/login" replace/>}/>
                     <Route path="/login" element={<LoginPage />}/>
                     <Route path="/signup" element={<SignupPage />}/>
+                    {/*
+                    클라이언트로부터 받은 동의를 기반으로
+                    백엔드에서 카카오톡 토큰을 전달받는 작업을 수행하기 위해
+                    클라이언트를 잠시 대시기키는 장소이다.
+                    */}
                     <Route path="/auth/kakao/callback" element={<KakaoCallback />}/>
                     <Route path="/feed"
                            element={

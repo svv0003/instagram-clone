@@ -1,7 +1,6 @@
 package com.instagram.user.model.service;
 
 import com.instagram.common.util.FileUploadService;
-import com.instagram.post.model.dto.Post;
 import com.instagram.user.model.dto.User;
 import com.instagram.user.model.mapper.UserMapper;
 import lombok.RequiredArgsConstructor;
@@ -11,7 +10,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.IOException;
+import java.lang.reflect.Array;
+import java.util.ArrayList;
 import java.util.List;
 
 @Slf4j
@@ -72,11 +72,6 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public User getUserByUserName(String userName) {
-        return null;
-    }
-
-    @Override
     public User getUserByUserId(int userId) {
         return userMapper.selectUserById(userId);
     }
@@ -118,4 +113,29 @@ public class UserServiceImpl implements UserService {
         getUserDataFromDB.setUserPassword(null);
         return getUserDataFromDB;
     }
+
+    // TODO 7: searchUsers 메서드 구현
+    @Override
+    public List<User> searchUsers(String query) {
+        if(query == null || query.isEmpty()) {
+            return new ArrayList<>();
+        }
+        try {
+            return userMapper.searchUsersByUserName(query);
+        } catch (Exception e) {
+            log.error("유저명으로 조회 중 오류 발생 : {}", e.getMessage());
+            return new ArrayList<>();
+        }
+    }
+
+    @Override
+    public User getUserByUserName(String userName) {
+        try {
+            return userMapper.selectUserByUserNameExact(userName);
+        } catch (Exception e) {
+            log.error("유저네임으로 유저 조회 중 오류 발생 : {}", e.getMessage());
+            return null;
+        }
+    }
+
 }

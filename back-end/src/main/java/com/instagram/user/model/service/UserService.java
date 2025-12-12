@@ -4,6 +4,7 @@ import com.instagram.user.model.dto.User;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.util.List;
 
 public interface UserService {
 
@@ -13,4 +14,5 @@ public interface UserService {
     User getUserByUserName(String userName);
     User getUserByUserId(int userId);
     User updateUser(User user, MultipartFile file) throws IOException;
+    List<User> searchUsers(String query);
 }

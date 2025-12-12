@@ -16,7 +16,6 @@ import apiService from '../service/apiService';
 const SignupPage = () => {
     const location = useLocation();
     const navigate = useNavigate();
-
     const [email, setEmail] = useState('');
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
@@ -26,19 +25,15 @@ const SignupPage = () => {
 
     useEffect(() => {
         if(location.state?.email) {
-            // 카카오에서 넘어온 정보로 email, username, fullName 작성하기
             setEmail(location.state.email);
             setUsername(location.state.name);
             setFullName(location.state.nickname);
             setIsKakaoSignup(true);
         }
     }, [location.state])
-
     console.log("kakao email : ", location.state?.email);
     console.log("kakao state : ", location.state);
-
     const handleSignup = async () => {
-        // TODO: 함수를 완성하세요
         try {
             const response = await apiService.signup(username, email, password, fullName);
             alert("회원가입이 완료되었습니다. 로그인해주세요.");
@@ -145,14 +140,16 @@ const SignupPage = () => {
                                autoComplete="username"
                                disabled={isKakaoSignup}
                         />
-                        <input className="login-input"
+                        {!isKakaoSignup && (
+                            <input className="login-input"
                                type="password"
                                placeholder="비밀번호"
                                value={password}
                                onChange={(e) => setPassword(e.target.value)}
                                onKeyPress={handleKeyPress}
                                autoComplete="new-password"
-                        />
+                            />
+                        )}
                         <button className="login-button"
                                 onClick={() => handleSignup()}
                                 disabled={loading}
