@@ -35,7 +35,7 @@ const MyFeedPage = () => {
             const allPosts = await apiService.getPosts();
             const myPosts = allPosts.filter(post => post.userId == loginUserId);
              */
-            const userRes = await apiService.getUser(loginUserId);
+            const userRes = await apiService.getLoginUser(loginUserId);
             console.log("userRes : ", userRes);
             setUser({
                 username: userRes.userName,

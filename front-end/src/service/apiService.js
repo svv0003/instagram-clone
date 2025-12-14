@@ -9,8 +9,10 @@ const api = axios.create({
     }
 });
 
-// 모든 요청에 JWT 토큰 추가
-// 사용자의 요청을 가로채다 = interceptor
+/*
+모든 요청에 JWT 토큰 추가
+사용자의 요청을 가로채다 = interceptor
+ */
 api.interceptors.request.use(
     config => {
         const token = localStorage.getItem('token');
@@ -52,7 +54,6 @@ api.interceptors.response.use(
 // 기능 2번과 같은 형태로 함수 활용
 const apiService = {
     // ===== 인증 API =====
-
     // POST /auth/signup
     // body: { username, email, password, fullName }
     signup: async (username, email, password, fullName) => {
@@ -90,7 +91,6 @@ const apiService = {
     },
 
     // ===== 게시물 API =====
-
     /**
      * 모든 게시물 조회
      */
@@ -115,9 +115,9 @@ const apiService = {
         }
     },
 
-    // TODO: 게시물 작성
-    // POST /posts
-    // body: { postImage, postCaption, postLocation }
+    /**
+     * 게시물 작성
+     */
     createPost: async (postImage, postCaption, postLocation) => {
         try {
             const uploadPost = new FormData();
@@ -232,6 +232,9 @@ const apiService = {
         return res.data;
     },
 
+    /**
+     * 스토리 삭제
+     */
     // deleteStory: async (userId, storyId) => {
     deleteStory: async (storyId) => {
         // console.log("userId : ", userId);
@@ -242,10 +245,10 @@ const apiService = {
     },
 
     // ===== 사용자 API =====
-
-    // TODO: 사용자 프로필 조회
-    // GET /users/:userId
-    getUser: async (userId) => {
+    /**
+     * 로그인 회원 프로필 조회
+     */
+    getLoginUser: async (userId) => {
         try {
             const res = await api.get(`/auth/user/${userId}`);
             console.log("res : ", res);
@@ -255,8 +258,50 @@ const apiService = {
         }
     },
 
-    // TODO: 사용자 게시물 조회
-    // GET /users/:userId/posts
+    /**
+     * 로그인 회원 프로필 업데이트
+     */
+    updateProfile: async (userId, formData) => {
+        console.log("userId : ", userId);
+        console.log("formData : ", formData);
+        try {
+            const res = await api.put(`/auth/profile/edit/${userId}`, formData, {
+                headers : {
+                    'Content-Type': 'multipart/form-data'
+                }
+            });
+            console.log("res : ", res);
+            if(res.data) {
+                localStorage.setItem('user', JSON.stringify(res.data));
+                const token = localStorage.getItem("token");
+                if(token) {
+                    localStorage.setItem("token", token);
+                }
+            }
+            return res.data;
+        } catch (e) {
+            alert("회원정보 수정 실패 : {}", e);
+        }
+    },
+
+    /**
+     * 사용자 프로필 조회
+     * GET /users/:userId
+     */
+    getUser: async (userId) => {
+        try {
+            const res = await api.get(`/users/${userId}`);
+            console.log("res : ", res);
+            return res.data;
+        } catch (error) {
+            alert("데이터를 가져올 수 없습니다.");
+        }
+    },
+
+    /**
+     * 사용자 게시물 조회
+     * GET /users/:userId/posts
+     */
     getUserPosts: async (userId) => {
         try {
             const res = await api.get(`/posts/user/${userId}`);
@@ -280,40 +325,7 @@ const apiService = {
             alert("스토리 조회 실패 : {}", e);
         }
     },
-    // TODO 2-1: getUser 함수 작성
-    // GET /users/:userId
-    // 파라미터: userId
-    // 리턴: res.data
-    // getUser: async (userId) => {
-    // },
 
-    // TODO 2-2: updateProfile 함수 작성
-    // PUT /users/:userId
-    // 파라미터: userId, formData
-    // 헤더: 'Content-Type': 'multipart/form-data'
-    // 성공 시 localStorage의 'user' 업데이트
-    updateProfile: async (userId, formData) => {
-        console.log("userId : ", userId);
-        console.log("formData : ", formData);
-        try {
-            const res = await api.put(`/auth/profile/edit/${userId}`, formData, {
-                headers : {
-                    'Content-Type': 'multipart/form-data'
-                }
-            });
-            console.log("res : ", res);
-            if(res.data) {
-                localStorage.setItem('user', JSON.stringify(res.data));
-                const token = localStorage.getItem("token");
-                if(token) {
-                    localStorage.setItem("token", token);
-                }
-            }
-            return res.data;
-        } catch (e) {
-            alert("회원정보 수정 실패 : {}", e);
-        }
-    },
     // TODO 1: 유저 검색 API 호출 함수 구현
     // GET /api/users/search?q={query}
     searchUsers: async (query) => {

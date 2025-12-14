@@ -29,7 +29,7 @@ const EditProfilePage = () => {
         try {
             console.log("loginUserId : ", loginUserId);
             console.log("loginUserId type : ", typeof(loginUserId));
-            const res = await apiService.getUser(loginUserId);
+            const res = await apiService.getLoginUser(loginUserId);
             console.log('res : ', res);
             setUser({
                 loginUserName: res.userName,
