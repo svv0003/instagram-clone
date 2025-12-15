@@ -18,6 +18,16 @@ public class UserSearchController {
 
     private final UserService userService;
 
+    @GetMapping("/profile/{userId}")
+    public ResponseEntity<User> getPostsByUserId(@PathVariable int userId) {
+        try {
+            User user = userService.getUserByUserId(userId);
+            return ResponseEntity.ok(user);
+        } catch (Exception e){
+            log.error("프로필 조회 실패 : {}", e.getMessage());
+            return  ResponseEntity.status(401).body(null);
+        }
+    }
     // TODO 9: 유저 검색 API
     @GetMapping("/search")
     public ResponseEntity<List<User>> searchUsers(@RequestParam("q") String query) {

@@ -2,9 +2,11 @@ import React, { useEffect, useState } from 'react';
 import Header from '../components/Header';
 import { Grid, Bookmark, Settings } from 'lucide-react';
 import apiService from "../service/apiService";
-import {useNavigate} from "react-router-dom";
+import {useLocation, useNavigate} from "react-router-dom";
 
 const MyFeedPage = () => {
+    const navigate = useNavigate();
+    const location = useLocation();
     const [user, setUser] = useState({
         username: "my_instagram",
         userFullname: "내 이름",
@@ -17,39 +19,65 @@ const MyFeedPage = () => {
     const [posts, setPosts] = useState([]);
     const [activeTab, setActiveTab] = useState('posts');
     const [loading, setLoading] = useState(true);
-    const navigate = useNavigate();
     const loginUser = JSON.parse(localStorage.getItem('user') || '{}');
     const loginUserId = loginUser.userId;
+    // const currentUrl = window.location.href;
+    const searchParams = new URLSearchParams(location.search);
+    const paramUserId = searchParams.get('userId');
 
     useEffect(() => {
         if(!loginUser) return navigate('/login');
         getMyFeedData();
-    }, []);
+    }, [navigate, paramUserId]);
 
+    const isMyFeed = location.pathname === '/myfeed' && !location.search;
+    const isMyFeedWithUserId = location.pathname === '/myfeed' && location.search.startsWith('?userId=');
     const getMyFeedData = async () => {
         setLoading(true);
-        try {
-            console.log("loginUserId : ", loginUserId);
-            /*
-            전체 게시물 가져와서 본인 게시물 필터링하는 방식
-            const allPosts = await apiService.getPosts();
-            const myPosts = allPosts.filter(post => post.userId == loginUserId);
-             */
-            const userRes = await apiService.getLoginUser(loginUserId);
-            console.log("userRes : ", userRes);
-            setUser({
-                username: userRes.userName,
-                userFullname: userRes.userFullname,
-                profileImage: userRes.userAvatar
-            });
-            console.log('profileImage : ', userRes.userAvatar);
-            const feedRes = await apiService.getUserPosts(loginUserId);
-            setPosts(feedRes);
-        } catch (error) {
-            console.log(error);
-            alert("계정 정보를 불러오는데 실패했습니다.");
-        } finally {
-            setLoading(false);
+        if(isMyFeed){
+            try {
+                console.log("loginUserId : ", loginUserId);
+                /*
+                전체 게시물 가져와서 본인 게시물 필터링하는 방식
+                const allPosts = await apiService.getPosts();
+                const myPosts = allPosts.filter(post => post.userId == loginUserId);
+                 */
+                const userRes = await apiService.getLoginUser();
+                console.log("userRes : ", userRes);
+                setUser({
+                    username: userRes.userName,
+                    userFullname: userRes.userFullname,
+                    profileImage: userRes.userAvatar
+                });
+                console.log('profileImage : ', userRes.userAvatar);
+                const feedRes = await apiService.getUserPosts(loginUserId);
+                setPosts(feedRes);
+            } catch (error) {
+                console.log(error);
+                alert("계정 정보를 불러오는데 실패했습니다.");
+            } finally {
+                setLoading(false);
+            }
+        }
+        if(isMyFeedWithUserId){
+            try {
+                console.log("paramUserId : ", paramUserId);
+                const userRes = await apiService.getUser(paramUserId);
+                console.log("userRes : ", userRes);
+                setUser({
+                    username: userRes.userName,
+                    userFullname: userRes.userFullname,
+                    profileImage: userRes.userAvatar
+                });
+                console.log('profileImage : ', userRes.userAvatar);
+                const feedRes = await apiService.getUserPosts(paramUserId);
+                setPosts(feedRes);
+            } catch (error) {
+                console.log(error);
+                alert("계정 정보를 불러오는데 실패했습니다.");
+            } finally {
+                setLoading(false);
+            }
         }
     }
 
@@ -85,7 +113,7 @@ const MyFeedPage = () => {
                         </div>
 
                         <ul className="profile-stats">
-                            <li>게시물 <strong>0</strong></li>
+                            <li>게시물 <strong>{posts.length}</strong></li>
                             <li>팔로워 <strong>0</strong></li>
                             <li>팔로잉 <strong>0</strong></li>
                         </ul>

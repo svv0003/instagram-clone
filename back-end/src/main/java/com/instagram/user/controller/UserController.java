@@ -45,7 +45,7 @@ public class UserController {
          */
         User user = userService.login(request.getUserEmail(), request.getUserPassword());
         log.info("===로그인 요청===");
-        log.info("요청 데이터 - 이름 : {}, 이메일 : {}", user.getUserName(), user.getUserEmail());
+        log.info("요청 데이터 - 이메일 : {}", user.getUserEmail());
         if(user == null) {
             return ResponseEntity.status(401).body(null);
         }
@@ -57,10 +57,17 @@ public class UserController {
         return ResponseEntity.ok(loginResponse);
     }
 
-    @GetMapping("/user/{userId}")
-    public ResponseEntity<User> getPostsByUserId(@PathVariable("userId") int userId) {
-        User user = userService.getUserByUserId(userId);
-        return ResponseEntity.ok(user);
+    @GetMapping("/profile")
+    public ResponseEntity<User> getPostsByUserId(@RequestHeader("Authorization") String authHeader) {
+        try {
+            String token = authHeader.substring(7);
+            int userId = jwtUtil.getUserIdFromToken(token);
+            User user = userService.getUserByUserId(userId);
+            return ResponseEntity.ok(user);
+        } catch (Exception e){
+            log.error("프로필 조회 실패 : {}", e.getMessage());
+            return  ResponseEntity.status(401).body(null);
+        }
     }
 
 //    @GetMapping("/profile/edit")
@@ -80,12 +87,13 @@ public class UserController {
 //        }
 //    }
 
-    @PutMapping("/profile/edit/{userId}")
-    public ResponseEntity<User> editProfile(@PathVariable("userId") int userId,
+    @PutMapping("/profile/edit")
+    public ResponseEntity<User> editProfile(@RequestHeader("Authorization") String authHeader,
                                             @RequestPart("formData") User user,
                                             @RequestPart(value = "profileImage", required = false) MultipartFile userAvatar){
         try {
-            log.info("user : {}", user);
+            String token = authHeader.substring(7);
+            int userId = jwtUtil.getUserIdFromToken(token);
             user.setUserId(userId);
             log.info("user : {}", user);
             log.info("profileImage : {}", userAvatar);

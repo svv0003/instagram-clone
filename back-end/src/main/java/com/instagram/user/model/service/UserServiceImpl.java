@@ -123,7 +123,7 @@ public class UserServiceImpl implements UserService {
         try {
             return userMapper.searchUsersByUserName(query);
         } catch (Exception e) {
-            log.error("유저명으로 조회 중 오류 발생 : {}", e.getMessage());
+            log.error("유저 이름 조회 중 오류 발생 : {}", e.getMessage());
             return new ArrayList<>();
         }
     }

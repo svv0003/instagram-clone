@@ -248,9 +248,9 @@ const apiService = {
     /**
      * 로그인 회원 프로필 조회
      */
-    getLoginUser: async (userId) => {
+    getLoginUser: async () => {
         try {
-            const res = await api.get(`/auth/user/${userId}`);
+            const res = await api.get(`/auth/profile`);
             console.log("res : ", res);
             return res.data;
         } catch (error) {
@@ -261,11 +261,10 @@ const apiService = {
     /**
      * 로그인 회원 프로필 업데이트
      */
-    updateProfile: async (userId, formData) => {
-        console.log("userId : ", userId);
+    updateProfile: async (formData) => {
         console.log("formData : ", formData);
         try {
-            const res = await api.put(`/auth/profile/edit/${userId}`, formData, {
+            const res = await api.put(`/auth/profile/edit`, formData, {
                 headers : {
                     'Content-Type': 'multipart/form-data'
                 }
@@ -290,7 +289,7 @@ const apiService = {
      */
     getUser: async (userId) => {
         try {
-            const res = await api.get(`/users/${userId}`);
+            const res = await api.get(`/users/profile/${userId}`);
             console.log("res : ", res);
             return res.data;
         } catch (error) {

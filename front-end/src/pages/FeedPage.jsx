@@ -135,7 +135,8 @@ const FeedPage = () => {
                             {stories.map((story) => (
                                 <div key={story.userId}
                                      className="story-item"
-                                     onClick={() => navigate(`/story/detail/${story.userId}`)}
+                                     onClick={() =>
+                                         navigate(`/story/detail/${story.userId}`)}
                                 >
                                     <div className="story-avatar-wrapper"
                                          key={story.id}>
@@ -156,8 +157,13 @@ const FeedPage = () => {
                         <article key={post.postId} className="post-card">
                             <div className="post-header">
                                 <div className="post-user-info">
-                                    <img src={getImageUrl(post.userAvatar)} className="post-user-avatar"/>
-                                    <span className="post-username">{post.userName}</span>
+                                    <img src={getImageUrl(post.userAvatar)}
+                                         className="post-user-avatar"/>
+                                    <span className="post-username"
+                                    onClick={() =>
+                                        navigate(`/myfeed?userId=${post.userId}`)}>
+                                        {post.userName}
+                                    </span>
                                 </div>
                                 <MoreHorizontal className="post-more-icon"/>
                             </div>
@@ -168,7 +174,8 @@ const FeedPage = () => {
                                     <div className="post-actions-left">
                                         <Heart
                                             className={`action-icon like-icon ${post.isLiked ? 'liked' : ''}`}
-                                            onClick={() => toggleLike(post.postId, post.isLiked)}
+                                            onClick={() =>
+                                                toggleLike(post.postId, post.isLiked)}
                                             fill={post.isLiked ? "#ed4956" : "none"}
                                         />
                                         <MessageCircle className="action-icon"/>
@@ -182,7 +189,9 @@ const FeedPage = () => {
                                 </div>
 
                                 <div className="post-caption">
-                                    <span className="post-caption-username">{post.userName}</span>
+                                    <span className="post-caption-username">
+                                        {post.userName}
+                                    </span>
                                     <MentionText text={post.postCaption} />
                                     {/*{post.postCaption}*/}
                                 </div>

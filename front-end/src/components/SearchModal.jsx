@@ -51,7 +51,8 @@ const SearchModal = ({ isOpen, onClose }) => {
         const debounceTimer = setTimeout(async () => {
             setIsLoading(true);
             try {
-                const res = await apiService.searchUsers(searchQuery)
+                const res = await apiService.searchUsers(searchQuery);
+                setSearchResults(res || []);
             } catch (err) {
                 console.error('검색 실패:', err);
                 setSearchResults([]);
@@ -139,16 +140,6 @@ const SearchModal = ({ isOpen, onClose }) => {
                 </div>
 
                 <div className="search-results-container">
-                    {/*
-                    요구사항:
-                    1. searchQuery가 비어있으면:
-                       - recentSearches가 있으면 "최근 검색 항목" 헤더와 목록 표시
-                       - 없으면 "최근 검색 내역이 없습니다." 메시지 표시
-                    2. searchQuery가 있으면:
-                       - isLoading이 true면 "검색 중..." 표시
-                       - searchResults가 있으면 검색 결과 목록 표시
-                       - 없으면 "검색 결과가 없습니다." 메시지 표시
-                    */}
                     {searchQuery.trim() === '' ? (
                         <>
                             {recentSearches.length > 0 && (
@@ -156,8 +147,6 @@ const SearchModal = ({ isOpen, onClose }) => {
                                     <div className="search-section-header">
                                         <span className="search-section-title">최근 검색 항목</span>
                                     </div>
-                                    {/* TODO 7: recentSearches 배열을 map으로 순회하여 각 유저 표시 */}
-                                    {/* 힌트: search-result-item 클래스 사용, onClick에 handleUserClick 연결 */}
                                     {recentSearches.map((user) => (
                                         <div key={user.userId}
                                              className="search-result-item"
@@ -172,7 +161,8 @@ const SearchModal = ({ isOpen, onClose }) => {
                                             </div>
                                             <X size={16}
                                                className="search-remove-icon"
-                                               onClick={(e) => removeRecentSearch(user.userId, e)} />
+                                               onClick={(e) =>
+                                                   removeRecentSearch(user.userId, e)} />
                                         </div>
                                     ))}
                                 </>
