@@ -14,14 +14,19 @@ import apiService from '../service/apiService';
 import {Heart, MessageCircle, Send, Bookmark, MoreHorizontal} from 'lucide-react';
 import Header from "../components/Header";
 import {getImageUrl} from "../service/commonService";
-import MentionInput from "./MentionInput";
-import MentionText from "./MentionText";
+import MentionInput from "../components/MentionInput";
+import MentionText from "../components/MentionText";
+import SearchModal from "../components/SearchModal";
+import PostDetailModal from "../components/PostDetailModal";
+import PostOptionMenu from "../components/PostOptionMenu";
 
 const FeedPage = () => {
+    const navigate = useNavigate();
     const [posts, setPosts] = useState([]);
     const [stories, setStories] = useState([]);
     const [loading, setLoading] = useState(true);
-    const navigate = useNavigate();
+    const [selectedPost, setSelectedPost] = useState(null);
+    const currentUser = JSON.parse(localStorage.getItem("user") || '[]');
 
     useEffect(() => {
         loadFeedData()
@@ -114,6 +119,17 @@ const FeedPage = () => {
         }
     };
 
+    const deletePost = async (postId) => {
+        try {
+            await apiService.deletePost(postId);
+            setPosts(posts.filter(p => p.postId !== postId));
+            setSelectedPost(null);
+            alert("게시물이 삭제되었습니다.");
+        } catch (err) {
+            alert("게시물 삭제에 실패했습니다.");
+        }
+    }
+
     if (loading) {
         return (
             <div className="feed-container">
@@ -127,7 +143,6 @@ const FeedPage = () => {
     return (
         <div className="feed-container">
             <Header/>
-
             <div className="feed-content">
                 {stories.length > 0 && (
                     <div className="stories-container">
@@ -160,15 +175,22 @@ const FeedPage = () => {
                                     <img src={getImageUrl(post.userAvatar)}
                                          className="post-user-avatar"/>
                                     <span className="post-username"
-                                    onClick={() =>
-                                        navigate(`/myfeed?userId=${post.userId}`)}>
+                                          onClick={() =>
+                                              navigate(`/myfeed?userId=${post.userId}`)}>
                                         {post.userName}
                                     </span>
                                 </div>
-                                <MoreHorizontal className="post-more-icon"/>
+                                <PostOptionMenu
+                                    post={post}
+                                    currentUserId={currentUser.userId}
+                                    onDelete={deletePost}/>
                             </div>
 
-                            <img src={post.postImage} className="post-image"/>
+                            <img src={post.postImage}
+                                 className="post-image"
+                                 // onClick={() => setSelectedPost(post)}
+                                 onClick={() => navigate(`/post/${post.postId}`)}
+                                 style={{cursor: 'pointer'}} />
                             <div className="post-content">
                                 <div className="post-actions">
                                     <div className="post-actions-left">
@@ -209,6 +231,15 @@ const FeedPage = () => {
                     ))
                 )}
             </div>
+            {selectedPost && (
+                <PostDetailModal
+                    post={selectedPost}
+                    currentUserId={currentUser.userId}
+                    onClose={() => setSelectedPost(null)}
+                    onDelete={deletePost}
+                    onToggleLike={toggleLike}
+                />
+            )}
         </div>
     );
 };

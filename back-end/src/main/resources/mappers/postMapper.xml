@@ -92,7 +92,7 @@
     <select id="selectPostById" resultType="Post">
         SELECT *
         FROM post_detail_view
-        ORDER BY  post_id = #{postId}
+        WHERE post_id = #{postId}
     </select>
 
     <!-- 특정 사용자 게시물 조회

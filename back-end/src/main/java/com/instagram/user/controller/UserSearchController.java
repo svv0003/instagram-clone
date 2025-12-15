@@ -28,6 +28,7 @@ public class UserSearchController {
             return  ResponseEntity.status(401).body(null);
         }
     }
+    
     // TODO 9: 유저 검색 API
     @GetMapping("/search")
     public ResponseEntity<List<User>> searchUsers(@RequestParam("q") String query) {

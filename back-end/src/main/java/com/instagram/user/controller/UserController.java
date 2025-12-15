@@ -104,6 +104,21 @@ public class UserController {
         }
     }
 
+    @PostMapping("/profile/password")
+    public ResponseEntity<Boolean> getPassword(@RequestHeader("Authorization") String authHeader,
+                                               @RequestBody Map<String, String> body) {
+        try {
+            String token = authHeader.substring(7);
+            int userId = jwtUtil.getUserIdFromToken(token);
+            String password = body.get("password");
+            Boolean result = userService.checkPassword(userId, password);
+            return ResponseEntity.ok(result);
+        } catch (Exception e){
+            log.error("비밀번호 조회 실패 : {}", e.getMessage());
+            return  ResponseEntity.status(401).body(null);
+        }
+    }
+
     @PostMapping("/kakao")
     public ResponseEntity<?> kakaoLogin(@RequestBody Map<String, String> data) {
         String code = data.get("code");

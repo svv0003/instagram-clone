@@ -17,13 +17,11 @@ public interface PostService {
     /**
      * 본인 피드 또는 특정 유저 피드 클릭 시 상세보기
      * @param postId
-     * @param currentUserId
      * @return
      */
-    Post getPostById(int postId, int currentUserId);
+    Post getPostById(int postId);
     /**
      * 본인 피드 또는 특정 유저 프로필 클릭 시 피드 목록 상세보기
-     * @param userId
      * @return
      */
     List<Post> getPostsByUserId(int userId);

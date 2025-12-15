@@ -14,7 +14,7 @@ public interface PostMapper {
     /**
      * 특정 게시물 조회
      */
-    Post selectPostById(int postId, int currentUserId);
+    Post selectPostById(int postId);
     /**
      * 특정 사용자 게시물 조회
      */

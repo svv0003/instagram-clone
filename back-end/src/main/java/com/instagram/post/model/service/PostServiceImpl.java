@@ -6,7 +6,6 @@ import com.instagram.post.model.mapper.PostMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
@@ -26,9 +25,10 @@ public class PostServiceImpl implements PostService {
     }
 
     @Override
-    public Post getPostById(int postId, int currentUserId) {
-        return postMapper.selectPostById(postId, currentUserId);
+    public Post getPostById(int postId) {
+        return postMapper.selectPostById(postId);
     }
+
 
     @Override
     public List<Post> getPostsByUserId(int userId) {

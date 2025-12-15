@@ -93,4 +93,17 @@ public class PostController {
             return ResponseEntity.badRequest().body(false);
         }
     }
+
+    @GetMapping("{postId}")
+    public ResponseEntity<Post> getPostById(@PathVariable("postId") int postId) {
+        try {
+            log.info("postId : {}", postId);
+            Post post = postService.getPostById(postId);
+            log.info("post : {}", post);
+            return ResponseEntity.ok(post);
+        } catch (Exception e) {
+            log.error("포스팅 조회 실패 : {}", e.getMessage());
+            return ResponseEntity.badRequest().body(null);
+        }
+    }
 }

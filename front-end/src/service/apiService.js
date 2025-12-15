@@ -283,6 +283,17 @@ const apiService = {
         }
     },
 
+    checkUserPassword: async (password) => {
+        console.log("password : ", password);
+        try {
+            const res = await api.post(`/auth/profile/password`, {password});
+            console.log("res : ", res);
+            return res;
+        } catch (e) {
+            alert("비밀번호 조회 실패 : {}", e);
+        }
+    },
+
     /**
      * 사용자 프로필 조회
      * GET /users/:userId

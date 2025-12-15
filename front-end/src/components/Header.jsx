@@ -25,18 +25,28 @@ const Header = ({
             <>
                 <header className="header">
                     <div className="header-container">
-                        <h1 className="header-title" onClick={() => navigate('/feed')}>
+                        <h1 className="header-title"
+                            onClick={() => navigate('/feed')}
+                            style={{cursor: 'pointer'}}>
                             Instagram
                         </h1>
                         <div className="header-nav">
-                            <Home className="header-icon" onClick={openSearch} />
+                            <Home className="header-icon" onClick={openSearch}
+                                  style={{cursor: 'pointer'}}/>
                             <MessageCircle className="header-icon" />
-                            <PlusSquare className="header-icon" onClick={() => navigate('/upload')} />
-                            <Film className="header-icon" onClick={() => navigate("/story/upload")} />
-                            <User className="header-icon" onClick={() => navigate("/myfeed")} />
+                            <PlusSquare className="header-icon"
+                                        onClick={() => navigate('/upload')}
+                                        style={{cursor: 'pointer'}}/>
+                            <Film className="header-icon"
+                                  onClick={() => navigate("/story/upload")}
+                                  style={{cursor: 'pointer'}}/>
+                            <User className="header-icon"
+                                  onClick={() => navigate("/myfeed")}
+                                  style={{cursor: 'pointer'}}/>
                             <Settings size={20}
                                       className="profile-settings-icon"
-                                      onClick={openSidebar} />
+                                      onClick={openSidebar}
+                                      style={{cursor: 'pointer'}} />
                         </div>
                     </div>
                 </header>

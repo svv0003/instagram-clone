@@ -4,7 +4,7 @@ import apiService from '../service/apiService';
 import {Image} from 'lucide-react';
 import {getFilteredFile, FILTER_OPTIONS} from "../service/filterService";
 import Header from "../components/Header";
-import MentionInput from "./MentionInput";
+import MentionInput from "../components/MentionInput";
 
 
 const UploadPage = () => {

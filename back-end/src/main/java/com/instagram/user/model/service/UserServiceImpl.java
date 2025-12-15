@@ -10,7 +10,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -126,6 +125,21 @@ public class UserServiceImpl implements UserService {
             log.error("유저 이름 조회 중 오류 발생 : {}", e.getMessage());
             return new ArrayList<>();
         }
+    }
+
+    @Override
+    public boolean checkPassword(int userId, String password) {
+        User checkUserFromDB = userMapper.selectUserById(userId);
+        if(checkUserFromDB == null) {
+            log.warn("로그인 실패 - 존재하지 않는 계정 : {}", userId);
+            return false;
+        }
+        if(!passwordEncoder.matches(password, checkUserFromDB.getUserPassword())) {
+            log.warn("비밀번호 불일치");
+            return false;
+        }
+        log.info("비밀번호 일치");
+        return true;
     }
 
     @Override
