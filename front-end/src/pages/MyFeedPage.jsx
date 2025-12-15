@@ -156,9 +156,22 @@ const MyFeedPage = () => {
 
                 <div className="profile-posts-grid">
                     {posts.map((post) => (
-                        <div key={post.postId} className="grid-item">
-                            <img src={post.postImage} alt="post" />
-                            <div className="grid-hover-overlay"></div>
+                        /*
+                        이미지 위에 overlay와 같은 효과가 덮어씌워진 상태로,
+                        <div key={post.postId}>
+                        <div className="grid-hover-overlay">
+                        둘 중 아무거나 클릭 기능을 넣을 수 있다.
+                         */
+                        <div key={post.postId}
+                             className="grid-item"
+                             onClick={() =>
+                                 navigate(`/post/${post.postId}`)}>
+                            <img src={post.postImage}
+                                 alt="post" />
+                            <div className="grid-hover-overlay"
+                                 // onClick={() =>
+                                 //     navigate(`/post/${post.postId}`)}
+                            ></div>
                         </div>
                     ))}
                 </div>

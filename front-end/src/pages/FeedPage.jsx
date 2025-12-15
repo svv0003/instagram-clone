@@ -173,10 +173,14 @@ const FeedPage = () => {
                             <div className="post-header">
                                 <div className="post-user-info">
                                     <img src={getImageUrl(post.userAvatar)}
-                                         className="post-user-avatar"/>
+                                         className="post-user-avatar"
+                                         onClick={() =>
+                                             navigate(`/myfeed?userId=${post.userId}`)}
+                                         style={{cursor: 'pointer'}}/>
                                     <span className="post-username"
                                           onClick={() =>
-                                              navigate(`/myfeed?userId=${post.userId}`)}>
+                                              navigate(`/myfeed?userId=${post.userId}`)}
+                                          style={{cursor: 'pointer'}}>
                                         {post.userName}
                                     </span>
                                 </div>
@@ -200,7 +204,9 @@ const FeedPage = () => {
                                                 toggleLike(post.postId, post.isLiked)}
                                             fill={post.isLiked ? "#ed4956" : "none"}
                                         />
-                                        <MessageCircle className="action-icon"/>
+                                        <MessageCircle className="action-icon"
+                                                       onClick={() =>
+                                                           navigate(`/post/${post.postId}`)}/>
                                         <Send className="action-icon"/>
                                     </div>
                                     <Bookmark className="action-icon"/>

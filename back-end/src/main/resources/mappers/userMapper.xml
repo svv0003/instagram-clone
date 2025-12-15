@@ -52,6 +52,13 @@
         WHERE user_id = #{userId}
     </update>
 
+    <update id="updateUserPassword" parameterType="User">
+        UPDATE users
+        SET user_password = #{userPassword},
+            updated_at = NOW()
+        WHERE user_id = #{userId}
+    </update>
+
     <delete id="deleteUser" parameterType="User">
         DELETE FROM users
         WHERE user_id = #{userId}

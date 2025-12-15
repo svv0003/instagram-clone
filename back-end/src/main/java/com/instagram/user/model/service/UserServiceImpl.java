@@ -143,6 +143,23 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    public boolean changePassword(int userId, String newPassword) {
+        try {
+            User user = new User();
+            String newEncodedPW = passwordEncoder.encode(newPassword);
+            user.setUserId(userId);
+            user.setUserPassword(newEncodedPW);
+            log.info("userId : {}, newPassword : {}", userId, newPassword);
+            log.info("user : {}", user);
+            userMapper.updateUserPassword(user);
+            return true;
+        } catch (Exception e) {
+            log.error("비밀번호 수정 실패 : {}", e.getMessage());
+            return false;
+        }
+    }
+
+    @Override
     public User getUserByUserName(String userName) {
         try {
             return userMapper.selectUserByUserNameExact(userName);

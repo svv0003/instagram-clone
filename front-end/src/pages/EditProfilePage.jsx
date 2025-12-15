@@ -81,7 +81,6 @@ const EditProfilePage = () => {
             alert('기존 비밀번호를 입력해주세요.');
             return;
         }
-
         try {
             const res = await apiService.checkUserPassword(passwordData.currentPassword);
             if (res.data === true) {
@@ -160,12 +159,14 @@ const EditProfilePage = () => {
 
         setLoading(true);
         try {
-            await apiService.changePassword(loginUserId, {
-                newPassword: passwordData.newPassword
-            });
-            alert('비밀번호가 성공적으로 변경되었습니다.');
-            setPasswordData({ currentPassword: '', newPassword: '', confirmPassword: '' });
-            setIsEditable(false);
+            const res = await apiService.changeUserPassword(passwordData.newPassword);
+            if(res.data) {
+                alert('비밀번호가 성공적으로 변경되었습니다.');
+                setPasswordData({ currentPassword: '', newPassword: '', confirmPassword: '' });
+                setIsEditable(false);
+            } else {
+                alert("비밀번호 변경 실패했어영");
+            }
         } catch (err) {
             console.error(err);
             alert('비밀번호 변경에 실패했습니다.');

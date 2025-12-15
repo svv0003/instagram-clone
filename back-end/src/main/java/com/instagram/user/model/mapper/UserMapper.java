@@ -35,4 +35,6 @@ public interface UserMapper {
      * 유저네임으로 정확히 일치하는 유저 조회
      */
     User selectUserByUserNameExact(String userName);
+
+    boolean updateUserPassword(User user);
 }

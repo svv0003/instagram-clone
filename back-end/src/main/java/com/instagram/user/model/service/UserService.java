@@ -16,4 +16,5 @@ public interface UserService {
     User updateUser(User user, MultipartFile file) throws IOException;
     List<User> searchUsers(String query);
     boolean checkPassword(int userId, String password);
+    boolean changePassword(int userId, String newPassword);
 }

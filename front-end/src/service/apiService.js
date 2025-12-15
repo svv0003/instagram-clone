@@ -172,20 +172,35 @@ const apiService = {
     // TODO: 댓글 목록 조회
     // GET /posts/:postId/comments
     getComments: async (postId) => {
-        // TODO: API 호출을 완성하세요
+        try {
+            const res = await api.get(`/posts/${postId}/comments`);
+            return res.data;
+        } catch (e) {
+            alert("댓글 조회 실패 : {}", e);
+        }
     },
 
     // TODO: 댓글 작성
     // POST /posts/:postId/comments
     // body: { commentContent }
     createComment: async (postId, commentContent) => {
-        // TODO: API 호출을 완성하세요
+        try {
+            const res = await api.post(`/posts/${postId}/comments`, {commentContent});
+            return res.data;
+        } catch (e) {
+            alert("댓글 작성 실패 : {}", e);
+        }
     },
 
     // TODO: 댓글 삭제
     // DELETE /comments/:commentId
     deleteComment: async (commentId) => {
-        // TODO: API 호출을 완성하세요
+        try {
+            const res = await api.delete(`/comments/${commentId}`);
+            return res.data;
+        } catch (e) {
+            alert("댓글 삭제 실패 : {}", e);
+        }
     },
 
     // ===== 스토리 API =====
@@ -283,6 +298,9 @@ const apiService = {
         }
     },
 
+    /**
+     * 비밀번호 확인
+     */
     checkUserPassword: async (password) => {
         console.log("password : ", password);
         try {
@@ -291,6 +309,20 @@ const apiService = {
             return res;
         } catch (e) {
             alert("비밀번호 조회 실패 : {}", e);
+        }
+    },
+
+    /**
+     * 비밀번호 업데이트
+     */
+    changeUserPassword: async (newPassword) => {
+        console.log("newPassword : ", newPassword);
+        try {
+            const res = await api.put(`/auth/profile/edit/password`, {newPassword});
+            console.log("res : ", res);
+            return res;
+        } catch (e) {
+            alert("비밀번호 수정 실패 : {}", e);
         }
     },
 
