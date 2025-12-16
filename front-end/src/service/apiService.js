@@ -138,7 +138,6 @@ const apiService = {
     // TODO: 게시물 삭제
     // DELETE /posts/:postId
     deletePost: async (postId) => {
-        // TODO: API 호출을 완성하세요
     },
 
     // ===== 좋아요 API =====
@@ -146,7 +145,6 @@ const apiService = {
     // TODO: 좋아요 추가
     // POST /posts/:postId/like
     addLike: async (postId) => {
-        // TODO: API 호출을 완성하세요
         try {
             const res = await api.post(`/posts/${postId}/like`, postId);
             return res.data;
@@ -158,7 +156,6 @@ const apiService = {
     // TODO: 좋아요 취소
     // DELETE /posts/:postId/like
     removeLike: async (postId) => {
-        // TODO: API 호출을 완성하세요
         try {
             const res = await api.delete(`/posts/${postId}/like`, postId);
             return res.data;
@@ -166,6 +163,45 @@ const apiService = {
             alert("좋아요 취소 실패 : {}", e);
         }
     },
+
+    // ===== 팔로우 API =====
+
+    getFollowingList: async () => {
+        try {
+            const res = await api.get("/follow/list");
+            return res.data;
+        } catch (e) {
+            alert("팔로잉 목록 조회 실패 : {}", e);
+        }
+    },
+
+    getFollowing: async (userId) => {
+        try {
+            const res = await api.get(`/follow/count?feedUserId=${userId}`);
+            return res.data;
+        } catch (e) {
+            alert("팔로잉/팔로우 조회 실패 : {}", e);
+        }
+    },
+
+    createFollowing: async (userId) => {
+        try {
+            const res = await api.post(`/follow/add?userId=${userId}`);
+            return res.data;
+        } catch (e) {
+            alert("팔로우 선택 실패 : {}", e);
+        }
+    },
+
+    deleteFollowing: async (userId) => {
+        try {
+            const res = await api.delete(`/follow/delete?userId=${userId}`);
+            return res.data;
+        } catch (e) {
+            alert("팔로우 취소 실패 : {}", e);
+        }
+    },
+
 
     // ===== 댓글 API =====
 

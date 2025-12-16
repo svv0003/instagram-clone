@@ -26,6 +26,7 @@ const FeedPage = () => {
     const [stories, setStories] = useState([]);
     const [loading, setLoading] = useState(true);
     const [selectedPost, setSelectedPost] = useState(null);
+    const [followings, setFollowings] = useState([]);
     const loginUser = JSON.parse(localStorage.getItem("user") || '[]');
     const loginUserId = loginUser.userId;
 
@@ -38,16 +39,12 @@ const FeedPage = () => {
         try {
             const postRes = await apiService.getPosts();
             setPosts(postRes);
-        } catch (error) {
-            alert("포스트를 불러오는데 실패했습니다.");
-        } finally {
-            setLoading(false);
-        }
-        try {
             const storyRes = await apiService.getStories();
             setStories(storyRes);
+            const followingRes = await apiService.getFollowingList();
+            setFollowings(followingRes || []);
         } catch (error) {
-            alert("스토리를 불러오는데 실패했습니다.");
+            alert("데이터를 불러오는데 실패했습니다.");
         } finally {
             setLoading(false);
         }
@@ -120,6 +117,31 @@ const FeedPage = () => {
         }
     };
 
+    // 팔로우 토글 함수
+    const toggleFollow = async (targetUserId) => {
+        if (targetUserId === loginUserId) return;
+        const isCurrentlyFollowing = followings.includes(targetUserId);
+        if (isCurrentlyFollowing) {
+            setFollowings(prev => prev.filter(id => id !== targetUserId));
+        } else {
+            setFollowings(prev => [...prev, targetUserId]);
+        }
+        try {
+            if (isCurrentlyFollowing) {
+                await apiService.deleteFollowing(targetUserId);
+            } else {
+                await apiService.createFollowing(targetUserId);
+            }
+        } catch (error) {
+            if (isCurrentlyFollowing) {
+                setFollowings(prev => [...prev, targetUserId]);
+            } else {
+                setFollowings(prev => prev.filter(id => id !== targetUserId));
+            }
+            alert("팔로우 처리에 실패했습니다.");
+        }
+    };
+
     const deletePost = async (postId) => {
         try {
             await apiService.deletePost(postId);
@@ -180,85 +202,99 @@ const FeedPage = () => {
                 </div>
 
 
-                {posts.length > 0 && (
-                    posts.map((post) => (
-                        <article key={post.postId} className="post-card">
-                            <div className="post-header">
-                                <div className="post-user-info">
-                                    <img src={getImageUrl(post.userAvatar)}
-                                         className="post-user-avatar"
-                                         onClick={() =>
-                                             navigate(`/myfeed?userId=${post.userId}`)}
-                                         style={{cursor: 'pointer'}}/>
-                                    <span className="post-username"
-                                          onClick={() =>
-                                              navigate(`/myfeed?userId=${post.userId}`)}
-                                          style={{cursor: 'pointer'}}>
+                {posts.length > 0 &&
+                    posts.map((post) => {
+                        const isOwnPost = post.userId === loginUserId;
+                        const isFollowing = followings.includes(post.userId);
+                        return (
+                            <article key={post.postId} className="post-card">
+                                <div className="post-header">
+                                    <div className="post-user-info">
+                                        <img src={getImageUrl(post.userAvatar)}
+                                             className="post-user-avatar"
+                                             onClick={() =>
+                                                 navigate(`/myfeed?userId=${post.userId}`)}
+                                             style={{cursor: 'pointer'}}/>
+                                        <span className="post-username"
+                                              onClick={() =>
+                                                  navigate(`/myfeed?userId=${post.userId}`)}
+                                              style={{cursor: 'pointer'}}>
                                         {post.userName}
-                                    </span>
-                                </div>
-                                <PostOptionMenu
-                                    post={post}
-                                    currentUserId={loginUser.userId}
-                                    onDelete={deletePost}/>
-                            </div>
-
-                            <img src={post.postImage}
-                                 className="post-image"
-                                 // onClick={() => setSelectedPost(post)}
-                                 onClick={() => navigate(`/post/${post.postId}`)}
-                                 style={{cursor: 'pointer'}} />
-                            <div className="post-content">
-                                <div className="post-actions">
-                                    <div className="post-actions-left">
-                                        <Heart
-                                            className={`action-icon like-icon ${post.isLiked ? 'liked' : ''}`}
-                                            onClick={() =>
-                                                toggleLike(post.postId, post.isLiked)}
-                                            fill={post.isLiked ? "#ed4956" : "none"}
-                                        />
-                                        <MessageCircle className="action-icon"
-                                                       onClick={() =>
-                                                           navigate(`/post/${post.postId}`)}/>
-                                        <Send className="action-icon"/>
+                                        </span>
                                     </div>
-                                    <Bookmark className="action-icon"/>
+                                    <div className="post-header-right">
+                                        {/* 본인 포스트가 아니면 팔로우 버튼 표시 */}
+                                        {!isOwnPost && (
+                                            <button
+                                                className={`follow-btn ${isFollowing ? 'following' : 'follow'}`}
+                                                onClick={() => toggleFollow(post.userId)}
+                                            >
+                                                {isFollowing ? '팔로잉' : '팔로우'}
+                                            </button>
+                                        )}
+                                    </div>
+                                    <PostOptionMenu
+                                        post={post}
+                                        currentUserId={loginUserId}
+                                        onDelete={deletePost}/>
                                 </div>
 
-                                <div className="post-likes">
-                                    좋아요 {post.likeCount}개
-                                </div>
+                                <img src={post.postImage}
+                                     className="post-image"
+                                    // onClick={() => setSelectedPost(post)}
+                                     onClick={() => navigate(`/post/${post.postId}`)}
+                                     style={{cursor: 'pointer'}}/>
+                                <div className="post-content">
+                                    <div className="post-actions">
+                                        <div className="post-actions-left">
+                                            <Heart
+                                                className={`action-icon like-icon ${post.isLiked ? 'liked' : ''}`}
+                                                onClick={() =>
+                                                    toggleLike(post.postId, post.isLiked)}
+                                                fill={post.isLiked ? "#ed4956" : "none"}
+                                            />
+                                            <MessageCircle className="action-icon"
+                                                           onClick={() =>
+                                                               navigate(`/post/${post.postId}`)}/>
+                                            <Send className="action-icon"/>
+                                        </div>
+                                        <Bookmark className="action-icon"/>
+                                    </div>
 
-                                <div className="post-caption">
+                                    <div className="post-likes">
+                                        좋아요 {post.likeCount}개
+                                    </div>
+
+                                    <div className="post-caption">
                                     <span className="post-caption-username">
                                         {post.userName}
                                     </span>
-                                    <MentionText text={post.postCaption} />
-                                    {/*{post.postCaption}*/}
-                                </div>
+                                        <MentionText text={post.postCaption}/>
+                                        {/*{post.postCaption}*/}
+                                    </div>
 
-                                {post.commentCount > 0 && (
-                                    <button className="post-comments-btn">
-                                        댓글{post.commentCount}개 모두 보기
-                                    </button>
-                                )}
-                                <div className="post-time">
-                                    {post.createdAt || '방금 전'}
+                                    {post.commentCount > 0 && (
+                                        <button className="post-comments-btn">
+                                            댓글{post.commentCount}개 모두 보기
+                                        </button>
+                                    )}
+                                    <div className="post-time">
+                                        {post.createdAt || '방금 전'}
+                                    </div>
                                 </div>
-                            </div>
-                        </article>
-                    ))
-                )}
+                            </article>
+                        );
+                    })}
             </div>
-            {selectedPost && (
-                <PostDetailModal
-                    post={selectedPost}
-                    currentUserId={loginUser.userId}
-                    onClose={() => setSelectedPost(null)}
-                    onDelete={deletePost}
-                    onToggleLike={toggleLike}
-                />
-            )}
+            {/*{selectedPost && (*/}
+            {/*    <PostDetailModal*/}
+            {/*        post={selectedPost}*/}
+            {/*        currentUserId={loginUserId}*/}
+            {/*        onClose={() => setSelectedPost(null)}*/}
+            {/*        onDelete={deletePost}*/}
+            {/*        onToggleLike={toggleLike}*/}
+            {/*    />*/}
+            {/*)}*/}
         </div>
     );
 };

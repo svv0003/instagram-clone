@@ -36,9 +36,11 @@ const PostOptionMenu = ({post, currentUserId, onDelete}) => {
                             삭제하기
                         </button>
                     )}
-                    <button className="post-menu-button" onClick={handleReport}>
-                        신고하기
-                    </button>
+                    {!isOwnPost && (
+                        <button className="post-menu-button" onClick={handleReport}>
+                            신고하기
+                        </button>
+                    )}
                     <button className="post-menu-button cancel"
                             onClick={() => setShowMenu(false)}>
                         취소

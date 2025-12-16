@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.instagram.follow.model.mapper.FollowMapper">
+
+    <!--
+    following_id    팔로우 받는 사람 (GD)(나)
+    4
+    |
+    follower_id     팔로우 보내는 사람 (본인)(전여친)
+    -->
+
+    <!-- 로그인 회원이 팔로우하는 계정 목록 -->
+    <select id="selectFollowingUserId" resultType="int">
+        SELECT following_id
+        FROM follows
+        WHERE follower_id = #{loginUserId};
+    </select>
+
+    <!-- 로그인 회원이 팔로우하는 계정 수 -->
+    <select id="selectFollowingUsers" resultType="int">
+        SELECT COUNT(*)
+        FROM follows
+        WHERE follower_id = #{loginUserId}
+    </select>
+
+    <!-- 로그인 회원을 팔로우하는 계정 수 -->
+    <select id="selectFollowerUsers" resultType="int">
+        SELECT COUNT(*)
+        FROM follows
+        WHERE following_id = #{loginUserId}
+    </select>
+
+    <!-- 팔로우 신청 -->
+    <insert id="insertFollowing" parameterType="Follow">
+        INSERT INTO follows (follower_id, following_id)
+        VALUES (#{followerId}, #{followingId})
+    </insert>
+
+    <!-- 팔로우 취소 -->
+    <delete id="deleteFollowing" parameterType="Follow">
+        DELETE FROM follows
+        WHERE following_id = #{followingId}
+        AND follower_id = #{followerId}
+    </delete>
+
+</mapper>

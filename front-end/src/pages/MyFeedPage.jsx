@@ -3,88 +3,116 @@ import Header from '../components/Header';
 import { Grid, Bookmark, Settings } from 'lucide-react';
 import apiService from "../service/apiService";
 import {useLocation, useNavigate} from "react-router-dom";
+import {getImageUrl} from "../service/commonService";
 
 const MyFeedPage = () => {
     const navigate = useNavigate();
     const location = useLocation();
     const [user, setUser] = useState({
-        username: "my_instagram",
-        userFullname: "내 이름",
+        username: "",
+        userFullname: "",
         profileImage: null,
-        postCount: 12,
-        followerCount: 150,
-        followingCount: 45,
+        postCount: 0,
+        followerCount: 0,
+        followingCount: 0,
         bio: "안녕하세요."
     });
+
     const [posts, setPosts] = useState([]);
     const [activeTab, setActiveTab] = useState('posts');
     const [loading, setLoading] = useState(true);
+
+    const [followingCount, setFollowingCount] = useState(0);
+    const [followerCount, setFollowerCount] = useState(0);
+    const [followings, setFollowings] = useState([]);
+
+    const [isLoginUser, setIsLoginUser] = useState(false);
     const loginUser = JSON.parse(localStorage.getItem('user') || '{}');
     const loginUserId = loginUser.userId;
-    // const currentUrl = window.location.href;
+
     const searchParams = new URLSearchParams(location.search);
     const paramUserId = searchParams.get('userId');
+
+    const isMyFeed = location.pathname === '/myfeed' && !location.search;
+    const isMyFeedWithUserId = location.pathname === '/myfeed' && location.search.startsWith('?userId=');
+
+    const isRealMyFeed = !paramUserId || parseInt(paramUserId) === loginUserId;
 
     useEffect(() => {
         if(!loginUser) return navigate('/login');
         getMyFeedData();
     }, [navigate, paramUserId]);
 
-    const isMyFeed = location.pathname === '/myfeed' && !location.search;
-    const isMyFeedWithUserId = location.pathname === '/myfeed' && location.search.startsWith('?userId=');
     const getMyFeedData = async () => {
         setLoading(true);
-        if(isMyFeed){
-            try {
-                console.log("loginUserId : ", loginUserId);
-                /*
-                전체 게시물 가져와서 본인 게시물 필터링하는 방식
-                const allPosts = await apiService.getPosts();
-                const myPosts = allPosts.filter(post => post.userId == loginUserId);
-                 */
-                const userRes = await apiService.getLoginUser();
-                console.log("userRes : ", userRes);
-                setUser({
-                    username: userRes.userName,
-                    userFullname: userRes.userFullname,
-                    profileImage: userRes.userAvatar
-                });
-                console.log('profileImage : ', userRes.userAvatar);
-                const feedRes = await apiService.getUserPosts(loginUserId);
-                setPosts(feedRes);
-            } catch (error) {
-                console.log(error);
-                alert("계정 정보를 불러오는데 실패했습니다.");
-            } finally {
-                setLoading(false);
-            }
+        try {
+            const followingRes = await apiService.getFollowingList();
+            setFollowings(followingRes || []);
+        } catch (e) {
+            console.error("팔로잉 목록 불러오기 실패", e);
         }
-        if(isMyFeedWithUserId){
-            try {
-                console.log("paramUserId : ", paramUserId);
-                const userRes = await apiService.getUser(paramUserId);
-                console.log("userRes : ", userRes);
-                setUser({
-                    username: userRes.userName,
-                    userFullname: userRes.userFullname,
-                    profileImage: userRes.userAvatar
-                });
-                console.log('profileImage : ', userRes.userAvatar);
-                const feedRes = await apiService.getUserPosts(paramUserId);
-                setPosts(feedRes);
-            } catch (error) {
-                console.log(error);
-                alert("계정 정보를 불러오는데 실패했습니다.");
-            } finally {
-                setLoading(false);
+        const feedPageOwner = isRealMyFeed ? loginUserId : parseInt(paramUserId);
+        try {
+            let userRes;
+            if (isRealMyFeed) {
+                userRes = await apiService.getLoginUser();
+            } else {
+                userRes = await apiService.getUser(paramUserId);
             }
+            setUser({
+                username: userRes.userName,
+                userFullname: userRes.userFullname || '',
+                profileImage: userRes.userAvatar
+            });
+            const followRes = await apiService.getFollowing(feedPageOwner);
+            setFollowerCount(followRes.resultFollower || 0);
+            setFollowingCount(followRes.resultFollowing || 0);
+            const postsRes = await apiService.getUserPosts(feedPageOwner);
+            setPosts(postsRes || []);
+        } catch (error) {
+            console.error(error);
+            alert("프로필 정보를 불러오는데 실패했습니다.");
+        } finally {
+            setLoading(false);
         }
     }
+
+    const toggleFollow = async () => {
+        if (isRealMyFeed || !paramUserId) return;
+        const feedPageOwner = parseInt(paramUserId);
+        const isCurrentlyFollowing = followings.includes(feedPageOwner);
+        setFollowings(prev =>
+            isCurrentlyFollowing
+                ? prev.filter(id => id !== feedPageOwner)
+                : [...prev, feedPageOwner]
+        );
+        setFollowerCount(prev =>
+            isCurrentlyFollowing ? prev - 1 : prev + 1
+        );
+        try {
+            if (isCurrentlyFollowing) {
+                await apiService.deleteFollowing(feedPageOwner);
+            } else {
+                await apiService.createFollowing(feedPageOwner);
+            }
+        } catch (error) {
+            setFollowings(prev =>
+                isCurrentlyFollowing
+                    ? [...prev, feedPageOwner]
+                    : prev.filter(id => id !== feedPageOwner)
+            );
+            setFollowerCount(prev =>
+                isCurrentlyFollowing ? prev + 1 : prev - 1
+            );
+            alert("팔로우 처리에 실패했습니다.");
+        }
+    };
+
+    const isFollowing = !isRealMyFeed && paramUserId && followings.includes(parseInt(paramUserId));
 
     return (
         <div className="feed-container">
             <Header type="feed" />
-
             <main className="profile-wrapper">
                 <header className="profile-header">
                     <div className="profile-image-container">
@@ -93,7 +121,7 @@ const MyFeedPage = () => {
                                 // src={loginUser.userAvatar != null
                                 //     ? loginUser.userAvatar
                                 //     : '/static/img/default-avatar.jpg'}
-                                src={user.profileImage}
+                                src={getImageUrl(user.profileImage)}
                                 alt="profile"
                                 className="profile-image-large"
                             />
@@ -104,18 +132,31 @@ const MyFeedPage = () => {
                         <div className="profile-title-row">
                             <h2 className="profile-username">{user.username}</h2>
                             <div className="profile-actions">
-                                <button className="profile-edit-btn"
-                                        onClick={() => navigate('/profile/edit')}>
-                                    프로필 편집
-                                </button>
-                                <button className="profile-archive-btn">보관함 보기</button>
+                                {isRealMyFeed ? (
+                                    <>
+                                        <button className="profile-edit-btn"
+                                                onClick={() => navigate('/profile/edit')}>
+                                            프로필 편집
+                                        </button>
+                                        <button className="profile-archive-btn">보관함 보기</button>
+                                    </>
+                                ) : (
+                                    <>
+                                        <button className={`profile-edit-btn ${isFollowing ? 'following' : 'follow'}`}
+                                                onClick={toggleFollow}
+                                        >
+                                            {isFollowing ? '팔로잉' : '팔로우'}
+                                        </button>
+                                        <button className="profile-archive-btn">메시지</button>
+                                    </>
+                                )}
                             </div>
                         </div>
 
                         <ul className="profile-stats">
                             <li>게시물 <strong>{posts.length}</strong></li>
-                            <li>팔로워 <strong>0</strong></li>
-                            <li>팔로잉 <strong>0</strong></li>
+                            <li>팔로워 <strong>{followerCount}</strong></li>
+                            <li>팔로잉 <strong>{followingCount}</strong></li>
                         </ul>
 
                         <div className="profile-bio-container">
@@ -130,11 +171,11 @@ const MyFeedPage = () => {
                         <span className="stat-label">게시물</span>
                     </div>
                     <div className="stat-item">
-                        <span className="stat-value">0</span>
+                        <span className="stat-value">{followerCount}</span>
                         <span className="stat-label">팔로워</span>
                     </div>
                     <div className="stat-item">
-                        <span className="stat-value">0</span>
+                        <span className="stat-value">{followingCount}</span>
                         <span className="stat-label">팔로잉</span>
                     </div>
                 </div>

@@ -19,6 +19,7 @@ import MentionText from "../components/MentionText";
 import SearchModal from "../components/SearchModal";
 import PostDetailModal from "../components/PostDetailModal";
 import {post} from "axios";
+import PostOptionMenu from "../components/PostOptionMenu";
 
 const SingleFeedPage = () => {
     const navigate = useNavigate();
@@ -28,7 +29,9 @@ const SingleFeedPage = () => {
     const [selectedPost, setSelectedPost] = useState(null);
     const [comments, setComments] = useState([]);
     const [commentText, setCommentText] = useState('');
-    const currentUser = JSON.parse(localStorage.getItem("user") || '[]');
+    const [followings, setFollowings] = useState([]);
+    const loginUser = JSON.parse(localStorage.getItem("user") || '[]');
+    const loginUserId = loginUser.userId;
     const {postId} = useParams();
 
     useEffect(() => {
@@ -43,6 +46,8 @@ const SingleFeedPage = () => {
             const res = await apiService.getPost(postId);
             console.log("res :", res);
             setPost(res);
+            const followingRes = await apiService.getFollowingList();
+            setFollowings(followingRes || []);
         } catch (error) {
             alert("포스트를 불러오는데 실패했습니다.");
         } finally {
@@ -133,6 +138,31 @@ const SingleFeedPage = () => {
         }
     };
 
+    // 팔로우 토글 함수
+    const toggleFollow = async (targetUserId) => {
+        if (targetUserId === loginUserId) return;
+        const isCurrentlyFollowing = followings.includes(targetUserId);
+        if (isCurrentlyFollowing) {
+            setFollowings(prev => prev.filter(id => id !== targetUserId));
+        } else {
+            setFollowings(prev => [...prev, targetUserId]);
+        }
+        try {
+            if (isCurrentlyFollowing) {
+                await apiService.deleteFollowing(targetUserId);
+            } else {
+                await apiService.createFollowing(targetUserId);
+            }
+        } catch (error) {
+            if (isCurrentlyFollowing) {
+                setFollowings(prev => [...prev, targetUserId]);
+            } else {
+                setFollowings(prev => prev.filter(id => id !== targetUserId));
+            }
+            alert("팔로우 처리에 실패했습니다.");
+        }
+    };
+
     const deletePost = async (postId) => {
         try {
             await apiService.deletePost(postId);
@@ -164,6 +194,9 @@ const SingleFeedPage = () => {
         );
     }
 
+    const isOwnPost = post.userId === loginUserId;
+    const isFollowing = followings.includes(post.userId);
+
     return (
         <div className="feed-container">
             <Header/>
@@ -183,7 +216,22 @@ const SingleFeedPage = () => {
                                 {post.userName}
                             </span>
                         </div>
-                        <MoreHorizontal className="post-more-icon"/>
+                        <div className="post-header-right">
+                            {/* 본인 포스트가 아니면 팔로우 버튼 표시 */}
+                            {!isOwnPost && (
+                                <button
+                                    className={`follow-btn ${isFollowing ? 'following' : 'follow'}`}
+                                    onClick={() => toggleFollow(post.userId)}
+                                >
+                                    {isFollowing ? '팔로잉' : '팔로우'}
+                                </button>
+                            )}
+                        </div>
+                        {/*<MoreHorizontal className="post-more-icon"/>*/}
+                        <PostOptionMenu
+                            post={post}
+                            currentUserId={loginUserId}
+                            onDelete={deletePost}/>
                     </div>
 
                     <img src={post.postImage}
@@ -235,7 +283,7 @@ const SingleFeedPage = () => {
                                                 {comment.createdAt}
                                             </div>
                                         </div>
-                                        {currentUser.userId === comment.userId &&(
+                                        {loginUser.userId === comment.userId &&(
                                             <Trash2 size={16}
                                                     className="comment-delete-btn"
                                                     onClick={() =>
@@ -273,7 +321,7 @@ const SingleFeedPage = () => {
             {selectedPost && (
                 <PostDetailModal
                     post={selectedPost}
-                    currentUserId={currentUser.userId}
+                    currentUserId={loginUser.userId}
                     onClose={() => setSelectedPost(null)}
                     onDelete={deletePost}
                     onToggleLike={toggleLike}
