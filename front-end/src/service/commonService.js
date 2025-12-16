@@ -1,4 +1,4 @@
-export const API_BASE_URL = 'https://3.26.33.138:9000/api';
+export const API_BASE_URL = '/api';
 
 export const getImageUrl = (path) => {
     if(!path) return '/static/img/default-avatar.jpg';
