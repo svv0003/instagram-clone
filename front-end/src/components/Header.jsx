@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { ArrowLeft, Film, Home, MessageCircle, PlusSquare, Settings, User } from "lucide-react";
+import { ArrowLeft, Film, Home, MessageCircle, PlusSquare, Settings, User, Search } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import Sidebar from "./Sidebar";
 import SearchModal from "./SearchModal";
@@ -31,8 +31,12 @@ const Header = ({
                             Instagram
                         </h1>
                         <div className="header-nav">
-                            <Home className="header-icon" onClick={openSearch}
+                            <Home className="header-icon"
+                                  onClick={() => navigate('/feed')}
                                   style={{cursor: 'pointer'}}/>
+                            <Search className="header"
+                                    onClick={openSearch}
+                                    style={{cursor: 'pointer'}} />
                             <MessageCircle className="header-icon" />
                             <PlusSquare className="header-icon"
                                         onClick={() => navigate('/upload')}

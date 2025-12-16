@@ -26,7 +26,8 @@ const FeedPage = () => {
     const [stories, setStories] = useState([]);
     const [loading, setLoading] = useState(true);
     const [selectedPost, setSelectedPost] = useState(null);
-    const currentUser = JSON.parse(localStorage.getItem("user") || '[]');
+    const loginUser = JSON.parse(localStorage.getItem("user") || '[]');
+    const loginUserId = loginUser.userId;
 
     useEffect(() => {
         loadFeedData()
@@ -144,28 +145,40 @@ const FeedPage = () => {
         <div className="feed-container">
             <Header/>
             <div className="feed-content">
-                {stories.length > 0 && (
-                    <div className="stories-container">
-                        <div className="stories-wrapper">
-                            {stories.map((story) => (
-                                <div key={story.userId}
-                                     className="story-item"
-                                     onClick={() =>
-                                         navigate(`/story/detail/${story.userId}`)}
+                <div className="stories-container">
+                    <div className="stories-wrapper">
+                        <div className="story-item"
+                             onClick={() =>
+                                 navigate(`/story/upload`)}>
+                            <div className="story-avatar-wrapper">
+                                <img src={getImageUrl(loginUser.userAvatar)}
+                                     className="story-avatar"/>
+                            </div>
+                            <span className="story-username">
+                                {loginUser.userName}
+                            </span>
+                        </div>
+                        {stories.length > 0 &&
+                            stories.map((story) => (
+                                <div
+                                    key={story.userId}  // key는 최상위 요소에만
+                                    className="story-item"
+                                    onClick={() => navigate(`/story/detail/${story.userId}`)}
+                                    style={{ cursor: "pointer" }}
                                 >
-                                    <div className="story-avatar-wrapper"
-                                         key={story.id}>
-                                        <img src={getImageUrl(story.userAvatar)}
-                                             className="story-avatar"/>
+                                    <div className="story-avatar-wrapper">
+                                        <img
+                                            src={getImageUrl(story.userAvatar)}
+                                            className="story-avatar"
+                                            alt={story.userName}
+                                        />
                                     </div>
-                                    <span className="story-username">
-                                        {story.userName}
-                                    </span>
+                                    <span className="story-username">{story.userName}</span>
                                 </div>
                             ))}
-                        </div>
                     </div>
-                )}
+                </div>
+
 
                 {posts.length > 0 && (
                     posts.map((post) => (
@@ -186,7 +199,7 @@ const FeedPage = () => {
                                 </div>
                                 <PostOptionMenu
                                     post={post}
-                                    currentUserId={currentUser.userId}
+                                    currentUserId={loginUser.userId}
                                     onDelete={deletePost}/>
                             </div>
 
@@ -240,7 +253,7 @@ const FeedPage = () => {
             {selectedPost && (
                 <PostDetailModal
                     post={selectedPost}
-                    currentUserId={currentUser.userId}
+                    currentUserId={loginUser.userId}
                     onClose={() => setSelectedPost(null)}
                     onDelete={deletePost}
                     onToggleLike={toggleLike}
