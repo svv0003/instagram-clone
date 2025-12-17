@@ -8,8 +8,8 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class Like {
-    private int like_id;
-    private int post_id;
-    private int user_id;
-    private String created_at;
+    private int likeId;
+    private int postId;
+    private int userId;
+    private String createdAt;
 }

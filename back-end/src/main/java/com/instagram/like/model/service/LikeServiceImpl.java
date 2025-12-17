@@ -21,6 +21,20 @@ public class LikeServiceImpl implements LikeService {
         return likeMapper.selectLikePostId(loginUserId);
     }
 
+    /**
+     * 팔로우 유무 확인
+     * @param postId
+     * @param loginUserId
+     * @return
+     */
+    @Override
+    public boolean checkLike(int postId, int loginUserId) {
+        Like like = new Like();
+        like.setPostId(postId);
+        like.setUserId(loginUserId);
+        return likeMapper.selectLike(like);
+    }
+
     @Override
     public int getLikes(int postId) {
         return likeMapper.selectLikes(postId);
@@ -30,8 +44,8 @@ public class LikeServiceImpl implements LikeService {
     public boolean addLike(int postId, int loginUserId) {
         try {
             Like like = new Like();
-            like.setPost_id(postId);
-            like.setUser_id(loginUserId);
+            like.setPostId(postId);
+            like.setUserId(loginUserId);
             return likeMapper.insertLike(like);
         } catch (Exception e) {
             log.error("좋아요 반영 문제 발생 : {}", e);
@@ -43,8 +57,8 @@ public class LikeServiceImpl implements LikeService {
     public boolean deleteLike(int postId, int loginUserId) {
         try {
             Like like = new Like();
-            like.setPost_id(postId);
-            like.setUser_id(loginUserId);
+            like.setPostId(postId);
+            like.setUserId(loginUserId);
             return likeMapper.deleteLike(like);
         } catch (Exception e) {
             log.error("좋아요 취소 문제 발생 : {}", e);

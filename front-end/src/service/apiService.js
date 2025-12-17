@@ -164,8 +164,80 @@ const apiService = {
         }
     },
 
+    /**
+     * 좋아요 목록 조회
+     * @returns {Promise<any>}
+     */
+    getLikeList: async () => {
+        try {
+            const res = await api.get("/like/list");
+            return res.data;
+        } catch (e) {
+            alert("좋아요 목록 조회 실패 : {}", e);
+        }
+    },
+
+    /**
+     * 좋아요 유무 확인
+     * @returns {Promise<any>}
+     */
+    getLike: async (postId) => {
+        try {
+            const res = await api.get(`/like/check?postId=${postId}`);
+            return res.data;
+        } catch (e) {
+            alert("좋아요 유무 확인 실패 : {}", e);
+        }
+    },
+
+    /**
+     * 좋아요 수 조회
+     * @param postId
+     * @returns {Promise<any>}
+     */
+    getLikes: async (postId) => {
+        try {
+            const res = await api.get(`/like/count?postId=${postId}`);
+            return res.data;
+        } catch (e) {
+            alert("좋아요 수 조회 실패 : {}", e);
+        }
+    },
+
+    /**
+     * 좋아요 추가
+     * @param postId
+     * @returns {Promise<any>}
+     */
+    createLike: async (postId) => {
+        try {
+            const res = await api.post(`/like/add?postId=${postId}`);
+            return res.data;
+        } catch (e) {
+            alert("좋아요 선택 실패 : {}", e);
+        }
+    },
+
+    /**
+     * 좋아요 취소
+     * @param postId
+     * @returns {Promise<any>}
+     */
+    deleteLike: async (postId) => {
+        try {
+            const res = await api.delete(`/like/delete?postId=${postId}`);
+            return res.data;
+        } catch (e) {
+            alert("좋아요 취소 실패 : {}", e);
+        }
+    },
+
     // ===== 팔로우 API =====
 
+    /**
+     * 팔로우 목록 조회
+     * @returns {Promise<any>}
+     */
     getFollowingList: async () => {
         try {
             const res = await api.get("/follow/list");
@@ -175,15 +247,38 @@ const apiService = {
         }
     },
 
+    /**
+     * 팔로우 유무 확인
+     * @returns {Promise<any>}
+     */
     getFollowing: async (userId) => {
         try {
-            const res = await api.get(`/follow/count?feedUserId=${userId}`);
+            const res = await api.get(`/follow/check?userId=${userId}`);
+            return res.data;
+        } catch (e) {
+            alert("팔로잉 유무 확인 실패 : {}", e);
+        }
+    },
+
+    /**
+     * 팔로우/팔로잉 수 조회
+     * @param userId
+     * @returns {Promise<any>}
+     */
+    getFollowingCount: async (userId) => {
+        try {
+            const res = await api.get(`/follow/count?userId=${userId}`);
             return res.data;
         } catch (e) {
             alert("팔로잉/팔로우 조회 실패 : {}", e);
         }
     },
 
+    /**
+     * 팔로우 신청
+     * @param userId
+     * @returns {Promise<any>}
+     */
     createFollowing: async (userId) => {
         try {
             const res = await api.post(`/follow/add?userId=${userId}`);
@@ -193,6 +288,11 @@ const apiService = {
         }
     },
 
+    /**
+     * 팔로우 취소
+     * @param userId
+     * @returns {Promise<any>}
+     */
     deleteFollowing: async (userId) => {
         try {
             const res = await api.delete(`/follow/delete?userId=${userId}`);

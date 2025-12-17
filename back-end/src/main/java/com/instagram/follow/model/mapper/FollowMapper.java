@@ -15,6 +15,12 @@ public interface FollowMapper {
      */
     List<Integer> selectFollowingUserId(int loginUserId);
     /**
+     * 로그인 회원이 특정 회원을 팔로우 유무 확인
+     * @param follow
+     * @return
+     */
+    boolean selectFollowing(Follow follow);
+    /**
      * 로그인 회원이 팔로우하는 계정 수
      * @param loginUserId
      * @return
@@ -38,4 +44,5 @@ public interface FollowMapper {
      * @return
      */
     boolean deleteFollowing(Follow follow);
+
 }

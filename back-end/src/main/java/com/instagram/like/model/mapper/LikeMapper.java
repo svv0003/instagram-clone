@@ -15,6 +15,12 @@ public interface LikeMapper {
      */
     List<Integer> selectLikePostId(int loginUserId);
     /**
+     * 로그인 회원 특정 게시물 좋아요 유무 확인
+     * @param like
+     * @return
+     */
+    boolean selectLike(Like like);
+    /**
      * 게시물을 좋아요 누른 사용자 수
      * @param postId
      * @return

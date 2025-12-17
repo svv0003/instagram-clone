@@ -35,45 +35,58 @@ public class LikeController {
         }
     }
 
-    @GetMapping("/count")
-    public ResponseEntity<Integer> getLikeCount(@RequestParam int feedPostId) {
+    @GetMapping("/check")
+    public ResponseEntity<Boolean> checkFollowing(@RequestHeader("Authorization") String authHeader,
+                                                  @RequestParam int postId) {
         try {
-            log.info("feedUserId : {}", feedPostId);
-            int result = likeService.getLikes(feedPostId);
+            String token = authHeader.substring(7);
+            int loginUserId = jwtUtil.getUserIdFromToken(token);
+            boolean isLike = likeService.checkLike(postId, loginUserId);
+            return ResponseEntity.ok(isLike);
+        } catch (Exception e) {
+            return ResponseEntity.status(500).body(null);
+        }
+    }
+
+    @GetMapping("/count")
+    public ResponseEntity<Integer> getLikeCount(@RequestParam int postId) {
+        try {
+            log.info("feedUserId : {}", postId);
+            int result = likeService.getLikes(postId);
             log.info("result : {}", result);
             return ResponseEntity.ok(result);
         } catch (Exception e) {
             return ResponseEntity.status(500).body(null);
         }
     }
-//
-//    @PostMapping("/add")
-//    public ResponseEntity<?> addFollowing(@RequestHeader("Authorization") String authHeader,
-//                                          @RequestParam int userId) {
-//        try {
-//            String token = authHeader.substring(7);
-//            int loginUserId = jwtUtil.getUserIdFromToken(token);
-//            log.info("userId : {}, loginUserId : {}", userId, loginUserId);
-//            boolean result = followService.addFollowing(userId, loginUserId);
-//            log.info("result : {}", result);
-//            return ResponseEntity.ok(result);
-//        } catch (Exception e) {
-//            return ResponseEntity.status(500).body(null);
-//        }
-//    }
-//
-//    @DeleteMapping("/delete")
-//    public ResponseEntity<?> deleteFollowing(@RequestHeader("Authorization") String authHeader,
-//                                             @RequestParam int userId) {
-//        try {
-//            String token = authHeader.substring(7);
-//            int loginUserId = jwtUtil.getUserIdFromToken(token);
-//            log.info("userId : {}, loginUserId : {}", userId, loginUserId);
-//            boolean result = followService.deleteFollowing(userId, loginUserId);
-//            log.info("result : {}", result);
-//            return ResponseEntity.ok(result);
-//        } catch (Exception e) {
-//            return ResponseEntity.status(500).body(null);
-//        }
-//    }
+
+    @PostMapping("/add")
+    public ResponseEntity<?> addFollowing(@RequestHeader("Authorization") String authHeader,
+                                          @RequestParam int postId) {
+        try {
+            String token = authHeader.substring(7);
+            int loginUserId = jwtUtil.getUserIdFromToken(token);
+            log.info("postId : {}, loginUserId : {}", postId, loginUserId);
+            boolean result = likeService.addLike(postId, loginUserId);
+            log.info("result : {}", result);
+            return ResponseEntity.ok(result);
+        } catch (Exception e) {
+            return ResponseEntity.status(500).body(null);
+        }
+    }
+
+    @DeleteMapping("/delete")
+    public ResponseEntity<?> deleteFollowing(@RequestHeader("Authorization") String authHeader,
+                                             @RequestParam int postId) {
+        try {
+            String token = authHeader.substring(7);
+            int loginUserId = jwtUtil.getUserIdFromToken(token);
+            log.info("postId : {}, loginUserId : {}", postId, loginUserId);
+            boolean result = likeService.deleteLike(postId, loginUserId);
+            log.info("result : {}", result);
+            return ResponseEntity.ok(result);
+        } catch (Exception e) {
+            return ResponseEntity.status(500).body(null);
+        }
+    }
 }

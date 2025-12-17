@@ -26,6 +26,20 @@ public class FollowServiceImpl implements FollowService {
     }
 
     /**
+     * 팔로우 유무 확인
+     * @param userId
+     * @param loginUserId
+     * @return
+     */
+    @Override
+    public boolean checkFollowing(int userId, int loginUserId) {
+        Follow follow = new Follow();
+        follow.setFollowingId(userId);
+        follow.setFollowerId(loginUserId);
+        return followMapper.selectFollowing(follow);
+    }
+
+    /**
      * 팔로잉 수 조회
      * @param feedUserId
      * @return

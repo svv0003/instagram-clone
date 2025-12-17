@@ -29,7 +29,8 @@ const SingleFeedPage = () => {
     const [selectedPost, setSelectedPost] = useState(null);
     const [comments, setComments] = useState([]);
     const [commentText, setCommentText] = useState('');
-    const [followings, setFollowings] = useState([]);
+    const [isFollowing, setIsFollowing] = useState(false);
+    const [isLiked, setIsLiked] = useState(false);
     const loginUser = JSON.parse(localStorage.getItem("user") || '[]');
     const loginUserId = loginUser.userId;
     const {postId} = useParams();
@@ -46,8 +47,12 @@ const SingleFeedPage = () => {
             const res = await apiService.getPost(postId);
             console.log("res :", res);
             setPost(res);
-            const followingRes = await apiService.getFollowingList();
-            setFollowings(followingRes || []);
+            if (res.userId !== loginUserId) {
+                const following = await apiService.getFollowing(res.userId);
+                setIsFollowing(following);
+            }
+            const liked = await apiService.getLike(postId);
+            setIsLiked(liked);
         } catch (error) {
             alert("포스트를 불러오는데 실패했습니다.");
         } finally {
@@ -95,7 +100,6 @@ const SingleFeedPage = () => {
     };
 
 /*
-
     const toggleLike = async (postId, isLiked) => {
         const newPosts = [...post];
         const targetIndex = newPosts.findIndex(post => post.postId === postId);
@@ -117,23 +121,26 @@ const SingleFeedPage = () => {
     };
  */
     const toggleLike = async () => {
-        if (!post) return;
-        // 낙관적 업데이트
+        // if (!post) return;
+        const previous = isLiked;
+        setIsLiked(!previous);
         setPost(prev => ({
             ...prev,
-            isLiked: !prev.isLiked,
-            likeCount: prev.isLiked ? --prev.likeCount : ++prev.likeCount
+            likeCount: previous ? prev.likeCount - 1 : prev.likeCount + 1
         }));
 
         try {
-            if (post.isLiked) {
+            if (previous) {
                 await apiService.removeLike(post.postId);
             } else {
                 await apiService.addLike(post.postId);
             }
         } catch (error) {
-            // 실패 시 롤백
-            setPost(post);
+            setIsLiked(previous);
+            setPost(prev => ({
+                ...prev,
+                likeCount: previous ? prev.likeCount + 1 : prev.likeCount - 1
+            }));
             alert("좋아요 처리에 실패했습니다.");
         }
     };
@@ -141,24 +148,15 @@ const SingleFeedPage = () => {
     // 팔로우 토글 함수
     const toggleFollow = async (targetUserId) => {
         if (targetUserId === loginUserId) return;
-        const isCurrentlyFollowing = followings.includes(targetUserId);
-        if (isCurrentlyFollowing) {
-            setFollowings(prev => prev.filter(id => id !== targetUserId));
-        } else {
-            setFollowings(prev => [...prev, targetUserId]);
-        }
+        setIsFollowing(prev => !prev);
         try {
-            if (isCurrentlyFollowing) {
+            if (isFollowing) {
                 await apiService.deleteFollowing(targetUserId);
             } else {
                 await apiService.createFollowing(targetUserId);
             }
         } catch (error) {
-            if (isCurrentlyFollowing) {
-                setFollowings(prev => [...prev, targetUserId]);
-            } else {
-                setFollowings(prev => prev.filter(id => id !== targetUserId));
-            }
+            setIsFollowing(prev => !prev); // 롤백
             alert("팔로우 처리에 실패했습니다.");
         }
     };
@@ -195,7 +193,6 @@ const SingleFeedPage = () => {
     }
 
     const isOwnPost = post.userId === loginUserId;
-    const isFollowing = followings.includes(post.userId);
 
     return (
         <div className="feed-container">
@@ -241,11 +238,9 @@ const SingleFeedPage = () => {
                     <div className="post-content">
                         <div className="post-actions">
                             <div className="post-actions-left">
-                                <Heart
-                                    className={`action-icon like-icon ${post.isLiked ? 'liked' : ''}`}
-                                    onClick={() =>
-                                        toggleLike(post.postId, post.isLiked)}
-                                    fill={post.isLiked ? "#ed4956" : "none"}
+                                <Heart className={`action-icon like-icon ${isLiked ? 'liked' : ''}`}
+                                       onClick={toggleLike}
+                                       fill={isLiked ? "#ed4956" : "none"}
                                 />
                                 <MessageCircle className="action-icon"/>
                                 <Send className="action-icon"/>

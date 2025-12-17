@@ -64,7 +64,7 @@ const MyFeedPage = () => {
                 userFullname: userRes.userFullname || '',
                 profileImage: userRes.userAvatar
             });
-            const followRes = await apiService.getFollowing(feedPageOwner);
+            const followRes = await apiService.getFollowingCount(feedPageOwner);
             setFollowerCount(followRes.resultFollower || 0);
             setFollowingCount(followRes.resultFollowing || 0);
             const postsRes = await apiService.getUserPosts(feedPageOwner);
@@ -80,29 +80,29 @@ const MyFeedPage = () => {
     const toggleFollow = async () => {
         if (isRealMyFeed || !paramUserId) return;
         const feedPageOwner = parseInt(paramUserId);
-        const isCurrentlyFollowing = followings.includes(feedPageOwner);
+        const isFollowing = followings.includes(feedPageOwner);
         setFollowings(prev =>
-            isCurrentlyFollowing
+            isFollowing
                 ? prev.filter(id => id !== feedPageOwner)
                 : [...prev, feedPageOwner]
         );
         setFollowerCount(prev =>
-            isCurrentlyFollowing ? prev - 1 : prev + 1
+            isFollowing ? prev - 1 : prev + 1
         );
         try {
-            if (isCurrentlyFollowing) {
+            if (isFollowing) {
                 await apiService.deleteFollowing(feedPageOwner);
             } else {
                 await apiService.createFollowing(feedPageOwner);
             }
         } catch (error) {
             setFollowings(prev =>
-                isCurrentlyFollowing
+                isFollowing
                     ? [...prev, feedPageOwner]
                     : prev.filter(id => id !== feedPageOwner)
             );
             setFollowerCount(prev =>
-                isCurrentlyFollowing ? prev + 1 : prev - 1
+                isFollowing ? prev + 1 : prev - 1
             );
             alert("팔로우 처리에 실패했습니다.");
         }

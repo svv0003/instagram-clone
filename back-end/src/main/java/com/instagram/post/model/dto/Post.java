@@ -22,6 +22,6 @@ public class Post {
     private String userAvatar;
 
     // 집계 컬럼
-    private String likeCount;
-    private String commentCount;
+    private int likeCount;
+    private int commentCount;
 }

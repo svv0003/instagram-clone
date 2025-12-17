@@ -13,6 +13,14 @@
         WHERE user_id = #{loginUserId};
     </select>
 
+    <!-- 로그인 회원 특정 게시물 좋아요 유무 확인 -->
+    <select id="selectLike" parameterType="Like" resultType="boolean">
+        SELECT COUNT(*) > 0
+        FROM likes
+        WHERE post_id = #{postId}
+          AND user_id = #{userId}
+    </select>
+
     <!-- 게시물 좋아요 수 -->
     <select id="selectLikes">
         SELECT COUNT(*)

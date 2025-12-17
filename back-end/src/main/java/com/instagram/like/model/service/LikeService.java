@@ -6,6 +6,7 @@ import java.util.List;
 
 public interface LikeService {
     List<Integer> getLikePostId(int loginUserId);
+    boolean checkLike(int postId, int loginUserId);
     int getLikes(int postId);
     boolean addLike(int postId, int loginUserId);
     boolean deleteLike(int postId, int loginUserId);

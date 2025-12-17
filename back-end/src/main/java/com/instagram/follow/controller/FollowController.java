@@ -36,12 +36,25 @@ public class FollowController {
         }
     }
 
-    @GetMapping("/count")
-    public ResponseEntity<Map<String, Integer>> getFollowerCount(@RequestParam int feedUserId) {
+    @GetMapping("/check")
+    public ResponseEntity<Boolean> checkFollowing(@RequestHeader("Authorization") String authHeader,
+                                                  @RequestParam int userId) {
         try {
-            log.info("feedUserId : {}", feedUserId);
-            int resultFollowing = followService.getFollowingUsers(feedUserId);
-            int resultFollower = followService.getFollowerUsers(feedUserId);
+            String token = authHeader.substring(7);
+            int loginUserId = jwtUtil.getUserIdFromToken(token);
+            boolean isFollowing = followService.checkFollowing(userId, loginUserId);
+            return ResponseEntity.ok(isFollowing);
+        } catch (Exception e) {
+            return ResponseEntity.status(500).body(null);
+        }
+    }
+
+    @GetMapping("/count")
+    public ResponseEntity<Map<String, Integer>> getFollowerCount(@RequestParam int userId) {
+        try {
+            log.info("userId : {}", userId);
+            int resultFollowing = followService.getFollowingUsers(userId);
+            int resultFollower = followService.getFollowerUsers(userId);
             log.info("resultFollowing : {}, resultFollower : {}", resultFollowing, resultFollower);
             Map<String, Integer> map = new HashMap<>();
             map.put("resultFollowing", resultFollowing);

@@ -7,12 +7,18 @@ import java.util.List;
 public interface FollowService {
 
     /**
-     * selectFollowingUserId
-     *
+     * 로그인 회원이 팔로우하는 계정 목록
      * @param loginUserId
      * @return
      */
     List<Integer> getFollowingUserId(int loginUserId);
+    /**
+     * 로그인 회원이 특정 회원을 팔로우 유무 확인
+     * @param userId
+     * @param loginUserId
+     * @return
+     */
+    boolean checkFollowing(int userId, int loginUserId);
     /**
      * 로그인 회원이 팔로우하는 계정 수
      *
