@@ -9,22 +9,19 @@ import java.util.List;
 public interface FollowMapper {
 
     /**
-     * selectFollowingUserId
-     *
+     * 로그인 회원이 팔로우하는 계정 리스트
      * @param loginUserId
      * @return
      */
     List<Integer> selectFollowingUserId(int loginUserId);
     /**
      * 로그인 회원이 팔로우하는 계정 수
-     *
      * @param loginUserId
      * @return
      */
     int selectFollowingUsers(int loginUserId);
     /**
      * 로그인 회원을 팔로우하는 계정 수
-     *
      * @param loginUserId
      * @return
      */

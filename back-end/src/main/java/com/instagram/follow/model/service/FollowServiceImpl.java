@@ -45,7 +45,6 @@ public class FollowServiceImpl implements FollowService {
         return followMapper.selectFollowerUsers(feedUserId);
     }
 
-
     @Override
     public boolean addFollowing(int userId, int loginUserId) {
         if(loginUserId == userId) return false;
@@ -55,7 +54,7 @@ public class FollowServiceImpl implements FollowService {
             follow.setFollowerId(loginUserId);
             return followMapper.insertFollowing(follow);
         } catch (Exception e) {
-            log.error("좋아요 반영 문제 발생 : {}", e);
+            log.error("팔로우 반영 문제 발생 : {}", e);
             return false;
         }
     }
@@ -69,7 +68,7 @@ public class FollowServiceImpl implements FollowService {
             follow.setFollowerId(loginUserId);
             return followMapper.deleteFollowing(follow);
         } catch (Exception e) {
-            log.error("좋아요 취소 문제 발생 : {}", e);
+            log.error("팔로우 취소 문제 발생 : {}", e);
             return false;
         }
     }

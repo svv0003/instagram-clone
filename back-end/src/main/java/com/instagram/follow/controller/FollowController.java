@@ -23,7 +23,7 @@ public class FollowController {
     private final JwtUtil jwtUtil;
 
     @GetMapping("/list")
-    public ResponseEntity<List<Integer>> getFollowerCount(@RequestHeader("Authorization") String authHeader) {
+    public ResponseEntity<List<Integer>> getFollowingList(@RequestHeader("Authorization") String authHeader) {
         try {
             String token = authHeader.substring(7);
             int loginUserId = jwtUtil.getUserIdFromToken(token);
