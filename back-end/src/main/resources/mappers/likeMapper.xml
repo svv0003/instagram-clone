@@ -21,13 +21,13 @@
     </select>
 
     <!-- 좋아요 추가 -->
-    <insert id="insertLike" parameterType="Likes">
+    <insert id="insertLike" parameterType="Like">
         INSERT INTO likes (post_id, user_id)
         VALUES (#{postId}, #{userId})
     </insert>
 
     <!-- 좋아요 취소 -->
-    <delete id="deleteLike" parameterType="Likes">
+    <delete id="deleteLike" parameterType="Like">
         DELETE FROM likes
         WHERE post_id = #{postId}
           AND user_id = #{userId}
