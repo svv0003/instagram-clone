@@ -220,7 +220,7 @@ const SingleFeedPage = () => {
                             {/* 본인 포스트가 아니면 팔로우 버튼 표시 */}
                             {!isOwnPost && (
                                 <button
-                                    className={`follow-btn ${isFollowing ? 'following' : 'follow'}`}
+                                    className={`profile-edit-btn ${isFollowing ? 'following' : 'follow'}`}
                                     onClick={() => toggleFollow(post.userId)}
                                 >
                                     {isFollowing ? '팔로잉' : '팔로우'}

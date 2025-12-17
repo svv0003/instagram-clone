@@ -33,7 +33,7 @@ public class WebConfig implements WebMvcConfigurer {
                 registry.addMapping("/api/**")
                         .allowedOrigins("http://localhost:3001",
                                 "http://localhost:3000",
-                                "https://instagram-clone-iota-liard.vercel.app")
+                                "https://instagram-front-black.vercel.app/")
                         .allowCredentials(true)
                         .allowedMethods("GET","POST","PUT","DELETE","PATCH","OPTIONS")
                         .allowedHeaders("*");
@@ -41,7 +41,7 @@ public class WebConfig implements WebMvcConfigurer {
                 registry.addMapping("/ws/**")
                         .allowedOrigins("http://localhost:3001",
                                 "http://localhost:3000",
-                                "https://instagram-clone-iota-liard.vercel.app")
+                                "https://instagram-front-black.vercel.app/")
                         .allowCredentials(true)
                         .allowedMethods("GET","POST","PUT","DELETE","PATCH","OPTIONS")
                         .allowedHeaders("*");
