@@ -10,14 +10,14 @@
     <select id="selectLikePostId">
         SELECT post_id
         FROM likes
-        WHERE user_id = #{userId};
+        WHERE user_id = #{loginUserId};
     </select>
 
     <!-- 게시물 좋아요 수 -->
     <select id="selectLikes">
         SELECT COUNT(*)
         FROM likes
-        WHERE post_id = #{postId}
+        WHERE post_id = #{selectedPostId}
     </select>
 
     <!-- 좋아요 추가 -->
