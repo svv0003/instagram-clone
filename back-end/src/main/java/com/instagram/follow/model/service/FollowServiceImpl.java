@@ -37,8 +37,7 @@ public class FollowServiceImpl implements FollowService {
     @Override
     public List<User> getFollowingUserList(int userId) {
         try {
-            List<Integer> followUserIdList = followMapper.selectFollowingUserId(userId);
-            return userMapper.selectUserByUserIdList(followUserIdList);
+            return userMapper.selectFollowingUserByUserIdList(userId);
         } catch (Exception e) {
             log.error(e.getMessage());
             return Collections.emptyList();
@@ -53,8 +52,7 @@ public class FollowServiceImpl implements FollowService {
     @Override
     public List<User> getFollowerUserList(int userId) {
         try {
-            List<Integer> followUserIdList = followMapper.selectFollowerUserId(userId);
-            return userMapper.selectUserByUserIdList(followUserIdList);
+            return userMapper.selectFollowerUserByUserIdList(userId);
         } catch (Exception e) {
             log.error(e.getMessage());
             return Collections.emptyList();

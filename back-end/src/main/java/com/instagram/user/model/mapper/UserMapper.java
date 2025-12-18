@@ -34,10 +34,16 @@ public interface UserMapper {
      */
     User selectUserByUserNameExact(String userName);
     /**
-     * 유저 id 목록에 해당하는 유저 정보 조회
-     * @param userIdList
+     * 팔로잉 유저 id 목록에 해당하는 유저 정보 조회
+     * @param userId
      * @return
      */
-    List<User> selectUserByUserIdList(List<Integer> userIdList);
+    List<User> selectFollowingUserByUserIdList(int userId);
+    /**
+     * 팔로워 유저 id 목록에 해당하는 유저 정보 조회
+     * @param userId
+     * @return
+     */
+    List<User> selectFollowerUserByUserIdList(int userId);
     boolean updateUserPassword(User user);
 }

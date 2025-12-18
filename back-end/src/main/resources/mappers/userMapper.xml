@@ -94,15 +94,34 @@
         WHERE user_name = #{userName}
     </select>
 
-    <!-- 유저 목록에 포함되는 유저 조회 -->
-    <select id="selectUserByUserIdList" parameterType="list" resultType="User">
+    <!-- 팔로잉 유저 목록에 포함되는 유저 조회 -->
+    <select id="selectFollowingUserByUserIdList" resultType="User">
         SELECT
             user_id,
             user_name,
             user_fullname,
             user_avatar
         FROM users
-        WHERE user_id = ANY(#{list})
+        WHERE user_id IN (
+            SELECT following_id
+            FROM follows
+            WHERE follower_id = #{userId}
+        )
+    </select>
+
+    <!-- 팔로워 유저 목록에 포함되는 유저 조회 -->
+    <select id="selectFollowerUserByUserIdList"  resultType="User">
+        SELECT
+            user_id,
+            user_name,
+            user_fullname,
+            user_avatar
+        FROM users
+        WHERE user_id IN (
+            SELECT follower_id
+            FROM follows
+            WHERE following_id = #{userId}
+        )
     </select>
 
 </mapper>
