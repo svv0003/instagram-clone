@@ -22,7 +22,7 @@ public class FollowController {
     private final FollowService followService;
     private final JwtUtil jwtUtil;
 
-    @GetMapping("/list/following/UserId")
+    @GetMapping("/list/following/userId")
     public ResponseEntity<List<Integer>> getFollowingList(@RequestHeader("Authorization") String authHeader) {
         try {
             String token = authHeader.substring(7);
