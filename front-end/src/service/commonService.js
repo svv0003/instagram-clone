@@ -1,4 +1,4 @@
-// export const API_BASE_URL = 'https://13.124.86.176:9000';
+export const API_BASE_URL = 'https://13.125.72.19:9000';
 
 export const getImageUrl = (path) => {
     if(!path) return '/static/img/default-avatar.jpg';
@@ -6,8 +6,8 @@ export const getImageUrl = (path) => {
     if(path ==='default-avatar.jpg') return '/static/img/default-avatar.jpg';
     if(path ==='default-avatar.png') return '/static/img/default-avatar.jpg';
     if(path.startsWith('/static/img')) return path;
-    // return `${API_BASE_URL}${path}`;
-    return `http://localhost:9000${path}`;
+    return `${API_BASE_URL}${path}`;
+    // return `http://localhost:9000${path}`;
 }
 
 export const formatDate = (dateString, format="relative") => {
