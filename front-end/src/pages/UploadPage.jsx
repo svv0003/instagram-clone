@@ -5,6 +5,7 @@ import {Image} from 'lucide-react';
 import {getFilteredFile, FILTER_OPTIONS} from "../service/filterService";
 import Header from "../components/Header";
 import MentionInput from "../components/MentionInput";
+import {getImageUrl} from "../service/commonService";
 
 
 const UploadPage = () => {
@@ -77,10 +78,9 @@ const UploadPage = () => {
                     <div className="upload-image-area">
                         {imagePreview ? (
                             <div style={{width:'100%', display:'flex', flexDirection:'column'}}>
-                                <img
-                                    src={imagePreview}
-                                    className="upload-preview-image"
-                                    style={{filter: selectedFilter}}
+                                <img src={getImageUrl(imagePreview)}
+                                     className="upload-preview-image"
+                                     style={{filter: selectedFilter}}
                                 />
                                 <div className="filter-scroll-container">
                                     {FILTER_OPTIONS.map((option) => (
@@ -128,7 +128,7 @@ const UploadPage = () => {
                     <div className="upload-caption-area">
                         <div className="upload-caption-content">
                             <img className="upload-user-avatar"
-                                 src={avatarImage}
+                                 src={getImageUrl(avatarImage)}
                                  onError={handleAvatarError}
                             />
                             <div className="upload-caption-right">

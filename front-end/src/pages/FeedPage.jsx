@@ -240,10 +240,9 @@ const FeedPage = () => {
                                     style={{ cursor: "pointer" }}
                                 >
                                     <div className="story-avatar-wrapper">
-                                        <img
-                                            src={getImageUrl(story.userAvatar)}
-                                            className="story-avatar"
-                                            alt={story.userName}
+                                        <img src={getImageUrl(story.userAvatar)}
+                                             className="story-avatar"
+                                             alt={story.userName}
                                         />
                                     </div>
                                     <span className="story-username">{story.userName}</span>

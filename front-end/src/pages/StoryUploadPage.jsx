@@ -4,6 +4,7 @@ import apiService from '../service/apiService';
 import {ArrowLeft, Image, X} from 'lucide-react';
 import {getFilteredFile, FILTER_OPTIONS} from '../service/filterService';
 import Header from "../components/Header";
+import {getImageUrl} from "../service/commonService";
 
 const StoryUploadPage = () => {
     const [selectedImage, setSelectedImage] = useState(null);
@@ -68,7 +69,7 @@ const StoryUploadPage = () => {
                         {imagePreview ? (
                             <div style={{width: '100%', display: 'flex', flexDirection: 'column'}}>
                                 <div style={{position: 'relative'}}>
-                                    <img src={imagePreview}
+                                    <img src={getImageUrl(imagePreview)}
                                          alt={imagePreview}
                                          style={{filter: selectedFilter}}
                                          className="upload-preview-image"

@@ -197,15 +197,13 @@ const SignupPage = () => {
                         gap: '0.5rem',
                         flexWrap: 'wrap'
                     }}>
-                        <img
-                            src="https://static.cdninstagram.com/rsrc.php/v3/yz/r/c5Rp7Ym-Klz.png"
-                            alt="Google Play에서 다운로드"
-                            style={{ height: '40px', cursor: 'pointer' }}
+                        <img src="https://static.cdninstagram.com/rsrc.php/v3/yz/r/c5Rp7Ym-Klz.png"
+                             alt="Google Play에서 다운로드"
+                             style={{ height: '40px', cursor: 'pointer' }}
                         />
-                        <img
-                            src="https://static.cdninstagram.com/rsrc.php/v3/yu/r/EHY6QnZYdNX.png"
-                            alt="Microsoft에서 다운로드"
-                            style={{ height: '40px', cursor: 'pointer' }}
+                        <img src="https://static.cdninstagram.com/rsrc.php/v3/yu/r/EHY6QnZYdNX.png"
+                             alt="Microsoft에서 다운로드"
+                             style={{ height: '40px', cursor: 'pointer' }}
                         />
                     </div>
                 </div>

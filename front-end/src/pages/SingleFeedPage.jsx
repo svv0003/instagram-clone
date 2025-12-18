@@ -231,7 +231,7 @@ const SingleFeedPage = () => {
                             onDelete={deletePost}/>
                     </div>
 
-                    <img src={post.postImage}
+                    <img src={getImageUrl(post.postImage)}
                          className="post-image"
                          style={{cursor:'pointer'}}
                     />
@@ -268,7 +268,7 @@ const SingleFeedPage = () => {
                                 comments.map((comment, i) => (
                                     <div key={i} className="comment-item">
                                         <img className="comment-avatar"
-                                             src={comment.userAvatar}/>
+                                             src={getImageUrl(comment.userAvatar)}/>
                                         <div className="comment-content">
                                             <div className="comment-text">
                                                 <span className="comment-username"></span>

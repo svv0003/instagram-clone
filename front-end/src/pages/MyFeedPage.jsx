@@ -196,7 +196,7 @@ const MyFeedPage = () => {
                              className="grid-item"
                              onClick={() =>
                                  navigate(`/post/${post.postId}`)}>
-                            <img src={post.postImage}
+                            <img src={getImageUrl(post.postImage)}
                                  alt="post" />
                             <div className="grid-hover-overlay"
                                  // onClick={() =>
