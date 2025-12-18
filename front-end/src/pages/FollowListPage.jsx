@@ -84,8 +84,8 @@ const FollowListPage = () => {
             <h2 className="follow-list-title">
                 {paramIngEr === "following" ? "팔로잉" : "팔로워"}
             </h2>
-            {followingUserIdList.length > 0 ? (
-                followingUserIdList.map((user) => {
+            {followUserList.length > 0 ? (
+                followUserList.map((user) => {
                     const isFollowing = followingUserIdList.includes(user.userId);
                     return (
                         <>
@@ -113,8 +113,7 @@ const FollowListPage = () => {
                 })
             ) : (
                 <p className="no-data">표시할 유저가 없습니다.</p>
-            )
-            }
+            )}
         </>
     );
 };
