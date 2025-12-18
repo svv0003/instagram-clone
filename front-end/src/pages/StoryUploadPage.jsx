@@ -69,7 +69,7 @@ const StoryUploadPage = () => {
                         {imagePreview ? (
                             <div style={{width: '100%', display: 'flex', flexDirection: 'column'}}>
                                 <div style={{position: 'relative'}}>
-                                    <img src={getImageUrl(imagePreview)}
+                                    <img src={imagePreview}
                                          alt={imagePreview}
                                          style={{filter: selectedFilter}}
                                          className="upload-preview-image"

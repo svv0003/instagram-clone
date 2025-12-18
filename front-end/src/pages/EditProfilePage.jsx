@@ -47,7 +47,7 @@ const EditProfilePage = () => {
                 userFullname: res.userFullname || '',
                 userEmail: res.userEmail || '',
             });
-            setPreviewImage(getImageUrl(res.userAvatar));
+            setPreviewImage(res.userAvatar);
         } catch (err) {
             console.error('사용자 정보 로드 실패', err);
             alert('사용자 정보를 불러오지 못했습니다.');
