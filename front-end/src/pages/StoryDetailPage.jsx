@@ -410,7 +410,7 @@ const StoryDetailPage = () => {
                     </div>
                 </div>
 
-                <img src={getImageUrl(currentStory.storyImage)}
+                <img src={currentStory.storyImage}
                      alt="story"
                      className="story-main-image"/>
                 {currentIndex > 0 &&(
