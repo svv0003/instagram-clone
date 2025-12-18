@@ -11,8 +11,8 @@ const FollowListPage = () => {
     const { userId: paramUserId, ingEr: paramIngEr } = useParams();
 
     const [loading, setLoading] = useState(true);
-    const [followings, setFollowings] = useState([]);
-    const [followers, setFollowers] = useState([]);
+    const [followingUserIdList, setFollowingUserIdList] = useState([]);
+    const [followUserList, setFollowUserList] = useState([]);
 
     const loginUser = JSON.parse(localStorage.getItem('user') || '{}');
     const loginUserId = loginUser.userId;
@@ -28,25 +28,23 @@ const FollowListPage = () => {
     const getFollowData = async () => {
         setLoading(true);
         try {
+            const followingUserIdRes = await apiService.getFollowingList();
+            setFollowingUserIdList(followingUserIdRes);
             if(isMyFeed) {
                 if(paramIngEr === "following") {
                     const followingsRes = await apiService.getFollowingUserList(loginUserId);
-                    setFollowers([]);
-                    setFollowings(followingsRes);
+                    setFollowUserList(followingsRes);
                 } else {
                     const followersRes = await apiService.getFollowerUserList(loginUserId);
-                    setFollowers(followersRes);
-                    setFollowings([]);
+                    setFollowUserList(followersRes);
                 }
             } else {
                 if(paramIngEr === "following") {
                     const followingsRes = await apiService.getFollowingUserList(paramUserId);
-                    setFollowers([]);
-                    setFollowings(followingsRes);
+                    setFollowUserList(followingsRes);
                 } else {
                     const followersRes = await apiService.getFollowerUserList(paramUserId);
-                    setFollowers(followersRes);
-                    setFollowings([]);
+                    setFollowUserList(followersRes);
                 }
             }
         } catch (error) {
@@ -56,82 +54,69 @@ const FollowListPage = () => {
             setLoading(false);
         }
     }
-    //
-    // const toggleFollow = async (targetUserId) => {
-    //     const isCurrentlyFollowing = followings.includes(targetUserId);
-    //     if (isCurrentlyFollowing) {
-    //         setFollowings(prev => prev.filter(id => id !== targetUserId));
-    //     } else {
-    //         setFollowings(prev => [...prev, targetUserId]);
-    //     }
-    //     try {
-    //         if (isCurrentlyFollowing) {
-    //             await apiService.deleteFollowing(targetUserId);
-    //         } else {
-    //             await apiService.createFollowing(targetUserId);
-    //         }
-    //     } catch (error) {
-    //         if (isCurrentlyFollowing) {
-    //             setFollowings(prev => [...prev, targetUserId]);
-    //         } else {
-    //             setFollowings(prev => prev.filter(id => id !== targetUserId));
-    //         }
-    //         alert("팔로우 처리에 실패했습니다.");
-    //     }
-    // };
-    //
-    // return (
-    //     <>
-    //         {followings.length > 0 &&
-    //             followings.map((post) => {
-    //                 const isFollowing = followings.includes(post.userId);
-    //                 return (
-    //                     <>
-    //                         <img src={getImageUrl(post.userAvatar)}
-    //                              className="post-user-avatar"
-    //                              onClick={() =>
-    //                                  navigate(`/myfeed?userId=${post.userId}`)}
-    //                              style={{cursor: 'pointer'}}/>
-    //                         <span className="post-username"
-    //                               onClick={() =>
-    //                                   navigate(`/myfeed?userId=${post.userId}`)}
-    //                               style={{cursor: 'pointer'}}>
-    //                             {post.userName}
-    //                         </span>
-    //                         <button className={`profile-edit-btn ${isFollowing ? 'following' : 'follow'}`}
-    //                                 onClick={() => toggleFollow(post.userId)}>
-    //                             {isFollowing ? '팔로잉' : '팔로우'}
-    //                         </button>
-    //                     </>
-    //                 )
-    //             })
-    //         }
-    //         {followers.length > 0 &&
-    //             followers.map((post) => {
-    //                 const isFollowing = followers.includes(post.userId);
-    //                 return (
-    //                     <>
-    //                         <img src={getImageUrl(post.userAvatar)}
-    //                              className="post-user-avatar"
-    //                              onClick={() =>
-    //                                  navigate(`/myfeed?userId=${post.userId}`)}
-    //                              style={{cursor: 'pointer'}}/>
-    //                         <span className="post-username"
-    //                               onClick={() =>
-    //                                   navigate(`/myfeed?userId=${post.userId}`)}
-    //                               style={{cursor: 'pointer'}}>
-    //                             {post.userName}
-    //                         </span>
-    //                         <button className={`profile-edit-btn ${isFollowing ? 'following' : 'follow'}`}
-    //                                 onClick={() => toggleFollow(post.userId)}>
-    //                             {isFollowing ? '팔로잉' : '팔로우'}
-    //                         </button>
-    //                     </>
-    //                 )
-    //             })
-    //         }
-    //     </>
-    // );
+
+    const toggleFollow = async (targetUserId) => {
+        if (targetUserId === loginUserId) return;
+        const isFollowing = followingUserIdList.includes(targetUserId);
+        if (isFollowing) {
+            setFollowingUserIdList(prev => prev.filter(id => id !== targetUserId));
+        } else {
+            setFollowingUserIdList(prev => [...prev, targetUserId]);
+        }
+        try {
+            if (isFollowing) {
+                await apiService.deleteFollowing(targetUserId);
+            } else {
+                await apiService.createFollowing(targetUserId);
+            }
+        } catch (error) {
+            if (isFollowing) {
+                setFollowingUserIdList(prev => [...prev, targetUserId]);
+            } else {
+                setFollowingUserIdList(prev => prev.filter(id => id !== targetUserId));
+            }
+            alert("팔로우 처리에 실패했습니다.");
+        }
+    };
+
+    return (
+        <>
+            <h2 className="follow-list-title">
+                {paramIngEr === "following" ? "팔로잉" : "팔로워"}
+            </h2>
+            {followingUserIdList.length > 0 ? (
+                followingUserIdList.map((user) => {
+                    const isFollowing = followingUserIdList.includes(user.userId);
+                    return (
+                        <>
+                            <li key={user.userId} className="user-item">
+                                <div className="user-info" onClick={() => navigate(`/myfeed?userId=${user.userId}`)}>
+                                    <img src={getImageUrl(user.userAvatar)}
+                                         alt={user.userName}
+                                         className="user-avatar"
+                                    />
+                                    <div className="user-text">
+                                        <span className="user-name">{user.userName}</span>
+                                        <span className="user-fullname">{user.userFullname}</span>
+                                    </div>
+                                </div>
+                                {user.userId !== loginUserId && (
+                                    <button className="follow-btn"
+                                            onClick={() => toggleFollow(user.userId)}
+                                    >
+                                        {isFollowing ? '팔로잉' : '팔로우'}
+                                    </button>
+                                )}
+                            </li>
+                        </>
+                    )
+                })
+            ) : (
+                <p className="no-data">표시할 유저가 없습니다.</p>
+            )
+            }
+        </>
+    );
 };
 
 export default FollowListPage;

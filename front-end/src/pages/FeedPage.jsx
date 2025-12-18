@@ -171,20 +171,20 @@ const FeedPage = () => {
     // 팔로우 토글 함수
     const toggleFollow = async (targetUserId) => {
         if (targetUserId === loginUserId) return;
-        const isCurrentlyFollowing = followings.includes(targetUserId);
-        if (isCurrentlyFollowing) {
+        const isFollowing = followings.includes(targetUserId);
+        if (isFollowing) {
             setFollowings(prev => prev.filter(id => id !== targetUserId));
         } else {
             setFollowings(prev => [...prev, targetUserId]);
         }
         try {
-            if (isCurrentlyFollowing) {
+            if (isFollowing) {
                 await apiService.deleteFollowing(targetUserId);
             } else {
                 await apiService.createFollowing(targetUserId);
             }
         } catch (error) {
-            if (isCurrentlyFollowing) {
+            if (isFollowing) {
                 setFollowings(prev => [...prev, targetUserId]);
             } else {
                 setFollowings(prev => prev.filter(id => id !== targetUserId));
