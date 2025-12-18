@@ -78,7 +78,7 @@ const UploadPage = () => {
                     <div className="upload-image-area">
                         {imagePreview ? (
                             <div style={{width:'100%', display:'flex', flexDirection:'column'}}>
-                                <img src={getImageUrl(imagePreview)}
+                                <img src={imagePreview}
                                      className="upload-preview-image"
                                      style={{filter: selectedFilter}}
                                 />

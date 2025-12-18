@@ -90,11 +90,10 @@ const FollowListPage = () => {
                     return (
                         <>
                             <li key={user.userId} className="user-item">
-                                <div className="user-info" onClick={() => navigate(`/myfeed?userId=${user.userId}`)}>
+                                <div onClick={() =>
+                                         navigate(`/myfeed?userId=${user.userId}`)}>
                                     <img src={getImageUrl(user.userAvatar)}
-                                         alt={user.userName}
-                                         className="user-avatar"
-                                    />
+                                         alt={user.userName} />
                                     <div className="user-text">
                                         <span className="user-name">{user.userName}</span>
                                         <span className="user-fullname">{user.userFullname}</span>
