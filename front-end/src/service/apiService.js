@@ -58,7 +58,7 @@ const apiService = {
     // POST /auth/signup
     // body: { username, email, password, fullName }
     signup: async (username, email, password, fullName) => {
-        const response = await api.post('auth/signup', {
+        const response = await api.post('/auth/signup', {
             userName: username,
             userEmail: email,
             userPassword: password,
