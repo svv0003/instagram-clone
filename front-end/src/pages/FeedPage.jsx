@@ -291,7 +291,7 @@ const FeedPage = () => {
                                         onDelete={deletePost}/>
                                 </div>
 
-                                <img src={post.postImage}
+                                <img src={getImageUrl(post.postImage)}
                                      className="post-image"
                                     // onClick={() => setSelectedPost(post)}
                                      onClick={() => navigate(`/post/${post.postId}`)}
