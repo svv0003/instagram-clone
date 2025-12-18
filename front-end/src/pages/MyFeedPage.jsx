@@ -24,7 +24,7 @@ const MyFeedPage = () => {
 
     const [followingCount, setFollowingCount] = useState(0);
     const [followerCount, setFollowerCount] = useState(0);
-    const [followings, setFollowings] = useState([]);
+    const [isFollowing, setIsFollowing] = useState(false);
 
     const [isLoginUser, setIsLoginUser] = useState(false);
     const loginUser = JSON.parse(localStorage.getItem('user') || '{}');
@@ -37,21 +37,16 @@ const MyFeedPage = () => {
     const isMyFeedWithUserId = location.pathname === '/myfeed' && location.search.startsWith('?userId=');
 
     const isRealMyFeed = !paramUserId || parseInt(paramUserId) === loginUserId;
+    const feedPageOwner = isRealMyFeed ? loginUserId : parseInt(paramUserId);
+
 
     useEffect(() => {
-        if(!loginUser) return navigate('/login');
+        if (!loginUser || !loginUserId) return navigate('/login');
         getMyFeedData();
-    }, [navigate, paramUserId]);
+    }, [navigate, paramUserId, loginUserId]);
 
     const getMyFeedData = async () => {
         setLoading(true);
-        try {
-            const followingRes = await apiService.getFollowingList();
-            setFollowings(followingRes || []);
-        } catch (e) {
-            console.error("팔로잉 목록 불러오기 실패", e);
-        }
-        const feedPageOwner = isRealMyFeed ? loginUserId : parseInt(paramUserId);
         try {
             let userRes;
             if (isRealMyFeed) {
@@ -64,6 +59,10 @@ const MyFeedPage = () => {
                 userFullname: userRes.userFullname || '',
                 profileImage: userRes.userAvatar
             });
+            if (!isRealMyFeed && feedPageOwner) {
+                const following = await apiService.getFollowing(feedPageOwner);
+                setIsFollowing(following);
+            }
             const followRes = await apiService.getFollowingCount(feedPageOwner);
             setFollowerCount(followRes.resultFollower || 0);
             setFollowingCount(followRes.resultFollowing || 0);
@@ -79,36 +78,21 @@ const MyFeedPage = () => {
 
     const toggleFollow = async () => {
         if (isRealMyFeed || !paramUserId) return;
-        const feedPageOwner = parseInt(paramUserId);
-        const isFollowing = followings.includes(feedPageOwner);
-        setFollowings(prev =>
-            isFollowing
-                ? prev.filter(id => id !== feedPageOwner)
-                : [...prev, feedPageOwner]
-        );
-        setFollowerCount(prev =>
-            isFollowing ? prev - 1 : prev + 1
-        );
+        const previous = isFollowing;
+        setIsFollowing(!previous);
+        setFollowerCount(prev => previous ? prev - 1 : prev + 1);
         try {
-            if (isFollowing) {
+            if (previous) {
                 await apiService.deleteFollowing(feedPageOwner);
             } else {
                 await apiService.createFollowing(feedPageOwner);
             }
         } catch (error) {
-            setFollowings(prev =>
-                isFollowing
-                    ? [...prev, feedPageOwner]
-                    : prev.filter(id => id !== feedPageOwner)
-            );
-            setFollowerCount(prev =>
-                isFollowing ? prev + 1 : prev - 1
-            );
+            setIsFollowing(previous);
+            setFollowerCount(prev => previous ? prev + 1 : prev - 1);
             alert("팔로우 처리에 실패했습니다.");
         }
     };
-
-    const isFollowing = !isRealMyFeed && paramUserId && followings.includes(parseInt(paramUserId));
 
     return (
         <div className="feed-container">
@@ -155,8 +139,13 @@ const MyFeedPage = () => {
 
                         <ul className="profile-stats">
                             <li>게시물 <strong>{posts.length}</strong></li>
-                            <li>팔로워 <strong>{followerCount}</strong></li>
-                            <li>팔로잉 <strong>{followingCount}</strong></li>
+                            <li onClick={() =>
+                                navigate(`/follow/${feedPageOwner}/follower`)}>
+                                팔로워<strong>{followerCount}</strong>
+                            </li>
+                            <li onClick={() =>
+                                navigate(`/follow/${feedPageOwner}/following`)}>
+                                팔로잉<strong>{followingCount}</strong></li>
                         </ul>
 
                         <div className="profile-bio-container">

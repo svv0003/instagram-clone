@@ -1,6 +1,7 @@
 import axios from 'axios';
-import {API_BASE_URL} from "./commonService";
 
+// export const API_BASE_URL = 'https://13.124.86.176:9000/api';
+export const API_BASE_URL = 'http://localhost:9000/api';
 
 const api = axios.create({
     baseURL: API_BASE_URL,
@@ -140,29 +141,32 @@ const apiService = {
     deletePost: async (postId) => {
     },
 
-    // ===== 좋아요 API =====
+
+    /*================================================================================
+                                        좋아요 API
+    ================================================================================*/
 
     // TODO: 좋아요 추가
     // POST /posts/:postId/like
-    addLike: async (postId) => {
-        try {
-            const res = await api.post(`/posts/${postId}/like`, postId);
-            return res.data;
-        } catch (e) {
-            alert("좋아요 실패 : {}", e);
-        }
-    },
+    // addLike: async (postId) => {
+    //     try {
+    //         const res = await api.post(`/posts/${postId}/like`, postId);
+    //         return res.data;
+    //     } catch (e) {
+    //         alert("좋아요 실패 : {}", e);
+    //     }
+    // },
 
     // TODO: 좋아요 취소
     // DELETE /posts/:postId/like
-    removeLike: async (postId) => {
-        try {
-            const res = await api.delete(`/posts/${postId}/like`, postId);
-            return res.data;
-        } catch (e) {
-            alert("좋아요 취소 실패 : {}", e);
-        }
-    },
+    // removeLike: async (postId) => {
+    //     try {
+    //         const res = await api.delete(`/posts/${postId}/like`, postId);
+    //         return res.data;
+    //     } catch (e) {
+    //         alert("좋아요 취소 실패 : {}", e);
+    //     }
+    // },
 
     /**
      * 좋아요 목록 조회
@@ -232,18 +236,45 @@ const apiService = {
         }
     },
 
-    // ===== 팔로우 API =====
+    /*================================================================================
+                                        팔로우 API
+    ================================================================================*/
 
     /**
-     * 팔로우 목록 조회
+     * 팔로잉 목록 조회
      * @returns {Promise<any>}
      */
     getFollowingList: async () => {
         try {
-            const res = await api.get("/follow/list");
+            const res = await api.get(`/follow/list/following/userId`);
             return res.data;
         } catch (e) {
             alert("팔로잉 목록 조회 실패 : {}", e);
+        }
+    },
+    /**
+     * 팔로잉 목록 조회
+     * @returns {Promise<any>}
+     */
+    getFollowingUserList: async (userId) => {
+        try {
+            const res = await api.get(`/follow/list/following?userId=${userId}`);
+            return res.data;
+        } catch (e) {
+            alert("팔로잉 유저 목록 조회 실패 : {}", e);
+        }
+    },
+
+    /**
+     * 팔로워 목록 조회
+     * @returns {Promise<any>}
+     */
+    getFollowerUserList: async (userId) => {
+        try {
+            const res = await api.get(`/follow/list/follower?userId=${userId}`);
+            return res.data;
+        } catch (e) {
+            alert("팔로워 유저 목록 조회 실패 : {}", e);
         }
     },
 
@@ -303,7 +334,10 @@ const apiService = {
     },
 
 
-    // ===== 댓글 API =====
+
+    /*================================================================================
+                                        댓글 API
+    ================================================================================*/
 
     // TODO: 댓글 목록 조회
     // GET /posts/:postId/comments

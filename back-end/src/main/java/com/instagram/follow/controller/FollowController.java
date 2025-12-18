@@ -22,13 +22,37 @@ public class FollowController {
     private final FollowService followService;
     private final JwtUtil jwtUtil;
 
-    @GetMapping("/list")
+    @GetMapping("/list/following/UserId")
     public ResponseEntity<List<Integer>> getFollowingList(@RequestHeader("Authorization") String authHeader) {
         try {
             String token = authHeader.substring(7);
             int loginUserId = jwtUtil.getUserIdFromToken(token);
             log.info("loginUserId : {}", loginUserId);
             List<Integer> result = followService.getFollowingUserId(loginUserId);
+            log.info("result : {}", result);
+            return ResponseEntity.ok(result);
+        } catch (Exception e) {
+            return ResponseEntity.status(500).body(null);
+        }
+    }
+
+    @GetMapping("/list/following")
+    public ResponseEntity<List<User>> getFollowingUserList(@RequestParam int userId) {
+        try {
+            log.info("userId : {}", userId);
+            List<User> result = followService.getFollowingUserList(userId);
+            log.info("result : {}", result);
+            return ResponseEntity.ok(result);
+        } catch (Exception e) {
+            return ResponseEntity.status(500).body(null);
+        }
+    }
+
+    @GetMapping("/list/follower")
+    public ResponseEntity<List<User>> getFollowerUserList(@RequestParam int userId) {
+        try {
+            log.info("userId : {}", userId);
+            List<User> result = followService.getFollowerUserList(userId);
             log.info("result : {}", result);
             return ResponseEntity.ok(result);
         } catch (Exception e) {

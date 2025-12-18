@@ -10,10 +10,16 @@ public interface FollowMapper {
 
     /**
      * 로그인 회원이 팔로우하는 계정 리스트
-     * @param loginUserId
+     * @param userId
      * @return
      */
-    List<Integer> selectFollowingUserId(int loginUserId);
+    List<Integer> selectFollowingUserId(int userId);
+    /**
+     * 로그인 회원을 팔로우하는 계정 리스트
+     * @param userId
+     * @return
+     */
+    List<Integer> selectFollowerUserId(int userId);
     /**
      * 로그인 회원이 특정 회원을 팔로우 유무 확인
      * @param follow

@@ -25,16 +25,19 @@ public interface UserMapper {
     User selectUserByUserPassword(String userPassword);
     // 모든 사용자 조회
     List<User> selectAllUsers();
-
     /**
      * 유저 이름으로 검색
      */
     List<User> searchUsersByUserName(@Param("query") String query);
-
     /**
      * 유저네임으로 정확히 일치하는 유저 조회
      */
     User selectUserByUserNameExact(String userName);
-
+    /**
+     * 유저 id 목록에 해당하는 유저 정보 조회
+     * @param userIdList
+     * @return
+     */
+    List<User> selectUserByUserIdList(List<Integer> userIdList);
     boolean updateUserPassword(User user);
 }

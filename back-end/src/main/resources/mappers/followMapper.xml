@@ -17,7 +17,14 @@
     <select id="selectFollowingUserId" resultType="int">
         SELECT following_id
         FROM follows
-        WHERE follower_id = #{loginUserId};
+        WHERE follower_id = #{userId};
+    </select>
+
+    <!-- 로그인 회원을 팔로우하는 계정 목록 -->
+    <select id="selectFollowerUserId" resultType="int">
+        SELECT follower_id
+        FROM follows
+        WHERE following_id = #{userId};
     </select>
 
     <!-- 로그인 회원이 특정 회원을 팔로우 유무 확인 -->

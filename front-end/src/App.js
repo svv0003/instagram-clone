@@ -23,8 +23,8 @@ import MyFeedPage from "./pages/MyFeedPage";
 import StoryDetailPage from "./pages/StoryDetailPage";
 import EditProfilePage from "./pages/EditProfilePage";
 import KakaoCallback from "./pages/KakaoCallback";
-import PostDetailModal from "./components/PostDetailModal";
 import SingleFeedPage from "./pages/SingleFeedPage";
+import FollowListPage from "./pages/FollowListPage";
 
 // TODO: 필요한 컴포넌트들을 import 하세요
 
@@ -64,8 +64,9 @@ function App() {
                     />
                     <Route path="/post/:postId"
                            element={
-                                    <SingleFeedPage />
-                        }
+                               <PrivateRoute>
+                                   <SingleFeedPage />
+                               </PrivateRoute>}
                     />
                     <Route path="/story/detail/:userId"
                            element={
@@ -89,6 +90,12 @@ function App() {
                            element={
                                 <PrivateRoute>
                                     <MyFeedPage />
+                               </PrivateRoute>}
+                    />
+                    <Route path="/follow/:userId/:ingEr"
+                           element={
+                                <PrivateRoute>
+                                    <FollowListPage />
                                </PrivateRoute>}
                     />
                     {/*<Route path="/user/:userId"*/}

@@ -1,6 +1,7 @@
 package com.instagram.follow.model.service;
 
 import com.instagram.follow.model.dto.Follow;
+import com.instagram.user.model.dto.User;
 
 import java.util.List;
 
@@ -12,6 +13,18 @@ public interface FollowService {
      * @return
      */
     List<Integer> getFollowingUserId(int loginUserId);
+    /**
+     * 로그인 회원이 팔로우하는 계정 정보 목록
+     * @param userId
+     * @return
+     */
+    List<User> getFollowingUserList(int userId);
+    /**
+     * 로그인 회원을 팔로우하는 계정 정보 목록
+     * @param userId
+     * @return
+     */
+    List<User> getFollowerUserList(int userId);
     /**
      * 로그인 회원이 특정 회원을 팔로우 유무 확인
      * @param userId

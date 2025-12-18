@@ -2,10 +2,13 @@ package com.instagram.follow.model.service;
 
 import com.instagram.follow.model.dto.Follow;
 import com.instagram.follow.model.mapper.FollowMapper;
+import com.instagram.user.model.dto.User;
+import com.instagram.user.model.mapper.UserMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+import java.util.Collections;
 import java.util.List;
 
 @Slf4j
@@ -14,6 +17,7 @@ import java.util.List;
 public class FollowServiceImpl implements FollowService {
 
     private final FollowMapper followMapper;
+    private final UserMapper userMapper;
 
     /**
      * 팔로잉 목록 조회
@@ -23,6 +27,38 @@ public class FollowServiceImpl implements FollowService {
     @Override
     public List<Integer> getFollowingUserId(int loginUserId) {
         return followMapper.selectFollowingUserId(loginUserId);
+    }
+
+    /**
+     * 팔로잉 유저 목록 조회
+     * @param userId
+     * @return
+     */
+    @Override
+    public List<User> getFollowingUserList(int userId) {
+        try {
+            List<Integer> followUserIdList = followMapper.selectFollowingUserId(userId);
+            return userMapper.selectUserByUserIdList(followUserIdList);
+        } catch (Exception e) {
+            log.error(e.getMessage());
+            return Collections.emptyList();
+        }
+    }
+
+    /**
+     * 팔로워 유저 목록 조회
+     * @param userId
+     * @return
+     */
+    @Override
+    public List<User> getFollowerUserList(int userId) {
+        try {
+            List<Integer> followUserIdList = followMapper.selectFollowerUserId(userId);
+            return userMapper.selectUserByUserIdList(followUserIdList);
+        } catch (Exception e) {
+            log.error(e.getMessage());
+            return Collections.emptyList();
+        }
     }
 
     /**

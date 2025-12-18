@@ -131,9 +131,9 @@ const SingleFeedPage = () => {
 
         try {
             if (previous) {
-                await apiService.removeLike(post.postId);
+                await apiService.deleteLike(post.postId);
             } else {
-                await apiService.addLike(post.postId);
+                await apiService.createLike(post.postId);
             }
         } catch (error) {
             setIsLiked(previous);
