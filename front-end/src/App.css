@@ -227,32 +227,85 @@ body {
 .post-header {
     display: flex;
     align-items: center;
-    justify-content: space-between;
-    padding: 0.75rem;
+    justify-content: space-between;  /* 왼쪽: 유저 정보, 오른쪽: 버튼 + 옵션 */
+    padding: 16px;                    /* 인스타그램 실제 상단 여백 (1rem = 16px) */
+    background-color: #ffffff;
 }
 
 .post-user-info {
     display: flex;
     align-items: center;
-    gap: 0.75rem;
+    gap: 12px;                         /* 아바타와 유저네임 사이 간격 (0.75rem ≈ 12px) */
+    cursor: pointer;
 }
 
 .post-user-avatar {
-    width: 2.5rem;
-    height: 2.5rem;
+    width: 42px;                      /* 인스타그램 피드 아바타 정확한 크기 (2.625rem) */
+    height: 42px;
     border-radius: 50%;
     object-fit: cover;
+    flex-shrink: 0;
+    border: 1px solid rgba(0, 0, 0, 0.05); /* 미세한 테두리로 깊이감 (선택사항) */
 }
 
 .post-username {
-    font-weight: 600;
-    font-size: 0.875rem;
+    font-weight: 600;                 /* semi-bold */
+    font-size: 14px;                  /* 0.875rem = 14px */
+    color: #262626;
+    line-height: 1.2;
 }
 
-.post-more-icon {
-    width: 1.5rem;
-    height: 1.5rem;
+/* 오른쪽 영역: 팔로우 버튼 + 더보기 아이콘을 가로로 나란히 */
+.post-header-right {
+    display: flex;
+    align-items: center;
+    gap: 12px;                         /* 팔로우 버튼과 옵션 아이콘 사이 간격 */
+    flex-shrink: 0;
+}
+
+/* 팔로우 / 팔로잉 버튼 */
+.follow-btn {
+    padding: 6px 16px;
+    border: 1px solid #dbdbdb;
+    border-radius: 8px;
+    background-color: transparent;
+    font-size: 14px;
+    font-weight: 600;
+    color: #0095f6;
     cursor: pointer;
+    transition: all 0.2s ease;
+    min-width: 80px;
+}
+
+/* 팔로잉 상태 (파란 배경) */
+.follow-btn.following {
+    background-color: #0095f6;
+    color: white;
+    border: none;
+}
+
+.follow-btn.following:hover {
+    background-color: #1877f2;
+}
+
+/* 팔로우 상태 호버 */
+.follow-btn:not(.following):hover {
+    background-color: #f0f8ff;
+    border-color: #0095f6;
+}
+
+/* 더보기 아이콘 (점점점) */
+.post-more-icon {
+    width: 24px;                      /* 1.5rem = 24px */
+    height: 24px;
+    padding: 4px;                     /* 클릭 영역 넓히기 */
+    cursor: pointer;
+    opacity: 0.8;
+    transition: opacity 0.2s;
+}
+
+.post-more-icon:hover {
+    opacity: 1;
 }
 
 .post-image {
@@ -2331,4 +2384,102 @@ comments
     .comment-text {
         font-size: 0.8125rem;
     }
+}
+
+/*================================================================================
+                            팔로우 리스트
+================================================================================*/
+.follow-user-list {
+    display: flex;
+    align-items: center;           /* 세로 중앙 정렬 */
+    justify-content: space-between; /* 양쪽 끝으로 배분 */
+    padding: 12px 16px;             /* 인스타와 비슷한 여백 */
+    height: 64px;                   /* 고정 높이로 일관성 유지 */
+    box-sizing: border-box;
+    border-bottom: 1px solid #dbdbdb; /* 항목 구분선 (선택사항) */
+    transition: background-color 0.2s;
+}
+
+.follow-user-list:hover {
+    background-color: #fafafa;      /* 호버 시 살짝 회색 배경 */
+}
+/* 클릭 가능한 유저 정보 영역 */
+.follow-user-info {
+    display: flex;
+    align-items: center;
+    flex: 1;                        /* 버튼 공간 확보 위해 유연하게 확장 */
+    min-width: 0;                   /* 텍스트 오버플로우 방지 */
+    cursor: pointer;
+}
+
+/* 아바타 */
+.follow-user-avatar {
+    width: 56px;                    /* 인스타그램 실제 크기 */
+    height: 56px;
+    border-radius: 50%;             /* 원형 */
+    object-fit: cover;
+    margin-right: 12px;
+    flex-shrink: 0;                 /* 크기 줄어들지 않게 */
+}
+
+/* 이름 + 실명 텍스트 영역 */
+.follow-user-text {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    min-width: 0;                   /* 텍스트가 길어도 줄바꿈/생략 가능하게 */
+}
+
+/* 유저네임 (굵게) */
+.follow-user-name {
+    font-weight: 600;               /* semi-bold 느낌 */
+    font-size: 14px;
+    color: #262626;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;        /* 길면 ... 처리 */
+}
+
+/* 실명 또는 소개글 */
+.follow-user-fullname {
+    font-size: 14px;
+    color: #8e8e8e;
+    margin-top: 2px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+/* 팔로우 / 팔로잉 버튼 */
+.follow-btn {
+    padding: 7px 16px;
+    border: 1px solid #dbdbdb;
+    border-radius: 8px;
+    background-color: transparent;
+    font-size: 14px;
+    font-weight: 600;
+    min-width: 88px;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+/* 팔로우 상태 (파란색 버튼) */
+.follow-btn.following {
+    background-color: #0095f6;
+    color: white;
+    border: none;
+}
+
+.follow-btn.following:hover {
+    background-color: #0077c8;
+}
+
+/* 팔로잉 상태 (회색 테두리 버튼) */
+.follow-btn:not(.following) {
+    color: #0095f6;
+}
+
+.follow-btn:not(.following):hover {
+    background-color: #f0f8ff;
+    border-color: #0095f6;
 }

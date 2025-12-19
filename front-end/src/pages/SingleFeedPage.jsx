@@ -214,21 +214,16 @@ const SingleFeedPage = () => {
                             </span>
                         </div>
                         <div className="post-header-right">
-                            {/* 본인 포스트가 아니면 팔로우 버튼 표시 */}
                             {!isOwnPost && (
-                                <button
-                                    className={`profile-edit-btn ${isFollowing ? 'following' : 'follow'}`}
-                                    onClick={() => toggleFollow(post.userId)}
-                                >
+                                <button className={`follow-btn ${isFollowing ? 'following' : ''}`}
+                                        onClick={() => toggleFollow(post.userId)}>
                                     {isFollowing ? '팔로잉' : '팔로우'}
                                 </button>
                             )}
+                            <PostOptionMenu post={post}
+                                            currentUserId={loginUserId}
+                                            onDelete={deletePost} />
                         </div>
-                        {/*<MoreHorizontal className="post-more-icon"/>*/}
-                        <PostOptionMenu
-                            post={post}
-                            currentUserId={loginUserId}
-                            onDelete={deletePost}/>
                     </div>
 
                     <img src={getImageUrl(post.postImage)}

@@ -236,7 +236,8 @@ const FeedPage = () => {
                                 <div
                                     key={story.userId}  // key는 최상위 요소에만
                                     className="story-item"
-                                    onClick={() => navigate(`/story/detail/${story.userId}`)}
+                                    onClick={() =>
+                                        navigate(`/story/detail/${story.userId}`)}
                                     style={{ cursor: "pointer" }}
                                 >
                                     <div className="story-avatar-wrapper">
@@ -265,42 +266,42 @@ const FeedPage = () => {
                                         <img src={getImageUrl(post.userAvatar)}
                                              className="post-user-avatar"
                                              onClick={() =>
-                                                 navigate(`/myfeed?userId=${post.userId}`)}
-                                             style={{cursor: 'pointer'}}/>
+                                                navigate(`/myfeed?userId=${post.userId}`)}
+                                             style={{ cursor: 'pointer' }}/>
                                         <span className="post-username"
                                               onClick={() =>
                                                   navigate(`/myfeed?userId=${post.userId}`)}
-                                              style={{cursor: 'pointer'}}>
-                                        {post.userName}
+                                              style={{ cursor: 'pointer' }}>
+                                            {post.userName}
                                         </span>
                                     </div>
+
                                     <div className="post-header-right">
-                                        {/* 본인 포스트가 아니면 팔로우 버튼 표시 */}
                                         {!isOwnPost && (
-                                            <button className={`profile-edit-btn ${isFollowing ? 'following' : 'follow'}`}
-                                                    onClick={() => toggleFollow(post.userId)}
-                                            >
+                                            <button className={`follow-btn ${isFollowing ? 'following' : ''}`}
+                                                    onClick={() => toggleFollow(post.userId)}>
                                                 {isFollowing ? '팔로잉' : '팔로우'}
                                             </button>
                                         )}
+                                        <PostOptionMenu post={post}
+                                                        currentUserId={loginUserId}
+                                                        onDelete={deletePost} />
                                     </div>
-                                    <PostOptionMenu
-                                        post={post}
-                                        currentUserId={loginUserId}
-                                        onDelete={deletePost}/>
                                 </div>
 
                                 <img src={getImageUrl(post.postImage)}
                                      className="post-image"
                                     // onClick={() => setSelectedPost(post)}
-                                     onClick={() => navigate(`/post/${post.postId}`)}
+                                     onClick={() =>
+                                         navigate(`/post/${post.postId}`)}
                                      style={{cursor: 'pointer'}}/>
                                 <div className="post-content">
                                     <div className="post-actions">
                                         <div className="post-actions-left">
                                             <Heart
                                                 className={`action-icon like-icon ${isLike ? 'liked' : ''}`}
-                                                onClick={() => toggleLike(post.postId)}
+                                                onClick={() =>
+                                                    toggleLike(post.postId)}
                                                 fill={isLike ? "#ed4956" : "none"}
                                             />
                                             <MessageCircle className="action-icon"
