@@ -24,9 +24,10 @@ public interface PostService {
      * 본인 피드 또는 특정 유저 프로필 클릭 시 피드 목록 상세보기
      * @return
      */
-    List<Post> getPostsByUserId(int userId);
+    List<Integer> getPostsByUserId(int userId);
     boolean createPost(MultipartFile postImage, String postCaption, String postLocation, int currentUserId);
     boolean deletePost(int postId);
     boolean addLike(int postId, int userId);
     boolean deleteLike(int postId, int userId);
+    String getPostImage(int postId);
 }

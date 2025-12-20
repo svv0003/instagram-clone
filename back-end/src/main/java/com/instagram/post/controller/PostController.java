@@ -61,8 +61,8 @@ public class PostController {
     }
 
     @GetMapping("/user/{userId}")
-    public ResponseEntity<List<Post>> getPostsByUserId(@PathVariable("userId") int userId) {
-        List<Post> posts = postService.getPostsByUserId(userId);
+    public ResponseEntity<List<Integer>> getPostsByUserId(@PathVariable("userId") int userId) {
+        List<Integer> posts = postService.getPostsByUserId(userId);
         return ResponseEntity.ok(posts);
     }
 
@@ -101,6 +101,19 @@ public class PostController {
             Post post = postService.getPostById(postId);
             log.info("post : {}", post);
             return ResponseEntity.ok(post);
+        } catch (Exception e) {
+            log.error("포스팅 조회 실패 : {}", e.getMessage());
+            return ResponseEntity.badRequest().body(null);
+        }
+    }
+
+    @GetMapping("image/{postId}")
+    public ResponseEntity<String> getPostImageByPostId(@PathVariable("postId") int postId) {
+        try {
+            log.info("postId : {}", postId);
+            String postImage = postService.getPostImage(postId);
+            log.info("postImage : {}", postImage);
+            return ResponseEntity.ok(postImage);
         } catch (Exception e) {
             log.error("포스팅 조회 실패 : {}", e.getMessage());
             return ResponseEntity.badRequest().body(null);

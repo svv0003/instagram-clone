@@ -3,6 +3,7 @@ package com.instagram.like.controller;
 import com.instagram.common.util.JwtUtil;
 import com.instagram.follow.model.service.FollowService;
 import com.instagram.like.model.service.LikeService;
+import com.instagram.post.model.dto.Post;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
@@ -88,5 +89,11 @@ public class LikeController {
         } catch (Exception e) {
             return ResponseEntity.status(500).body(null);
         }
+    }
+
+    @GetMapping("/user/{userId}")
+    public ResponseEntity<List<Integer>> getLikesByUserId(@PathVariable("userId") int userId) {
+        List<Integer> likes = likeService.getLikesByUserId(userId);
+        return ResponseEntity.ok(likes);
     }
 }

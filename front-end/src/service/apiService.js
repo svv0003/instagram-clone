@@ -117,6 +117,18 @@ const apiService = {
     },
 
     /**
+     * 특정 게시물 이미지 조회
+     * */
+    getPostImage: async (postId) => {
+        try {
+            const res = await api.get('/posts/image/' + postId);
+            return res.data;
+        } catch (error) {
+            alert("데이터를 가져올 수  없습니다.");
+        }
+    },
+
+    /**
      * 게시물 작성
      */
     createPost: async (postImage, postCaption, postLocation) => {
@@ -535,6 +547,20 @@ const apiService = {
             return res.data;
         } catch (e) {
             alert("스토리 조회 실패 : {}", e);
+        }
+    },
+
+    /**
+     * 사용자 게시물 조회
+     * GET /users/:userId/posts
+     */
+    getUserLikes: async (userId) => {
+        try {
+            const res = await api.get(`/like/user/${userId}`);
+            console.log("postRes : ", res);
+            return res.data;
+        } catch (error) {
+            alert("데이터를 가져올 수 없습니다.");
         }
     },
 

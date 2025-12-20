@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import Header from '../components/Header';
-import { Grid, Bookmark, Settings } from 'lucide-react';
+import {Heart, Grid, Bookmark, Settings } from 'lucide-react';
 import apiService from "../service/apiService";
 import {useLocation, useNavigate} from "react-router-dom";
 import {getImageUrl} from "../service/commonService";
@@ -19,8 +19,17 @@ const MyFeedPage = () => {
     });
 
     const [posts, setPosts] = useState([]);
+    const [saves, setSaves] = useState([]);
+    const [likes, setLikes] = useState([]);
     const [activeTab, setActiveTab] = useState('posts');
     const [loading, setLoading] = useState(true);
+
+    const [currentImages, setCurrentImages] = useState({});
+    const currentState = activeTab === 'posts'
+        ? posts
+        : activeTab === 'saves'
+            ? saves
+            : likes;
 
     const [followingCount, setFollowingCount] = useState(0);
     const [followerCount, setFollowerCount] = useState(0);
@@ -45,6 +54,26 @@ const MyFeedPage = () => {
         getMyFeedData();
     }, [navigate, paramUserId, loginUserId]);
 
+    useEffect(() => {
+        const loadImages = async () => {
+            const newImages = {};
+            await Promise.all(
+                currentState.map( async (postId) => {
+                    if (!currentImages[postId]) {
+                        try {
+                            const res = await apiService.getPostImage(postId);
+                            newImages[postId] = res;
+                        } catch (e) {
+                            newImages[postId] = null;
+                        }
+                    }
+                })
+            );
+            setCurrentImages(prev => ({ ...prev, ...newImages }));
+        };
+        loadImages();
+    }, [activeTab, posts, likes, saves]);
+
     const getMyFeedData = async () => {
         setLoading(true);
         try {
@@ -68,6 +97,8 @@ const MyFeedPage = () => {
             setFollowingCount(followRes.resultFollowing || 0);
             const postsRes = await apiService.getUserPosts(feedPageOwner);
             setPosts(postsRes || []);
+            const likesRes = await apiService.getUserLikes(feedPageOwner);
+            setLikes(likesRes || []);
         } catch (error) {
             console.error(error);
             alert("프로필 정보를 불러오는데 실패했습니다.");
@@ -93,6 +124,8 @@ const MyFeedPage = () => {
             alert("팔로우 처리에 실패했습니다.");
         }
     };
+
+
 
     return (
         <div className="feed-container">
@@ -172,39 +205,39 @@ const MyFeedPage = () => {
                 <div className="profile-tabs">
                     <button
                         className={`tab-btn ${activeTab === 'posts' ? 'active' : ''}`}
-                        onClick={() => setActiveTab('posts')}
-                    >
+                        onClick={() => setActiveTab('posts')}>
                         <Grid size={12} /> 게시물
                     </button>
                     <button
-                        className={`tab-btn ${activeTab === 'saved' ? 'active' : ''}`}
-                        onClick={() => setActiveTab('saved')}
-                    >
+                        className={`tab-btn ${activeTab === 'saves' ? 'active' : ''}`}
+                        onClick={() => setActiveTab('saves')}>
                         <Bookmark size={12} /> 저장됨
+                    </button>
+                    <button
+                        className={`tab-btn ${activeTab === 'likes' ? 'active' : ''}`}
+                        onClick={() => setActiveTab('likes')}>
+                        <Heart size={12} /> 좋아요
                     </button>
                 </div>
 
+
                 <div className="profile-posts-grid">
-                    {posts.map((post) => (
-                        /*
-                        이미지 위에 overlay와 같은 효과가 덮어씌워진 상태로,
-                        <div key={post.postId}>
-                        <div className="grid-hover-overlay">
-                        둘 중 아무거나 클릭 기능을 넣을 수 있다.
-                         */
-                        <div key={post.postId}
+                    {currentState.map((postId) => (
+                        <div key={postId}
                              className="grid-item"
-                             onClick={() =>
-                                 navigate(`/post/${post.postId}`)}>
-                            <img src={getImageUrl(post.postImage)}
-                                 alt="post" />
-                            <div className="grid-hover-overlay"
-                                 // onClick={() =>
-                                 //     navigate(`/post/${post.postId}`)}
-                            ></div>
+                             onClick={() => navigate(`/post/${postId}`)}>
+                            {currentImages[postId] ? (
+                                <img src={getImageUrl(currentImages[postId])} alt="post" />
+                            ) : (
+                                <div className="image-placeholder">
+                                    <div className="skeleton-box"></div>
+                                </div>
+                            )}
+                            <div className="grid-hover-overlay"></div>
                         </div>
                     ))}
                 </div>
+
             </main>
         </div>
     );

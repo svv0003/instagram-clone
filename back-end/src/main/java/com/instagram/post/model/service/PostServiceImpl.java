@@ -31,8 +31,8 @@ public class PostServiceImpl implements PostService {
 
 
     @Override
-    public List<Post> getPostsByUserId(int userId) {
-        List<Post> res = postMapper.selectPostsByUserId(userId);
+    public List<Integer> getPostsByUserId(int userId) {
+        List<Integer> res = postMapper.selectPostsByUserId(userId);
         return res;
     }
 
@@ -84,5 +84,10 @@ public class PostServiceImpl implements PostService {
     @Override
     public boolean deleteLike(int postId, int userId) {
         return postMapper.deleteLike(postId, userId) > 0;
+    }
+
+    @Override
+    public String getPostImage(int postId) {
+        return postMapper.selectPostImageByPostId(postId);
     }
 }

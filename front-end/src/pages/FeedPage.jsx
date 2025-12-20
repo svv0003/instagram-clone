@@ -28,6 +28,7 @@ const FeedPage = () => {
     const [selectedPost, setSelectedPost] = useState(null);
     const [followings, setFollowings] = useState([]);
     const [likes, setLikes] = useState([]);
+    const [saves, setSaves] = useState([]);
     const loginUser = JSON.parse(localStorage.getItem("user") || '[]');
     const loginUserId = loginUser.userId;
 
@@ -46,6 +47,8 @@ const FeedPage = () => {
             setFollowings(followingRes || []);
             const likeRes = await apiService.getLikeList();
             setLikes(likeRes || []);
+            const saveRes = await apiService.getSaveList();
+            setSaves(saveRes || []);
         } catch (error) {
             alert("데이터를 불러오는데 실패했습니다.");
         } finally {
@@ -164,7 +167,31 @@ const FeedPage = () => {
                     return post;
                 });
             });
-            alert("좋아요 처리에 실패했습니다.");
+            alert("좋아요 처리를 실패했습니다.");
+        }
+    };
+
+    // 저장 토글 함수
+    const toggleSave = async (targetPostId) => {
+        const isSave = likes.includes(targetPostId);
+        if (isSave) {
+            setSaves(prev => prev.filter(id => id !== targetPostId));
+        } else {
+            setSaves(prev => [...prev, targetPostId]);
+        }
+        try {
+            if (isSave) {
+                await apiService.deleteSave(targetPostId);
+            } else {
+                await apiService.createSave(targetPostId);
+            }
+        } catch (error) {
+            if (isSave) {
+                setSaves(prev => [...prev, targetPostId]);
+            } else {
+                setSaves(prev => prev.filter(id => id !== targetPostId));
+            }
+            alert("저장하기 처리를 실패했습니다.");
         }
     };
 
@@ -189,7 +216,7 @@ const FeedPage = () => {
             } else {
                 setFollowings(prev => prev.filter(id => id !== targetUserId));
             }
-            alert("팔로우 처리에 실패했습니다.");
+            alert("팔로우 처리를 실패했습니다.");
         }
     };
 
@@ -258,6 +285,8 @@ const FeedPage = () => {
                         const isOwnPost = post.userId === loginUserId;
                         const isFollowing = followings.includes(post.userId);
                         const isLike = likes.includes(post.postId);
+                        const isSave = saves.includes(post.postId);
+
 
                         return (
                             <article key={post.postId} className="post-card">
@@ -309,7 +338,10 @@ const FeedPage = () => {
                                                                navigate(`/post/${post.postId}`)}/>
                                             <Send className="action-icon"/>
                                         </div>
-                                        <Bookmark className="action-icon"/>
+                                        <Bookmark className={`action-icon save-icon ${isSave ? 'saved' : ''}`}
+                                                  onClick={() =>
+                                                      toggleSave(post.postId)}
+                                                  fill={isSave ? "#ed4956" : "none"} />
                                     </div>
 
                                     <div className="post-likes">

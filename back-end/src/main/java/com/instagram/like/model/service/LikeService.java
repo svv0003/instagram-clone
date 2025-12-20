@@ -1,6 +1,7 @@
 package com.instagram.like.model.service;
 
 import com.instagram.like.model.dto.Like;
+import com.instagram.post.model.dto.Post;
 
 import java.util.List;
 
@@ -10,4 +11,5 @@ public interface LikeService {
     int getLikes(int postId);
     boolean addLike(int postId, int loginUserId);
     boolean deleteLike(int postId, int loginUserId);
+    List<Integer> getLikesByUserId(int userId);
 }

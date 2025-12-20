@@ -3,6 +3,7 @@ package com.instagram.like.model.service;
 import com.instagram.follow.model.dto.Follow;
 import com.instagram.like.model.dto.Like;
 import com.instagram.like.model.mapper.LikeMapper;
+import com.instagram.post.model.dto.Post;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -64,5 +65,11 @@ public class LikeServiceImpl implements LikeService {
             log.error("좋아요 취소 문제 발생 : {}", e);
             return false;
         }
+    }
+
+    @Override
+    public List<Integer> getLikesByUserId(int userId) {
+        List<Integer> res = likeMapper.selectLikesByUserId(userId);
+        return res;
     }
 }

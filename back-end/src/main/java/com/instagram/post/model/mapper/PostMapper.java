@@ -18,7 +18,7 @@ public interface PostMapper {
     /**
      * 특정 사용자 게시물 조회
      */
-    List<Post> selectPostsByUserId(int currentUserId);
+    List<Integer> selectPostsByUserId(int currentUserId);
     /**
      * 게시물 작성
      */
@@ -39,4 +39,9 @@ public interface PostMapper {
      * 좋아요 취소
      */
     int deleteLike(int postId, int userId);
+
+    /**
+     * 포스트 이미지 조회
+     */
+    String selectPostImageByPostId(int postId);
 }

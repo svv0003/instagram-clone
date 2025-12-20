@@ -38,4 +38,6 @@ public interface LikeMapper {
      * @return
      */
     boolean deleteLike(Like like);
+
+    List<Integer> selectLikesByUserId(int userId);
 }
