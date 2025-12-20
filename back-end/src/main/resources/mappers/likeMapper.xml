@@ -43,7 +43,7 @@
 
     <select id="selectLikesByUserId">
         SELECT post_id
-        FROM like_detail_view
+        FROM likes
         WHERE user_id = #{userId}
         ORDER BY created_at DESC
     </select>

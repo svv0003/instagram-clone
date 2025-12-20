@@ -99,6 +99,8 @@ const MyFeedPage = () => {
             setPosts(postsRes || []);
             const likesRes = await apiService.getUserLikes(feedPageOwner);
             setLikes(likesRes || []);
+            const savesRes = await apiService.getUserSaves(feedPageOwner);
+            setSaves(savesRes || []);
         } catch (error) {
             console.error(error);
             alert("프로필 정보를 불러오는데 실패했습니다.");

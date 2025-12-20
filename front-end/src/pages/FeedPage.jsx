@@ -49,6 +49,7 @@ const FeedPage = () => {
             setLikes(likeRes || []);
             const saveRes = await apiService.getSaveList();
             setSaves(saveRes || []);
+            console.log("save", saveRes);
         } catch (error) {
             alert("데이터를 불러오는데 실패했습니다.");
         } finally {
@@ -173,7 +174,7 @@ const FeedPage = () => {
 
     // 저장 토글 함수
     const toggleSave = async (targetPostId) => {
-        const isSave = likes.includes(targetPostId);
+        const isSave = saves.includes(targetPostId);
         if (isSave) {
             setSaves(prev => prev.filter(id => id !== targetPostId));
         } else {
@@ -181,8 +182,10 @@ const FeedPage = () => {
         }
         try {
             if (isSave) {
+                console.log("deleteSave");
                 await apiService.deleteSave(targetPostId);
             } else {
+                console.log("createSave");
                 await apiService.createSave(targetPostId);
             }
         } catch (error) {
@@ -192,6 +195,7 @@ const FeedPage = () => {
                 setSaves(prev => prev.filter(id => id !== targetPostId));
             }
             alert("저장하기 처리를 실패했습니다.");
+            console.error(error);
         }
     };
 
@@ -341,7 +345,7 @@ const FeedPage = () => {
                                         <Bookmark className={`action-icon save-icon ${isSave ? 'saved' : ''}`}
                                                   onClick={() =>
                                                       toggleSave(post.postId)}
-                                                  fill={isSave ? "#ed4956" : "none"} />
+                                                  fill={isSave ? "black" : "none"} />
                                     </div>
 
                                     <div className="post-likes">

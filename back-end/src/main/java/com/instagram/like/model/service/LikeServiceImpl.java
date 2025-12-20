@@ -22,12 +22,6 @@ public class LikeServiceImpl implements LikeService {
         return likeMapper.selectLikePostId(loginUserId);
     }
 
-    /**
-     * 팔로우 유무 확인
-     * @param postId
-     * @param loginUserId
-     * @return
-     */
     @Override
     public boolean checkLike(int postId, int loginUserId) {
         Like like = new Like();

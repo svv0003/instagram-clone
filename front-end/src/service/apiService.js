@@ -248,6 +248,65 @@ const apiService = {
         }
     },
 
+
+    /*================================================================================
+                                        저장하기 API
+    ================================================================================*/
+
+    /**
+     * 저장 목록 조회
+     * @returns {Promise<any>}
+     */
+    getSaveList: async () => {
+        try {
+            const res = await api.get("/save/list");
+            return res.data;
+        } catch (e) {
+            alert("저장 목록 조회 실패 : {}", e);
+        }
+    },
+
+    /**
+     * 저장 유무 확인
+     * @returns {Promise<any>}
+     */
+    getSave: async (postId) => {
+        try {
+            const res = await api.get(`/save/check?postId=${postId}`);
+            return res.data;
+        } catch (e) {
+            alert("저장 유무 확인 실패 : {}", e);
+        }
+    },
+
+    /**
+     * 저장 추가
+     * @param postId
+     * @returns {Promise<any>}
+     */
+    createSave: async (postId) => {
+        try {
+            const res = await api.post(`/save/add?postId=${postId}`);
+            return res.data;
+        } catch (e) {
+            alert("저장 추가 실패 : {}", e);
+        }
+    },
+
+    /**
+     * 저장 취소
+     * @param postId
+     * @returns {Promise<any>}
+     */
+    deleteSave: async (postId) => {
+        try {
+            const res = await api.delete(`/save/delete?postId=${postId}`);
+            return res.data;
+        } catch (e) {
+            alert("저장 취소 실패 : {}", e);
+        }
+    },
+
     /*================================================================================
                                         팔로우 API
     ================================================================================*/
@@ -551,12 +610,26 @@ const apiService = {
     },
 
     /**
-     * 사용자 게시물 조회
+     * 사용자 좋아요 조회
      * GET /users/:userId/posts
      */
     getUserLikes: async (userId) => {
         try {
             const res = await api.get(`/like/user/${userId}`);
+            console.log("postRes : ", res);
+            return res.data;
+        } catch (error) {
+            alert("데이터를 가져올 수 없습니다.");
+        }
+    },
+
+    /**
+     * 사용자 저장 조회
+     * GET /users/:userId/posts
+     */
+    getUserSaves: async (userId) => {
+        try {
+            const res = await api.get(`/save/user/${userId}`);
             console.log("postRes : ", res);
             return res.data;
         } catch (error) {

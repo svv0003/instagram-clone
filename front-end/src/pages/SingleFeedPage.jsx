@@ -31,9 +31,11 @@ const SingleFeedPage = () => {
     const [commentText, setCommentText] = useState('');
     const [isFollowing, setIsFollowing] = useState(false);
     const [isLiked, setIsLiked] = useState(false);
+    const [isSaved, setIsSaved] = useState(false);
     const loginUser = JSON.parse(localStorage.getItem("user") || '[]');
     const loginUserId = loginUser.userId;
     const {postId} = useParams();
+
 
     useEffect(() => {
         console.log("postId :", postId);
@@ -53,6 +55,8 @@ const SingleFeedPage = () => {
             }
             const liked = await apiService.getLike(postId);
             setIsLiked(liked);
+            const saved = await apiService.getSave(postId);
+            setIsSaved(saved);
         } catch (error) {
             alert("포스트를 불러오는데 실패했습니다.");
         } finally {
@@ -141,7 +145,23 @@ const SingleFeedPage = () => {
                 ...prev,
                 likeCount: previous ? prev.likeCount + 1 : prev.likeCount - 1
             }));
-            alert("좋아요 처리에 실패했습니다.");
+            alert("좋아요 처리를 실패했습니다.");
+        }
+    };
+
+    // 저장 토글 함수
+    const toggleSave = async () => {
+        const previous = isSaved;
+        setIsSaved(!previous);
+        try {
+            if (previous) {
+                await apiService.deleteSave(post.postId);
+            } else {
+                await apiService.createSave(post.postId);
+            }
+        } catch (error) {
+            setIsSaved(previous);
+            alert("저장 처리를 실패했습니다.");
         }
     };
 
@@ -157,7 +177,7 @@ const SingleFeedPage = () => {
             }
         } catch (error) {
             setIsFollowing(prev => !prev); // 롤백
-            alert("팔로우 처리에 실패했습니다.");
+            alert("팔로우 처리를 실패했습니다.");
         }
     };
 
@@ -240,7 +260,9 @@ const SingleFeedPage = () => {
                                 <MessageCircle className="action-icon"/>
                                 <Send className="action-icon"/>
                             </div>
-                            <Bookmark className="action-icon"/>
+                            <Bookmark className={`action-icon save-icon ${isSaved ? 'saved' : ''}`}
+                                      onClick={toggleSave}
+                                      fill={isSaved ? "black" : "none"} />
                         </div>
 
                         <div className="post-likes">
