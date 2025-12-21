@@ -25,6 +25,7 @@ import EditProfilePage from "./pages/EditProfilePage";
 import KakaoCallback from "./pages/KakaoCallback";
 import SingleFeedPage from "./pages/SingleFeedPage";
 import FollowListPage from "./pages/FollowListPage";
+import SearchPage from "./pages/SearchPage";
 
 // TODO: 필요한 컴포넌트들을 import 하세요
 
@@ -60,6 +61,12 @@ function App() {
                            element={
                                 <PrivateRoute>
                                     <FeedPage />
+                                </PrivateRoute>}
+                    />
+                    <Route path="/search"
+                           element={
+                                <PrivateRoute>
+                                    <SearchPage />
                                 </PrivateRoute>}
                     />
                     <Route path="/post/:postId"

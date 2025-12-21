@@ -61,6 +61,17 @@
         ORDER BY created_at DESC
     </select>
 
+    <select id="selectPostsByFollowerUserId" resultType="Post">
+        SELECT *
+        FROM post_detail_view
+        WHERE user_id IN (
+            SELECT following_id
+            FROM follows
+            WHERE follower_id = #{userId}
+            )
+        ORDER BY created_at DESC
+    </select>
+
     <!-- 특정 게시물 조회
     <select id="selectPostById" >
         SELECT

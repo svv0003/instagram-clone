@@ -223,8 +223,6 @@ const SingleFeedPage = () => {
                         <div className="post-user-info">
                             <img src={getImageUrl(post.userAvatar)}
                                  className="post-user-avatar"
-                                 onClick={() =>
-                                     navigate(`/myfeed?userId=${post.userId}`)}
                                  style={{cursor: 'pointer'}}/>
                             <span className="post-username"
                                   onClick={() =>

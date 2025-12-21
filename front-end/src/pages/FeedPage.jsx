@@ -264,20 +264,19 @@ const FeedPage = () => {
                         </div>
                         {stories.length > 0 &&
                             stories.map((story) => (
-                                <div
-                                    key={story.userId}  // key는 최상위 요소에만
-                                    className="story-item"
-                                    onClick={() =>
-                                        navigate(`/story/detail/${story.userId}`)}
-                                    style={{ cursor: "pointer" }}
-                                >
+                                <div key={story.userId}  // key는 최상위 요소에만
+                                     className="story-item"
+                                     style={{ cursor: "pointer" }}>
                                     <div className="story-avatar-wrapper">
                                         <img src={getImageUrl(story.userAvatar)}
                                              className="story-avatar"
-                                             alt={story.userName}
-                                        />
+                                             alt={story.userName} />
                                     </div>
-                                    <span className="story-username">{story.userName}</span>
+                                    <span className="story-username"
+                                          onClick={() =>
+                                              navigate(`/story/detail/${story.userId}`)}>
+                                        {story.userName}
+                                    </span>
                                 </div>
                             ))}
                     </div>
@@ -291,15 +290,12 @@ const FeedPage = () => {
                         const isLike = likes.includes(post.postId);
                         const isSave = saves.includes(post.postId);
 
-
                         return (
                             <article key={post.postId} className="post-card">
                                 <div className="post-header">
                                     <div className="post-user-info">
                                         <img src={getImageUrl(post.userAvatar)}
                                              className="post-user-avatar"
-                                             onClick={() =>
-                                                navigate(`/myfeed?userId=${post.userId}`)}
                                              style={{ cursor: 'pointer' }}/>
                                         <span className="post-username"
                                               onClick={() =>

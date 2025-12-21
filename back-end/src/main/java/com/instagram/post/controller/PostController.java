@@ -52,12 +52,41 @@ public class PostController {
     }
 
     @GetMapping
-    public ResponseEntity<List<Post>> getAllPosts(@RequestHeader("Authorization") String authHeader) {
-        String token = authHeader.substring(7);
-        log.info("token: {}", token);
-        int currentUserId = jwtUtil.getUserIdFromToken(token);
-        List<Post> posts = postService.getAllPosts(currentUserId);
-        return ResponseEntity.ok(posts);
+    public ResponseEntity<List<Post>> getAllPosts() {
+        try {
+            List<Post> posts = postService.getAllPosts();
+            return ResponseEntity.ok(posts);
+        } catch (Exception e) {
+            log.error("포스팅 조회 실패 : {}", e.getMessage());
+            return ResponseEntity.badRequest().body(null);
+        }
+    }
+
+    @GetMapping("/following")
+    public ResponseEntity<List<Post>> getPostsByFollowingUserId(@RequestHeader("Authorization") String authHeader) {
+        try {
+            String token = authHeader.substring(7);
+            int currentUserId = jwtUtil.getUserIdFromToken(token);
+            List<Post> post = postService.getPostsByFollowerUserId(currentUserId);
+            log.info("post : {}", post);
+            return ResponseEntity.ok(post);
+        } catch (Exception e) {
+            log.error("포스팅 조회 실패 : {}", e.getMessage());
+            return ResponseEntity.badRequest().body(null);
+        }
+    }
+
+    @GetMapping("/{postId}")
+    public ResponseEntity<Post> getPostById(@PathVariable int postId) {
+        try {
+            log.info("postId : {}", postId);
+            Post post = postService.getPostById(postId);
+            log.info("post : {}", post);
+            return ResponseEntity.ok(post);
+        } catch (Exception e) {
+            log.error("포스팅 조회 실패 : {}", e.getMessage());
+            return ResponseEntity.badRequest().body(null);
+        }
     }
 
     @GetMapping("/user/{userId}")
@@ -94,18 +123,7 @@ public class PostController {
         }
     }
 
-    @GetMapping("{postId}")
-    public ResponseEntity<Post> getPostById(@PathVariable("postId") int postId) {
-        try {
-            log.info("postId : {}", postId);
-            Post post = postService.getPostById(postId);
-            log.info("post : {}", post);
-            return ResponseEntity.ok(post);
-        } catch (Exception e) {
-            log.error("포스팅 조회 실패 : {}", e.getMessage());
-            return ResponseEntity.badRequest().body(null);
-        }
-    }
+
 
     @GetMapping("image/{postId}")
     public ResponseEntity<String> getPostImageByPostId(@PathVariable("postId") int postId) {

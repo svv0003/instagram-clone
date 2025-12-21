@@ -210,16 +210,20 @@ const MyFeedPage = () => {
                         onClick={() => setActiveTab('posts')}>
                         <Grid size={12} /> 게시물
                     </button>
-                    <button
-                        className={`tab-btn ${activeTab === 'saves' ? 'active' : ''}`}
-                        onClick={() => setActiveTab('saves')}>
-                        <Bookmark size={12} /> 저장됨
-                    </button>
-                    <button
-                        className={`tab-btn ${activeTab === 'likes' ? 'active' : ''}`}
-                        onClick={() => setActiveTab('likes')}>
-                        <Heart size={12} /> 좋아요
-                    </button>
+                    {isRealMyFeed && (
+                        <>
+                            <button
+                                className={`tab-btn ${activeTab === 'saves' ? 'active' : ''}`}
+                                onClick={() => setActiveTab('saves')}>
+                                <Bookmark size={12} /> 저장됨
+                            </button>
+                            <button
+                                className={`tab-btn ${activeTab === 'likes' ? 'active' : ''}`}
+                                onClick={() => setActiveTab('likes')}>
+                                <Heart size={12} /> 좋아요
+                            </button>
+                        </>
+                    )}
                 </div>
 
 

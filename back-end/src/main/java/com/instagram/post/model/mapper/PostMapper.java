@@ -10,7 +10,11 @@ public interface PostMapper {
     /**
      * 전체 게시물 조회
      */
-    List<Post> selectAllPosts(int currentUserId);
+    List<Post> selectAllPosts();
+    /**
+     * 팔로잉 유저 게시물 조회
+     */
+    List<Post> selectPostsByFollowerUserId(int currentUserId);
     /**
      * 특정 게시물 조회
      */

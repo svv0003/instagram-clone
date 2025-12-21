@@ -95,9 +95,21 @@ const apiService = {
     /**
      * 모든 게시물 조회
      */
-    getPosts: async () => {
+    getAllPosts: async () => {
         try {
             const res = await api.get('/posts');
+            return res.data;
+        } catch (error) {
+            alert("데이터를 가져올 수  없습니다.");
+        }
+    },
+
+    /**
+     * 팔로잉 유저 게시물 조회
+     */
+    getPosts: async () => {
+        try {
+            const res = await api.get('/posts/following');
             return res.data;
         } catch (error) {
             alert("데이터를 가져올 수  없습니다.");
@@ -109,7 +121,7 @@ const apiService = {
      * */
     getPost: async (postId) => {
         try {
-            const res = await api.get('/posts/' + postId);
+            const res = await api.get(`/posts/${postId}`);
             return res.data;
         } catch (error) {
             alert("데이터를 가져올 수  없습니다.");

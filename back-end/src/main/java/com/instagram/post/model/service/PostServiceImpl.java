@@ -19,8 +19,14 @@ public class PostServiceImpl implements PostService {
     private final FileUploadService fileUploadService;
 
     @Override
-    public List<Post> getAllPosts(int currentUserId) {
-        List<Post> p = postMapper.selectAllPosts(currentUserId);
+    public List<Post> getAllPosts() {
+        List<Post> p = postMapper.selectAllPosts();
+        return p;
+    }
+
+    @Override
+    public List<Post> getPostsByFollowerUserId(int currentUserId) {
+        List<Post> p = postMapper.selectPostsByFollowerUserId(currentUserId);
         return p;
     }
 

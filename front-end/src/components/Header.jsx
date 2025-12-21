@@ -34,8 +34,8 @@ const Header = ({
                             <Home className="header-icon"
                                   onClick={() => navigate('/feed')}
                                   style={{cursor: 'pointer'}}/>
-                            <Search className="header"
-                                    onClick={openSearch}
+                            <Search className="header-icon"
+                                    onClick={() => navigate('/search')}
                                     style={{cursor: 'pointer'}} />
                             <MessageCircle className="header-icon" />
                             <PlusSquare className="header-icon"

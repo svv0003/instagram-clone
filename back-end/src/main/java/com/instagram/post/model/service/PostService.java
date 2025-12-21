@@ -9,11 +9,14 @@ public interface PostService {
 
     /**
      * 모든 게시물 조회하기
-     * 로그인 시 본인이 팔로우하는 지인 게시물
-     * @param currentUserId
      * @return
      */
-    List<Post> getAllPosts(int currentUserId);
+    List<Post> getAllPosts();
+    /**
+     * 팔로잉 유저 게시물 조회하기
+     * @return
+     */
+    List<Post> getPostsByFollowerUserId(int currentUserId);
     /**
      * 본인 피드 또는 특정 유저 피드 클릭 시 상세보기
      * @param postId
