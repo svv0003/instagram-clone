@@ -402,11 +402,13 @@ body {
 }
 
 .upload-header {
+    position: sticky;
     background-color: white;
     border-bottom: 1px solid #dbdbdb;
 }
 
 .upload-header-content {
+    position: sticky;
     max-width: 975px;
     margin: 0 auto;
     padding: 0.75rem 1rem;
@@ -2510,4 +2512,8 @@ comments
     height: 100%;
     text-align: center;
     align-content: center;
+}
+
+Header {
+    position: sticky;
 }

@@ -65,13 +65,13 @@ const UploadPage = () => {
 
     return (
         <div className="upload-container">
-            <Header
-                type="upload"
-                title="새 게시물"
-                onSubmit={handlePost}
-                submitDisabled={!selectedImage || !caption.trim()}
-                loading={loading}
-                submitText={"공유"} />
+            <Header className="header"
+                    type="upload"
+                    title="새 게시물"
+                    onSubmit={handlePost}
+                    submitDisabled={!selectedImage || !caption.trim()}
+                    loading={loading}
+                    submitText={"공유"} />
 
             <div className="upload-content">
                 <div className="upload-card">

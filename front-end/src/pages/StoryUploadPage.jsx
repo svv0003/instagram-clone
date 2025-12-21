@@ -57,7 +57,8 @@ const StoryUploadPage = () => {
 
     return (
         <div className="upload-container">
-            <Header type="upload"
+            <Header className="header"
+                    type="upload"
                     title="새 스토리"
                     onSubmit={handlePost}
                     submitDisabled={!selectedImage}

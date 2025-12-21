@@ -38,7 +38,7 @@ public class LikeController {
 
     @GetMapping("/check")
     public ResponseEntity<Boolean> checkLike(@RequestHeader("Authorization") String authHeader,
-                                                  @RequestParam int postId) {
+                                             @RequestParam int postId) {
         try {
             String token = authHeader.substring(7);
             int loginUserId = jwtUtil.getUserIdFromToken(token);
@@ -63,7 +63,7 @@ public class LikeController {
 
     @PostMapping("/add")
     public ResponseEntity<?> addLike(@RequestHeader("Authorization") String authHeader,
-                                          @RequestParam int postId) {
+                                     @RequestParam int postId) {
         try {
             String token = authHeader.substring(7);
             int loginUserId = jwtUtil.getUserIdFromToken(token);
@@ -78,7 +78,7 @@ public class LikeController {
 
     @DeleteMapping("/delete")
     public ResponseEntity<?> deleteLike(@RequestHeader("Authorization") String authHeader,
-                                             @RequestParam int postId) {
+                                        @RequestParam int postId) {
         try {
             String token = authHeader.substring(7);
             int loginUserId = jwtUtil.getUserIdFromToken(token);

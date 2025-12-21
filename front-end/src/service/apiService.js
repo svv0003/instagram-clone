@@ -529,10 +529,10 @@ const apiService = {
     /**
      * 로그인 회원 프로필 업데이트
      */
-    updateProfile: async (formData) => {
-        console.log("formData : ", formData);
+    updateProfile: async (submitData) => {
+        console.log("submitData : ", submitData);
         try {
-            const res = await api.put(`/auth/profile/edit`, formData, {
+            const res = await api.put(`/auth/profile/edit`, submitData, {
                 headers : {
                     'Content-Type': 'multipart/form-data'
                 }
