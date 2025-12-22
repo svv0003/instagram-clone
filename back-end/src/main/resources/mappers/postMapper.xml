@@ -58,7 +58,7 @@
     <select id="selectAllPosts" resultType="Post">
         SELECT *
         FROM post_detail_view
-        ORDER BY created_at DESC
+        ORDER BY random()
     </select>
 
     <select id="selectPostsByFollowerUserId" resultType="Post">
