@@ -7,11 +7,11 @@ export const getImageUrl = (path) => {
         if(path ==='default-avatar.jpg') return '/static/img/default-avatar.jpg';
         if(path ==='default-avatar.png') return '/static/img/default-avatar.jpg';
         if(path.startsWith('/static/img')) return path;
-        // return `${API_BASE_URL}${path}`;
-        return `http://localhost:9000${path}`;
+        return `${API_BASE_URL}${path}`;
+        // return `http://localhost:9000${path}`;
     }
-    // return `${API_BASE_URL}${path}`;
-    return `http://localhost:9000${path}`;
+    return `${API_BASE_URL}${path}`;
+    // return `http://localhost:9000${path}`;
 }
 
 export const formatDate = (dateString, format="relative") => {
