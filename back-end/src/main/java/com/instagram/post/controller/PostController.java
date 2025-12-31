@@ -51,15 +51,34 @@ public class PostController {
         }
     }
 
+//    @GetMapping
+//    public ResponseEntity<List<Post>> getAllPosts() {
+//        try {
+//            List<Post> posts = postService.getAllPosts();
+//            return ResponseEntity.ok(posts);
+//        } catch (Exception e) {
+//            log.error("포스팅 조회 실패 : {}", e.getMessage());
+//            return ResponseEntity.badRequest().body(null);
+//        }
+//    }
+
     @GetMapping
-    public ResponseEntity<List<Post>> getAllPosts() {
-        try {
-            List<Post> posts = postService.getAllPosts();
-            return ResponseEntity.ok(posts);
-        } catch (Exception e) {
-            log.error("포스팅 조회 실패 : {}", e.getMessage());
-            return ResponseEntity.badRequest().body(null);
+    public ResponseEntity<List<Post>> getAllPosts(@RequestHeader(value = "Authorization", required = false) String authHeader) {
+        // 인증되지 않은 유저가 게시물 보려고 하면 userId null 추가한다.
+        Integer currentUserId = null;
+
+        // 토큰 있으면 사용자 ID 추출한다.
+        if(authHeader != null && authHeader.startsWith("Bearer ")) {
+            try {
+                String token = authHeader.substring(7);
+                currentUserId = jwtUtil.getUserIdFromToken(token);
+            } catch (Exception e) {
+                log.error("유저 아이디 없지만 그냥 진행 : {}", e.getMessage());
+            }
         }
+        int userId = (currentUserId != null) ? currentUserId : 0;
+        List<Post> posts = postService.getAllPosts();
+        return ResponseEntity.ok(posts);
     }
 
     @GetMapping("/following")
