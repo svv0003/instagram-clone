@@ -31,10 +31,13 @@ public class WebConfig implements WebMvcConfigurer {
             public void addCorsMappings(CorsRegistry registry) {
                 // REST API CORS 설정
                 registry.addMapping("/api/**")
-                        .allowedOrigins("http://localhost:3001",
-                                "http://localhost:3000",
+                        .allowedOrigins(
+                                "http://localhost:3001",
+                                "http://localhost:3000", // IOS 테스트 8080
                                 "https://instagram-clone-iota-liard.vercel.app",
-                                "https://instagram-clone-iaayy8rke-svv0003s-projects.vercel.app")
+                                "https://instagram-clone-iaayy8rke-svv0003s-projects.vercel.app",
+                                "http://10.0.2.2:8080" // 안드로이드 핸드폰 테스트
+                        )
                         .allowCredentials(true)
                         .allowedMethods("GET","POST","PUT","DELETE","PATCH","OPTIONS")
                         .allowedHeaders("*");
