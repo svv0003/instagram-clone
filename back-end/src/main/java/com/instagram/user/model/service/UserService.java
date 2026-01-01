@@ -1,10 +1,12 @@
 package com.instagram.user.model.service;
 
 import com.instagram.user.model.dto.User;
+import jakarta.servlet.http.HttpSession;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.Map;
 
 public interface UserService {
 
@@ -17,4 +19,5 @@ public interface UserService {
     List<User> searchUsers(String query);
     boolean checkPassword(int userId, String password);
     boolean changePassword(int userId, String newPassword);
+    Map<String, Object> checkLoginStatus(HttpSession session);
 }

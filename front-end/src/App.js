@@ -30,23 +30,22 @@ import SearchPage from "./pages/SearchPage";
 // TODO: 필요한 컴포넌트들을 import 하세요
 
 function App() {
-    const [user, setUser] = useState(() => {
-        try {
-            const savedUser = localStorage.getItem("user");
-            const token = localStorage.getItem("token");
-            if(savedUser && token) {
-                return JSON.parse(savedUser);
-            }
-            return null;
-        } catch (err) {
-            localStorage.removeItem("user");
-            localStorage.removeItem("token");
-        }
-    })
+    // const [user, setUser] = useState(() => {
+    //     try {
+    //         const savedUser = localStorage.getItem("user");
+    //         const token = localStorage.getItem("token");
+    //         if(savedUser && token) {
+    //             return JSON.parse(savedUser);
+    //         }
+    //         return null;
+    //     } catch (err) {
+    //         localStorage.removeItem("user");
+    //         localStorage.removeItem("token");
+    //     }
+    // })
 
     return (
         <div>
-            <BrowserRouter>
                 <Routes>
                     <Route path="/" element={<Navigate to="/login" replace/>}/>
                     <Route path="/login" element={<LoginPage />}/>
@@ -119,7 +118,6 @@ function App() {
                     />
 
                 </Routes>
-            </BrowserRouter>
         </div>
     );
 }

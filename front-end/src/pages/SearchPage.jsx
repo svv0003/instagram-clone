@@ -123,7 +123,8 @@ const FeedPage = () => {
                         <div className="follow-search-reset-btn"
                              onClick={() => {
                                  setSearchQuery("");
-                                 setIsSearching(false);}}>
+                                 setIsSearching(false);}}
+                             style={{cursor: 'pointer'}}>
                             취소
                         </div>
                     </div>

@@ -6,6 +6,7 @@ import com.instagram.user.model.dto.LoginResponse;
 import com.instagram.user.model.dto.User;
 import com.instagram.user.model.service.KakaoServiceImpl;
 import com.instagram.user.model.service.UserService;
+import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
@@ -39,10 +40,6 @@ public class UserController {
 
     @PostMapping("/login")
     public ResponseEntity<LoginResponse> login(@RequestBody LoginRequest request){
-        /*
-        TODO
-        로그인 성공 시 JWT 토큰 생성
-         */
         User user = userService.login(request.getUserEmail(), request.getUserPassword());
         log.info("===로그인 요청===");
         log.info("요청 데이터 - 이메일 : {}", user.getUserEmail());
@@ -55,6 +52,11 @@ public class UserController {
         loginResponse.setUser(user);
         log.info("로그인 성공 - 이메일: {}", user.getUserEmail());
         return ResponseEntity.ok(loginResponse);
+    }
+
+    @GetMapping("/check")
+    public Map<String, Object> checkLoginStatus(HttpSession session){
+        return userService.checkLoginStatus(session);
     }
 
     @GetMapping("/profile")

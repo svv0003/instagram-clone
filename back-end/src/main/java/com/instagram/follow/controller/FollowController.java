@@ -4,9 +4,11 @@ import com.instagram.common.util.JwtUtil;
 import com.instagram.follow.model.dto.Follow;
 import com.instagram.follow.model.service.FollowService;
 import com.instagram.user.model.dto.User;
+import com.instagram.user.model.service.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
@@ -21,6 +23,9 @@ public class FollowController {
 
     private final FollowService followService;
     private final JwtUtil jwtUtil;
+    private final SimpMessagingTemplate messagingTemplate; // WebSocket 메세지 전송
+    private final UserService userService;
+
 
     @GetMapping("/list/following/userId")
     public ResponseEntity<List<Integer>> getFollowingList(@RequestHeader("Authorization") String authHeader) {
@@ -95,9 +100,23 @@ public class FollowController {
         try {
             String token = authHeader.substring(7);
             int loginUserId = jwtUtil.getUserIdFromToken(token);
+            User loginUser = userService.getUserByUserId(loginUserId);
+            String loginUserName = loginUser.getUserName();
             log.info("userId : {}, loginUserId : {}", userId, loginUserId);
             boolean result = followService.addFollowing(userId, loginUserId);
             log.info("result : {}", result);
+
+            Map<String, Object> notification = new HashMap<>();
+            notification.put("id", 1);
+            notification.put("type", "FOLLOW");
+            notification.put("loginUserName", loginUserName);
+            notification.put("targetUserId", userId);
+            notification.put("timestamp", System.currentTimeMillis());
+            messagingTemplate.convertAndSendToUser(String.valueOf(userId), "/queue/notifications", notification);
+            log.info("String.valueOf(userId) : {}, loginUserName : {}, userId : {}", userId, loginUserName, userId);
+            log.info("팔로우 및 WebSocket 알림 전송 완료");
+            messagingTemplate.convertAndSend("/topic/notifications", notification);
+
             return ResponseEntity.ok(result);
         } catch (Exception e) {
             return ResponseEntity.status(500).body(null);

@@ -1,7 +1,16 @@
 import axios from 'axios';
 
-const API_BASE_URL = '/api';
-// const API_BASE_URL = 'http://localhost:9000/api';
+// build.gradle : "proxy": "https://13.125.72.19:9000",
+// const API_BASE_URL = '/api';
+
+export const API_URL = 'http://localhost:9000';
+export const API_BASE_URL = 'http://localhost:9000/api';
+export const API_URLS = {
+    AUTH :`${API_BASE_URL}/auth`,
+//     BOARD :`${API_BASE_URL}/api/board`,
+//     PRODUCT :`${API_BASE_URL}/api/product`,
+//     EMAIL :`${API_BASE_URL}/api/email`
+}
 
 const api = axios.create({
     baseURL: API_BASE_URL,
