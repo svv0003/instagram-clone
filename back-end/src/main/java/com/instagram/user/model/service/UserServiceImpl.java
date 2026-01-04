@@ -1,6 +1,7 @@
 package com.instagram.user.model.service;
 
 import com.instagram.common.util.FileUploadService;
+import com.instagram.common.util.JwtUtil;
 import com.instagram.user.model.dto.User;
 import com.instagram.user.model.mapper.UserMapper;
 import jakarta.servlet.http.HttpSession;
@@ -24,6 +25,8 @@ public class UserServiceImpl implements UserService {
     private final UserMapper userMapper;
     private final BCryptPasswordEncoder passwordEncoder;
     private final FileUploadService fileUploadService;
+    private final JwtUtil jwtUtil;
+
 
     @Override
     public void signUp(User user) {
@@ -61,26 +64,42 @@ public class UserServiceImpl implements UserService {
         return checkUserFromDB;
     }
 
-    /**
-     * 로그인 상태확인
-     * @param session 현재 세션을 가져온 후
-     * @return 로그인 이 되어있으면 로그인이 되어있는 상태로 반환
-     */
-    public Map<String, Object> checkLoginStatus(HttpSession session) {
-        Map<String, Object> res = new HashMap<>();
-        User loginUser = (User) session.getAttribute("loginUser");
+//    /**
+//     * 로그인 상태확인
+//     * @param session 현재 세션을 가져온 후
+//     * @return 로그인 이 되어있으면 로그인이 되어있는 상태로 반환
+//     */
+//    public Map<String, Object> checkLoginStatus(HttpSession session) {
+//        Map<String, Object> res = new HashMap<>();
+//        User loginUser = (User) session.getAttribute("loginUser");
+//
+//        if(loginUser == null) {
+//            res.put("loggedIn", false);
+//            res.put("user", null);
+//            log.debug("로그인 상태 확인: 로그인되지 않음");
+//        } else {
+//            res.put("loggedIn", true);
+//            res.put("user",loginUser);
+//            log.debug("로그인 상태 확인 : {}", loginUser.getUserEmail());
+//        }
+//        return  res;
+//    }
 
-        if(loginUser == null) {
+    public Map<String, Object> checkLoginStatus(String authHeader) {
+        Map<String, Object> res = new HashMap<>();
+        if (authHeader == null || !authHeader.startsWith("Bearer ")) {
             res.put("loggedIn", false);
             res.put("user", null);
-            log.debug("로그인 상태 확인: 로그인되지 않음");
-        }else {
-            res.put("loggedIn", true);
-            res.put("user",loginUser);
-            log.debug("로그인 상태 확인 : {}", loginUser.getUserEmail());
+            return res;
         }
-        return  res;
+        String token = authHeader.substring(7);
+        int userIdFromToken = jwtUtil.getUserIdFromToken(token);
+        User user = userMapper.selectUserById(userIdFromToken);
+        res.put("loggedIn", true);
+        res.put("user", user);
+        return res;
     }
+
 
     @Override
     public User getUserByUserEmail(String userEmail) {

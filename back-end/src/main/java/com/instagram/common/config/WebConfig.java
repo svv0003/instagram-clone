@@ -43,7 +43,8 @@ public class WebConfig implements WebMvcConfigurer {
                         .allowedHeaders("*");
                 // WebSocket CORS 설정 추가
                 registry.addMapping("/ws/**")
-                        .allowedOrigins("http://localhost:3001",
+                        .allowedOrigins(
+                                "http://localhost:3001",
                                 "http://localhost:3000",
                                 "https://instagram-clone-iota-liard.vercel.app",
                                 "https://instagram-clone-iaayy8rke-svv0003s-projects.vercel.app")

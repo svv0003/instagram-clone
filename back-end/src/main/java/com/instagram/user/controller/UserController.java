@@ -39,7 +39,10 @@ public class UserController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<LoginResponse> login(@RequestBody LoginRequest request){
+    public ResponseEntity<LoginResponse> login(
+            @RequestBody LoginRequest request
+            ,HttpSession session
+            ){
         User user = userService.login(request.getUserEmail(), request.getUserPassword());
         log.info("===로그인 요청===");
         log.info("요청 데이터 - 이메일 : {}", user.getUserEmail());
@@ -50,13 +53,19 @@ public class UserController {
         LoginResponse loginResponse = new LoginResponse();
         loginResponse.setToken(token);
         loginResponse.setUser(user);
+        session.setAttribute("loginUser", user);
         log.info("로그인 성공 - 이메일: {}", user.getUserEmail());
         return ResponseEntity.ok(loginResponse);
     }
 
+//    @GetMapping("/check")
+//    public Map<String, Object> checkLoginStatus(HttpSession session){
+//        return userService.checkLoginStatus(session);
+//    }
+
     @GetMapping("/check")
-    public Map<String, Object> checkLoginStatus(HttpSession session){
-        return userService.checkLoginStatus(session);
+    public Map<String, Object> checkLoginStatus(@RequestHeader("Authorization") String authHeader){
+        return userService.checkLoginStatus(authHeader);
     }
 
     @GetMapping("/profile")

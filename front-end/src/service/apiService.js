@@ -79,10 +79,18 @@ const apiService = {
     // POST /auth/login
     // body: { userEmail, password }
     login: async (userEmail, password) => {
+        // 세션 로그인 상태 확인용
+        // const res = await api.post('/auth/login', {
+        //     userEmail: userEmail,
+        //     userPassword: password},
+        //     {
+        //     withCredentials: true});
+
+        // 토큰 로그인 상태 확인용
         const res = await api.post('/auth/login', {
             userEmail: userEmail,
-            userPassword: password,
-        });
+            userPassword: password},
+        );
 
         // 토큰과 사용자 정보를 localStorage 저장
         if(res.data.token) {

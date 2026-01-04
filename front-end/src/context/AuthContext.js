@@ -1,6 +1,6 @@
 import {createContext, useContext, useEffect, useState} from "react";
 import axios from "axios";
-import {API_URLS} from "../service/apiService";
+import {API_BASE_URL, API_URLS} from "../service/apiService";
 
 /**
  * context 생성
@@ -30,8 +30,15 @@ const AuthProvider = ({children}) => {
      * 로그인 상태 확인 및 회원 정보 저장하기
      */
     const checkLoginStatus = () => {
-        axios.get(API_URLS.AUTH+"/check", {
-            withCredentials:true })
+        // 세션 로그인 확인용
+        // axios.get(API_URLS.AUTH+"/check", {
+        //     withCredentials:true })
+        axios.get(API_URLS.AUTH+"/check",
+            {
+                headers: {
+                    Authorization: `Bearer ${localStorage.getItem('token')}`
+                }
+            })
             .then(res => {
                 console.log("로그인 상태 확인 응답 : ", res.data);
                 setUser(res.data.user);

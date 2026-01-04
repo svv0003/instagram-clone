@@ -30,10 +30,16 @@ const ToastProvider = ({children}) => {
 
     useEffect(() => {
         // 웹 소켓 연결 설정
+        // const socket = new SockJS('http://localhost:9000/ws');
+        const token = localStorage.getItem("token");
         const socket = new SockJS('http://localhost:9000/ws');
         const client = new Client({
             webSocketFactory: () => socket,
+            connectHeaders: {
+                Authorization: `Bearer ${token}`
+            },
             reconnectDelay:5000,
+            debug: (str) => console.log("[STOMP]", str),
         });
         client.onConnect = () => {
             console.log("웹소켓 연결 성공");
@@ -45,20 +51,26 @@ const ToastProvider = ({children}) => {
                     ...n,
                     read:false
                 }
-                setNotifications(p => [...p, newNotification] );
-                // 5초 후 자동 삭제
-                // setTimeout(() => {
-                //     removeNotification(newNotification.id);
-                // },5000);
+                setNotifications(p => [...p, newNotification]);
+                // 3초 후 자동 삭제
+                setTimeout(() => {
+                    removeNotification(newNotification.id);
+                },3000);
             });
-            client.subscribe('/user/queue/notifications', (msg) => {
+
+            // client.subscribe('/user/queue/notifications', (msg) => {
+            client.subscribe('/queue/notifications', (msg) => {
                 const n = JSON.parse(msg.body);
                 console.log("🔔 개인 알림:", n);
 
+                const timeId = Date.now();
                 setNotifications(prev => [
                     ...prev,
-                    { ...n, id: Date.now(), read: false }
+                    { ...n, id: timeId, read: false }
                 ]);
+                setTimeout(() => {
+                    removeNotification(timeId);
+                }, 3000);
             });
         };
 

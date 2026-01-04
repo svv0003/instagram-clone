@@ -26,8 +26,8 @@ import KakaoCallback from "./pages/KakaoCallback";
 import SingleFeedPage from "./pages/SingleFeedPage";
 import FollowListPage from "./pages/FollowListPage";
 import SearchPage from "./pages/SearchPage";
+import NotificationToast from "./components/NotificationToast";
 
-// TODO: 필요한 컴포넌트들을 import 하세요
 
 function App() {
     // const [user, setUser] = useState(() => {
@@ -46,6 +46,7 @@ function App() {
 
     return (
         <div>
+            <NotificationToast/>
                 <Routes>
                     <Route path="/" element={<Navigate to="/login" replace/>}/>
                     <Route path="/login" element={<LoginPage />}/>

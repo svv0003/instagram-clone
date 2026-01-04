@@ -109,13 +109,14 @@ public class FollowController {
             Map<String, Object> notification = new HashMap<>();
             notification.put("id", 1);
             notification.put("type", "FOLLOW");
-            notification.put("loginUserName", loginUserName);
-            notification.put("targetUserId", userId);
+            notification.put("sendUserid", loginUserId);
+            notification.put("sendUserName", loginUserName);
+            notification.put("receiveUserId", userId);
             notification.put("timestamp", System.currentTimeMillis());
             messagingTemplate.convertAndSendToUser(String.valueOf(userId), "/queue/notifications", notification);
+//            messagingTemplate.convertAndSend("/queue/notifications", notification);
             log.info("String.valueOf(userId) : {}, loginUserName : {}, userId : {}", userId, loginUserName, userId);
             log.info("팔로우 및 WebSocket 알림 전송 완료");
-            messagingTemplate.convertAndSend("/topic/notifications", notification);
 
             return ResponseEntity.ok(result);
         } catch (Exception e) {

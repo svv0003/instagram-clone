@@ -30,11 +30,11 @@ const NotificationToast = () => {
     const getNotificationMessage = (notification) => {
             switch (notification.type) {
                 case 'FOLLOW':
-                    return `${notification.loginUserName}님이 회원님을 팔로우했습니다`;
+                    return `${notification.sendUserName}님이 회원님을 팔로우했습니다`;
                 case 'BOARD_LIKE':
-                    return `${notification.loginUserName}님이 게시글을 좋아합니다`;
+                    return `${notification.sendUserName}님이 게시글을 좋아합니다`;
                 case 'BOARD_COMMENT':
-                    return `${notification.loginUserName}님이 댓글을 남겼습니다`;
+                    return `${notification.sendUserName}님이 댓글을 남겼습니다`;
                 default:
                     return '새 알림이 도착했습니다';
             }
@@ -43,11 +43,11 @@ const NotificationToast = () => {
     const handleNotificationClick = (notification) => {
         switch (notification.type) {
             case 'FOLLOW':
-                navigate(`/profile/${notification.actorId}`);
+                navigate(`/myfeed?userId=${notification.sendUserId}`);
                 break;
             case 'BOARD_LIKE':
             case 'BOARD_COMMENT':
-                navigate(`/board/${notification.boardId}`);
+                navigate(`/post/${notification.postId}`);
                 break;
             default:
                 return;
@@ -67,7 +67,6 @@ const NotificationToast = () => {
                         <div className="notification-icon">🔔</div>
                         <div className="notification-text">
                             <h4>{getNotificationMessage(notification)}</h4>
-                            {notification.title && <p>제목: {notification.title}</p>}
                             {hasDetailPage(notification.type) && (
                                 <button
                                     className="notification-goto-btn"

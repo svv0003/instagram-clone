@@ -51,7 +51,7 @@ public class NotificationController {
             notification
         );
 
-        이 주소를 구독한 클라이언트만 메시지를 받음
+        이 주소를 구독한 클라이언트만 메시지를 받는다.
         stompClient.subscribe(
           `/queue/notifications/${userId}`,
           onMessage

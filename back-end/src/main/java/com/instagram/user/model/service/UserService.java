@@ -19,5 +19,6 @@ public interface UserService {
     List<User> searchUsers(String query);
     boolean checkPassword(int userId, String password);
     boolean changePassword(int userId, String newPassword);
-    Map<String, Object> checkLoginStatus(HttpSession session);
+//    Map<String, Object> checkLoginStatus(HttpSession session);
+    Map<String, Object> checkLoginStatus(String authHeader);
 }
