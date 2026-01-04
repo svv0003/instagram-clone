@@ -94,6 +94,11 @@ public class FollowController {
         }
     }
 
+    /*
+    팔로우, 좋아요 등의 알림 전송 시 발신자, 수신자, 내용, 읽음 상태 등을 DB 저장 후
+    저장된 id를 사용해서 프론트에서 읽음, 삭제 등에 사용하고,
+    로그인 시 해당 계정 알림 불러오기
+     */
     @PostMapping("/add")
     public ResponseEntity<?> addFollowing(@RequestHeader("Authorization") String authHeader,
                                           @RequestParam int userId) {
