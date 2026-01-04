@@ -155,7 +155,6 @@ public class SecurityConfig {
                         .anyRequest().permitAll()
                 )
 
-                // 핵심: JWT 필터 등록
                 /*
                 직접 만든 JwtAuthenticationFilter를 등록한다.
                 모든 요청이 들어올 때마다 이 필터가 먼저 실행되어 Authorization 헤더의 Bearer 토큰을 검사하고,
