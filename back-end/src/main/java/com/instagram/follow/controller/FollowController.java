@@ -128,6 +128,15 @@ public class FollowController {
             return ResponseEntity.status(500).body(null);
         }
     }
+    /*
+    https://github.com/svv0003/instagram-clone.git
+
+    package com.instagram.follow.controller;
+    addFollowing 메서드에서 convertAndSend() 사용할 땐 전역으로 알림이 모두 전송되는데,
+    convertAndSendToUser() 사용할 땐 상대방 측에 알림이 도착하지 않습니다.
+
+    JwtAuthenticationFilter, SecurityConfig, WebSocket 수정했습니다.
+     */
 
     @DeleteMapping("/delete")
     public ResponseEntity<?> deleteFollowing(@RequestHeader("Authorization") String authHeader,

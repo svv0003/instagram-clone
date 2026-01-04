@@ -1,0 +1,53 @@
+2025-12-23 00:14:54.994  WARN 10177 --- [MyHikariCP housekeeper] com.zaxxer.hikari.pool.HikariPool        : MyHikariCP - Thread starvation or clock leap detected (housekeeper delta=20m13s122ms).
+2025-12-23 00:48:24.120  WARN 10177 --- [MyHikariCP housekeeper] com.zaxxer.hikari.pool.HikariPool        : MyHikariCP - Thread starvation or clock leap detected (housekeeper delta=33m29s125ms).
+2025-12-23 01:53:56.842  WARN 10177 --- [MyHikariCP housekeeper] com.zaxxer.hikari.pool.HikariPool        : MyHikariCP - Thread starvation or clock leap detected (housekeeper delta=1h5m32s722ms).
+2025-12-23 02:54:48.388  WARN 10177 --- [MyHikariCP housekeeper] com.zaxxer.hikari.pool.HikariPool        : MyHikariCP - Thread starvation or clock leap detected (housekeeper delta=1h51s546ms).
+2025-12-23 04:12:20.978  WARN 10177 --- [MyHikariCP housekeeper] com.zaxxer.hikari.pool.HikariPool        : MyHikariCP - Thread starvation or clock leap detected (housekeeper delta=1h17m32s591ms).
+2025-12-23 05:30:18.168  WARN 10177 --- [MyHikariCP housekeeper] com.zaxxer.hikari.pool.HikariPool        : MyHikariCP - Thread starvation or clock leap detected (housekeeper delta=1h17m57s190ms).
+2025-12-23 06:47:31.438  WARN 10177 --- [MyHikariCP housekeeper] com.zaxxer.hikari.pool.HikariPool        : MyHikariCP - Thread starvation or clock leap detected (housekeeper delta=1h17m13s269ms).
+2025-12-23 07:54:36.033  WARN 10177 --- [MyHikariCP housekeeper] com.zaxxer.hikari.pool.HikariPool        : MyHikariCP - Thread starvation or clock leap detected (housekeeper delta=1h7m4s595ms).
+2025-12-23 08:32:39.820  WARN 10177 --- [MyHikariCP housekeeper] com.zaxxer.hikari.pool.HikariPool        : MyHikariCP - Thread starvation or clock leap detected (housekeeper delta=38m3s787ms).
+2025-12-23 08:36:44.485  WARN 10177 --- [MyHikariCP housekeeper] com.zaxxer.hikari.pool.HikariPool        : MyHikariCP - Thread starvation or clock leap detected (housekeeper delta=4m4s665ms).
+2025-12-23 09:00:54.166  WARN 10177 --- [MyHikariCP housekeeper] com.zaxxer.hikari.pool.HikariPool        : MyHikariCP - Thread starvation or clock leap detected (housekeeper delta=24m9s681ms).
+2025-12-23 09:59:31.043  WARN 10177 --- [MyHikariCP housekeeper] com.zaxxer.hikari.pool.HikariPool        : MyHikariCP - Thread starvation or clock leap detected (housekeeper delta=58m36s877ms).
+2025-12-23 10:19:04.120  WARN 10177 --- [MyHikariCP housekeeper] com.zaxxer.hikari.pool.HikariPool        : MyHikariCP - Thread starvation or clock leap detected (housekeeper delta=19m33s78ms).
+2025-12-23 10:33:15.225  WARN 10177 --- [MyHikariCP housekeeper] com.zaxxer.hikari.pool.HikariPool        : MyHikariCP - Thread starvation or clock leap detected (housekeeper delta=14m11s105ms).
+2025-12-23 10:40:12.972  WARN 10177 --- [MyHikariCP housekeeper] com.zaxxer.hikari.pool.HikariPool        : MyHikariCP - Thread starvation or clock leap detected (housekeeper delta=6m57s747ms).
+2025-12-23 11:02:56.016  WARN 10177 --- [MyHikariCP housekeeper] com.zaxxer.hikari.pool.HikariPool        : MyHikariCP - Thread starvation or clock leap detected (housekeeper delta=22m43s44ms).
+2025-12-23 11:54:21.241  WARN 10177 --- [MyHikariCP housekeeper] com.zaxxer.hikari.pool.HikariPool        : MyHikariCP - Thread starvation or clock leap detected (housekeeper delta=51m25s225ms).
+2025-12-23 11:57:32.136  WARN 10177 --- [MyHikariCP housekeeper] com.zaxxer.hikari.pool.HikariPool        : MyHikariCP - Thread starvation or clock leap detected (housekeeper delta=3m10s894ms).
+2025-12-23 12:04:04.858  WARN 10177 --- [MyHikariCP housekeeper] com.zaxxer.hikari.pool.HikariPool        : MyHikariCP - Thread starvation or clock leap detected (housekeeper delta=6m32s723ms).
+2025-12-23 13:05:06.571  WARN 10177 --- [MyHikariCP housekeeper] com.zaxxer.hikari.pool.HikariPool        : MyHikariCP - Thread starvation or clock leap detected (housekeeper delta=1h1m1s713ms).
+2025-12-23 13:07:12.211  WARN 10177 --- [MyHikariCP housekeeper] com.zaxxer.hikari.pool.HikariPool        : MyHikariCP - Thread starvation or clock leap detected (housekeeper delta=2m5s640ms).
+2025-12-23 13:10:49.034  WARN 10177 --- [MyHikariCP housekeeper] com.zaxxer.hikari.pool.HikariPool        : MyHikariCP - Thread starvation or clock leap detected (housekeeper delta=3m36s823ms).
+2025-12-23 14:05:57.905  WARN 10177 --- [MyHikariCP housekeeper] com.zaxxer.hikari.pool.HikariPool        : MyHikariCP - Thread starvation or clock leap detected (housekeeper delta=55m8s870ms).
+2025-12-23 14:26:36.999  WARN 10177 --- [MyHikariCP housekeeper] com.zaxxer.hikari.pool.HikariPool        : MyHikariCP - Thread starvation or clock leap detected (housekeeper delta=20m39s95ms).
+2025-12-23 14:31:02.698  WARN 10177 --- [MyHikariCP housekeeper] com.zaxxer.hikari.pool.HikariPool        : MyHikariCP - Thread starvation or clock leap detected (housekeeper delta=4m25s699ms).
+2025-12-23 15:06:56.743  WARN 10177 --- [MyHikariCP housekeeper] com.zaxxer.hikari.pool.HikariPool        : MyHikariCP - Thread starvation or clock leap detected (housekeeper delta=35m54s45ms).
+2025-12-23 15:45:47.063  WARN 10177 --- [MyHikariCP housekeeper] com.zaxxer.hikari.pool.HikariPool        : MyHikariCP - Thread starvation or clock leap detected (housekeeper delta=38m50s319ms).
+2025-12-23 15:50:51.261  WARN 10177 --- [MyHikariCP housekeeper] com.zaxxer.hikari.pool.HikariPool        : MyHikariCP - Thread starvation or clock leap detected (housekeeper delta=5m4s199ms).
+2025-12-23 16:58:49.779  WARN 10177 --- [MyHikariCP housekeeper] com.zaxxer.hikari.pool.HikariPool        : MyHikariCP - Thread starvation or clock leap detected (housekeeper delta=1h7m58s518ms).
+2025-12-23 17:08:46.234  WARN 10177 --- [MyHikariCP housekeeper] com.zaxxer.hikari.pool.HikariPool        : MyHikariCP - Thread starvation or clock leap detected (housekeeper delta=9m56s455ms).
+2025-12-23 17:20:49.526  WARN 10177 --- [MyHikariCP housekeeper] com.zaxxer.hikari.pool.HikariPool        : MyHikariCP - Thread starvation or clock leap detected (housekeeper delta=12m3s291ms).
+2025-12-23 17:33:31.605  WARN 10177 --- [MyHikariCP housekeeper] com.zaxxer.hikari.pool.HikariPool        : MyHikariCP - Thread starvation or clock leap detected (housekeeper delta=12m42s80ms).
+2025-12-23 18:07:55.989  WARN 10177 --- [MyHikariCP housekeeper] com.zaxxer.hikari.pool.HikariPool        : MyHikariCP - Thread starvation or clock leap detected (housekeeper delta=34m24s384ms).
+2025-12-23 18:42:18.809  WARN 10177 --- [MyHikariCP housekeeper] com.zaxxer.hikari.pool.HikariPool        : MyHikariCP - Thread starvation or clock leap detected (housekeeper delta=34m22s819ms).
+2025-12-23 19:10:29.658  WARN 10177 --- [MyHikariCP housekeeper] com.zaxxer.hikari.pool.HikariPool        : MyHikariCP - Thread starvation or clock leap detected (housekeeper delta=28m10s850ms).
+2025-12-23 19:25:29.497  WARN 10177 --- [MyHikariCP housekeeper] com.zaxxer.hikari.pool.HikariPool        : MyHikariCP - Thread starvation or clock leap detected (housekeeper delta=14m59s839ms).
+2025-12-23 19:45:01.385  WARN 10177 --- [MyHikariCP housekeeper] com.zaxxer.hikari.pool.HikariPool        : MyHikariCP - Thread starvation or clock leap detected (housekeeper delta=19m31s887ms).
+2025-12-23 19:48:27.642  WARN 10177 --- [MyHikariCP housekeeper] com.zaxxer.hikari.pool.HikariPool        : MyHikariCP - Thread starvation or clock leap detected (housekeeper delta=3m26s258ms).
+2025-12-23 20:42:51.586  WARN 10177 --- [MyHikariCP housekeeper] com.zaxxer.hikari.pool.HikariPool        : MyHikariCP - Thread starvation or clock leap detected (housekeeper delta=54m23s943ms).
+2025-12-23 20:48:05.746  WARN 10177 --- [MyHikariCP housekeeper] com.zaxxer.hikari.pool.HikariPool        : MyHikariCP - Thread starvation or clock leap detected (housekeeper delta=5m14s161ms).
+2025-12-23 20:51:06.709  WARN 10177 --- [MyHikariCP housekeeper] com.zaxxer.hikari.pool.HikariPool        : MyHikariCP - Thread starvation or clock leap detected (housekeeper delta=3m963ms).
+2025-12-23 21:11:01.286  WARN 10177 --- [MyHikariCP housekeeper] com.zaxxer.hikari.pool.HikariPool        : MyHikariCP - Thread starvation or clock leap detected (housekeeper delta=19m54s576ms).
+2025-12-23 21:12:36.120  WARN 10177 --- [MyHikariCP housekeeper] com.zaxxer.hikari.pool.HikariPool        : MyHikariCP - Thread starvation or clock leap detected (housekeeper delta=1m34s835ms).
+2025-12-23 22:13:18.714  WARN 10177 --- [MyHikariCP housekeeper] com.zaxxer.hikari.pool.HikariPool        : MyHikariCP - Thread starvation or clock leap detected (housekeeper delta=1h42s593ms).
+2025-12-23 23:14:23.350  WARN 10177 --- [MyHikariCP housekeeper] com.zaxxer.hikari.pool.HikariPool        : MyHikariCP - Thread starvation or clock leap detected (housekeeper delta=1h1m4s637ms).
+2025-12-23 23:52:11.341  INFO 10177 --- [SpringApplicationShutdownHook] o.s.b.w.e.tomcat.GracefulShutdown        : Commencing graceful shutdown. Waiting for active requests to complete
+2025-12-23 23:52:11.367  INFO 10177 --- [tomcat-shutdown] o.s.b.w.e.tomcat.GracefulShutdown        : Graceful shutdown complete
+2025-12-23 23:52:11.375  INFO 10177 --- [SpringApplicationShutdownHook] o.s.m.s.b.SimpleBrokerMessageHandler     : Stopping...
+2025-12-23 23:52:11.375  INFO 10177 --- [SpringApplicationShutdownHook] o.s.m.s.b.SimpleBrokerMessageHandler     : BrokerAvailabilityEvent[available=false, SimpleBrokerMessageHandler [org.springframework.messaging.simp.broker.DefaultSubscriptionRegistry@3864c66b]]
+2025-12-23 23:52:11.375  INFO 10177 --- [SpringApplicationShutdownHook] o.s.m.s.b.SimpleBrokerMessageHandler     : Stopped.
+2025-12-23 23:52:11.382  INFO 10177 --- [SpringApplicationShutdownHook] j.LocalContainerEntityManagerFactoryBean : Closing JPA EntityManagerFactory for persistence unit 'default'
+2025-12-23 23:52:11.384  INFO 10177 --- [SpringApplicationShutdownHook] com.zaxxer.hikari.HikariDataSource       : MyHikariCP - Shutdown initiated...
+2025-12-23 23:52:11.388  INFO 10177 --- [SpringApplicationShutdownHook] com.zaxxer.hikari.HikariDataSource       : MyHikariCP - Shutdown completed.
