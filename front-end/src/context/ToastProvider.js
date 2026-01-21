@@ -58,7 +58,6 @@ const ToastProvider = ({children}) => {
                 },3000);
             });
 
-            // client.subscribe('/user/queue/notifications', (msg) => {
             client.subscribe('/user/queue/notifications', (msg) => {
                 const n = JSON.parse(msg.body);
                 console.log("🔔 개인 알림:", n);

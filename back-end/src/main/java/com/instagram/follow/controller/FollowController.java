@@ -119,8 +119,8 @@ public class FollowController {
             notification.put("receiveUserId", userId);
             notification.put("timestamp", System.currentTimeMillis());
             messagingTemplate.convertAndSendToUser(String.valueOf(userId), "/queue/notifications", notification);
-//            messagingTemplate.convertAndSend("/queue/notifications", notification);
-            log.info("String.valueOf(userId) : {}, loginUserName : {}, userId : {}", userId, loginUserName, userId);
+            messagingTemplate.convertAndSend("/topic/notifications", notification);
+            log.info("String.valueOf(userId) : {}, , loginUserName : {}, userId : {}", userId, loginUserName, userId);
             log.info("팔로우 및 WebSocket 알림 전송 완료");
 
             return ResponseEntity.ok(result);
@@ -136,6 +136,30 @@ public class FollowController {
     convertAndSendToUser() 사용할 땐 상대방 측에 알림이 도착하지 않습니다.
 
     JwtAuthenticationFilter, SecurityConfig, WebSocket 수정했습니다.
+     */
+
+    /*
+    선생님 피드백
+
+    // FollowController.java
+
+    @PostMapping("/follow/{toUserId}")
+    public ResponseEntity<?> followUser(@AuthenticationPrincipal UserDetailsImpl userDetails,
+                                        @PathVariable Long toUserId) {
+
+        // 팔로우 로직 수행
+        String toUserEmail = followService.findEmailById(toUserId); // 상대방의 식별자(email 등)
+
+        // 알림 전송
+        // /user/{toUserEmail}/queue/notifications 로 전송됨
+        simpMessagingTemplate.convertAndSendToUser(
+                toUserEmail,            // 수신자 식별자 (Principal Name과 일치해야 함)
+                "/queue/notifications", // 구독 경로 (앞에 /user 생략)
+                new NotificationDto(...)
+        );
+
+        return ResponseEntity.ok().build();
+    }
      */
 
     @DeleteMapping("/delete")

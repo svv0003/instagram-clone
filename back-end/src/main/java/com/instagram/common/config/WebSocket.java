@@ -1,14 +1,30 @@
 package com.instagram.common.config;
 
+import com.instagram.common.util.JwtUtil;
+import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.messaging.Message;
+import org.springframework.messaging.MessageChannel;
+import org.springframework.messaging.simp.config.ChannelRegistration;
 import org.springframework.messaging.simp.config.MessageBrokerRegistry;
+import org.springframework.messaging.simp.stomp.StompCommand;
+import org.springframework.messaging.simp.stomp.StompHeaderAccessor;
+import org.springframework.messaging.support.ChannelInterceptor;
+import org.springframework.messaging.support.MessageHeaderAccessor;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.socket.config.annotation.EnableWebSocketMessageBroker;
 import org.springframework.web.socket.config.annotation.StompEndpointRegistry;
 import org.springframework.web.socket.config.annotation.WebSocketMessageBrokerConfigurer;
 
+import java.util.Collections;
+
 @Configuration
 @EnableWebSocketMessageBroker
+@RequiredArgsConstructor
 public class WebSocket implements WebSocketMessageBrokerConfigurer {
+
+    private final JwtTokenProvider jwtTokenProvider;
 
     @Override
     public void configureMessageBroker(MessageBrokerRegistry registry) {
@@ -26,7 +42,6 @@ public class WebSocket implements WebSocketMessageBrokerConfigurer {
         /queue으로 시작하는 경로는 개인 메시지용 브로커를 활성화하라는 코드
          */
         registry.enableSimpleBroker("/topic", "/queue");
-
         registry.setApplicationDestinationPrefixes("/app");
 
         /*
@@ -53,4 +68,124 @@ public class WebSocket implements WebSocketMessageBrokerConfigurer {
 
                 .withSockJS();
     }
+
+    // ★ STOMP 연결 시 헤더에서 토큰을 꺼내 인증 객체 설정
+    @Override
+    public void configureClientInboundChannel(ChannelRegistration registration) {
+        registration.interceptors(new ChannelInterceptor() {
+            @Override
+            public Message<?> preSend(Message<?> message, MessageChannel channel) {
+                StompHeaderAccessor accessor =
+                        MessageHeaderAccessor.getAccessor(message, StompHeaderAccessor.class);
+
+                // CONNECT 프레임일 때만 토큰 검증
+                if (StompCommand.CONNECT.equals(accessor.getCommand())) {
+                    // 헤더에서 토큰 추출 (Client에서 'Authorization' : 'Bearer {token}'으로 보냈다고 가정)
+                    String authHeader = accessor.getFirstNativeHeader("Authorization");
+
+                    if (authHeader != null && authHeader.startsWith("Bearer ")) {
+                        String token = authHeader.substring(7);
+
+                        // 토큰 유효성 검사 및 Authentication 객체 생성
+//                        if (jwtUtil.validateToken(token)) {
+//                            int userId =
+//                                    jwtUtil.getUserIdFromToken(token);
+//
+//                            Authentication auth =
+//                                    new UsernamePasswordAuthenticationToken(
+//                                            String.valueOf(userId),
+//                                            null,
+//                                            Collections.emptyList()
+//                                    );
+                            if (jwtTokenProvider.validateToken(token)) {
+                            Authentication auth = jwtTokenProvider.getAuthentication(token);
+
+                            // ★ WebSocket 세션에 사용자 정보(Principal) 등록
+                            accessor.setUser(auth);
+                        }
+                    }
+                }
+                return message;
+            }
+        });
+    }
 }
+
+/*
+기존 내 코드
+
+@Configuration
+@EnableWebSocketMessageBroker
+public class WebSocket implements WebSocketMessageBrokerConfigurer {
+    @Override
+    public void configureMessageBroker(MessageBrokerRegistry registry) {
+        registry.enableSimpleBroker("/topic", "/queue");
+        registry.setApplicationDestinationPrefixes("/app");
+        registry.setUserDestinationPrefix("/user");
+}
+
+    @Override
+    public void registerStompEndpoints(StompEndpointRegistry registry) {
+        registry.addEndpoint("/ws")
+                .setAllowedOriginPatterns("*")
+                .withSockJS();
+    }
+}
+ */
+
+/*
+
+// 경란쌤 피드백
+@Configuration
+@EnableWebSocketMessageBroker
+@RequiredArgsConstructor
+public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
+
+    private final JwtTokenProvider jwtTokenProvider;
+
+    @Override
+    public void configureMessageBroker(MessageBrokerRegistry config) {
+        config.enableSimpleBroker("/queue", "/topic");
+        config.setApplicationDestinationPrefixes("/app");
+        config.setUserDestinationPrefix("/user");
+    }
+
+    @Override
+    public void registerStompEndpoints(StompEndpointRegistry registry) {
+        registry.addEndpoint("/ws")
+                .setAllowedOriginPatterns("*")
+                .withSockJS();
+    }
+
+    // ★ STOMP 연결 시 헤더에서 토큰을 꺼내 인증 객체 설정
+    @Override
+    public void configureClientInboundChannel(ChannelRegistration registration) {
+        registration.interceptors(new ChannelInterceptor() {
+            @Override
+            public Message<?> preSend(Message<?> message, MessageChannel channel) {
+                StompHeaderAccessor accessor =
+                        MessageHeaderAccessor.getAccessor(message, StompHeaderAccessor.class);
+
+                // CONNECT 프레임일 때만 토큰 검증
+                if (StompCommand.CONNECT.equals(accessor.getCommand())) {
+                    // 헤더에서 토큰 추출 (Client에서 'Authorization' : 'Bearer {token}'으로 보냈다고 가정)
+                    String authHeader = accessor.getFirstNativeHeader("Authorization");
+
+                    if (authHeader != null && authHeader.startsWith("Bearer ")) {
+                        String token = authHeader.substring(7);
+
+                        // 토큰 유효성 검사 및 Authentication 객체 생성
+                        if (jwtTokenProvider.validateToken(token)) {
+                            Authentication auth = jwtTokenProvider.getAuthentication(token);
+
+                            // ★ WebSocket 세션에 사용자 정보(Principal) 등록
+                            accessor.setUser(auth);
+                        }
+                    }
+                }
+                return message;
+            }
+        });
+    }
+}
+ */
