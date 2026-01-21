@@ -29,6 +29,9 @@ const ToastProvider = ({children}) => {
     }
 
     useEffect(() => {
+        // 브라우저 환경 체크
+        if (typeof window === "undefined") return;
+
         // 웹 소켓 연결 설정
         // const socket = new SockJS('http://localhost:9000/ws');
         const token = localStorage.getItem("token");
