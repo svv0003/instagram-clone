@@ -50,7 +50,7 @@
     </select>
 
     <!-- 팔로우 신청 -->
-    <insert id="insertFollowing" parameterType="Follow">
+    <insert id="insertFollowing" parameterType="Follow" useGeneratedKeys="true" keyProperty="followId" keyColumn="follow_id">
         INSERT INTO follows (follower_id, following_id)
         VALUES (#{followerId}, #{followingId})
     </insert>

@@ -3,6 +3,10 @@ package com.instagram.comment.model.service;
 import com.instagram.comment.model.dto.Comment;
 import com.instagram.comment.model.dto.CommentResponse;
 import com.instagram.comment.model.mapper.CommentMapper;
+import com.instagram.notification.model.dto.Notification;
+import com.instagram.notification.model.service.NotificationService;
+import com.instagram.post.model.dto.Post;
+import com.instagram.post.model.mapper.PostMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -17,6 +21,8 @@ import java.util.List;
 public class CommentServiceImpl implements CommentService {
 
     private final CommentMapper commentMapper;
+    private final PostMapper postMapper;
+    private final NotificationService notificationService;
 
 
     /*
@@ -42,7 +48,19 @@ public class CommentServiceImpl implements CommentService {
             comment.setPostId(postId);
             comment.setUserId(userId);
             comment.setCommentContent(commentContent);
-            return commentMapper.insertComment(comment) > 0;
+            boolean result = commentMapper.insertComment(comment) > 0;
+            if(result) {
+                Post post = postMapper.selectPostById(postId);
+                if(userId != post.getUserId()) {
+                    Notification notif = new Notification();
+                    notif.setNotificationSenderId(userId);
+                    notif.setNotificationReceiverId(post.getUserId());
+                    notif.setNotificationType("COMMENT");
+                    notif.setNotification_content_id(postId);
+                    notificationService.addNotification(notif);
+                }
+            }
+            return result;
         } catch (Exception e) {
             log.error("댓글 저장 실패 : {}", e.getMessage());
             return false;

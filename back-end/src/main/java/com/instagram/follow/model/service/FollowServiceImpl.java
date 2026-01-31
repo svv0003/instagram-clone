@@ -2,6 +2,8 @@ package com.instagram.follow.model.service;
 
 import com.instagram.follow.model.dto.Follow;
 import com.instagram.follow.model.mapper.FollowMapper;
+import com.instagram.notification.model.dto.Notification;
+import com.instagram.notification.model.service.NotificationService;
 import com.instagram.user.model.dto.User;
 import com.instagram.user.model.mapper.UserMapper;
 import lombok.RequiredArgsConstructor;
@@ -18,6 +20,7 @@ public class FollowServiceImpl implements FollowService {
 
     private final FollowMapper followMapper;
     private final UserMapper userMapper;
+    private final NotificationService notificationService;
 
     /**
      * 팔로잉 목록 조회
@@ -100,7 +103,16 @@ public class FollowServiceImpl implements FollowService {
             Follow follow = new Follow();
             follow.setFollowingId(userId);
             follow.setFollowerId(loginUserId);
-            return followMapper.insertFollowing(follow);
+            boolean result = followMapper.insertFollowing(follow);
+            if(result) {
+                Notification notification = new Notification();
+                notification.setNotificationSenderId(loginUserId);
+                notification.setNotificationReceiverId(userId);
+                notification.setNotificationType("FOLLOW");
+                notification.setNotification_content_id(follow.getFollowId()); // useGeneratedKeys로 얻은 PK
+                notificationService.addNotification(notification);
+            }
+            return result;
         } catch (Exception e) {
             log.error("팔로우 반영 문제 발생 : {}", e);
             return false;

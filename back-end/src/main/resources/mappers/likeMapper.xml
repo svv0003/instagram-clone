@@ -29,7 +29,7 @@
     </select>
 
     <!-- 좋아요 추가 -->
-    <insert id="insertLike" parameterType="Like">
+    <insert id="insertLike" parameterType="Like" useGeneratedKeys="true" keyProperty="likeId" keyColumn="like_id">
         INSERT INTO likes (post_id, user_id)
         VALUES (#{postId}, #{userId})
     </insert>
